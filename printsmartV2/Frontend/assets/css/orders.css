@@ -211,20 +211,20 @@
             transform: translateY(-1px);
         }
 
-        .completed {
+        .badge.completed {
             background: #d1fae5;
             color: #059669;
         }
 
-        .pending {
+        .badge.pending {
             background: #fef3c7;
             color: #d97706;
         }
 
-        .processing {
-            background: #dbeafe;
-            color: #2563eb;
-        }
+        .badge.processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
 
         .toast-notification {
             position: fixed;
@@ -609,4 +609,19 @@
     border-top: 1px solid #e5e7eb;
     font-size: 10px;
     color: #6b7280;
+}
+
+#viewOrderStatus.completed {
+    background: #d1fae5;
+    color: #059669;
+}
+
+#viewOrderStatus.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+#viewOrderStatus.processing {
+    background: #dbeafe;
+    color: #2563eb;
 }
