@@ -47,18 +47,31 @@ function getOrders($pdo): void {
 }
 
 function addOrder($pdo): void {
-    if (!isset($_POST['order'])) { echo json_encode(['success' => false, 'message' => 'No order data received']); return; }
+    if (!isset($_POST['order'])) {
+         echo json_encode(['success' => false, 'message' => 'No order data received']); 
+         return; 
+         }
+
     $order        = $_POST['order'];
-    $customerId   = $order['customer_id']    ?? null;
-    $order_date   = empty($order['order_date']) ? null : $order['order_date'];
-    $deadline     = empty($order['deadline']) ? null : $order['deadline'];
-    $status       = $order['status']         ?? 'Pending';
-    $total_amount = (float) ($order['total_amount'] ?? 0);
-    $order_details = $order['order_details'] ?? '';
+    $customerId   = $order['customer_id'];
+    $order_date   = $order['order_date'];
+    $deadline     = $order['deadline'];
+    $status       = $order['status'];
+    $total_amount = $order['total_amount'];
+    $order_details = $order['order_details'];
     
     $stmt = $pdo->query("SELECT COUNT(id) FROM orders");
     $count = $stmt->fetchColumn();
-    $order_number = '#ORD-' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+
+    $next_number = $count + 1;
+    
+    if ($next_number < 10) {
+        $order_number = "#ORD-00" . $next_number;
+    } elseif ($next_number < 100) {
+        $order_number = "#ORD-0" . $next_number;
+    } else {
+        $order_number = "#ORD-" . $next_number;
+    }
     
     $sql = "INSERT INTO orders (customer_id, order_number, order_date, deadline, status, total_amount, order_details) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
