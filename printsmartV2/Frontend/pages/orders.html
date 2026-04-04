@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,190 +9,374 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/orders.css">
 </head>
+
 <body>
-<div class="page-container">
-    <aside class="sidebar">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="brand-icon">
-                <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z" fill="currentColor"/>
-                <path d="M16 3H8V8H16V3Z" fill="currentColor"/>
-                <path d="M16 15H8V19H16V15Z" fill="#FFFFFF"/>
-            </svg>
-            PrintSmart
-        </div>
-        <nav class="menu">
-            <a href="../index.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</a>
-            <a href="orders.html" class="menu-item active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Order Management</a>
-            <a href="customers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Customer Management</a>
-            <a href="suppliers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Supplier Management</a>
-            <a href="employees.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Employee Management</a>
-            <a href="expenses.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Expense Management</a>
-        </nav>
-        <div class="user-info-box mt-auto" style="margin-top:auto;">
-            <div class="user-profile">
-                <div class="user-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                <div class="user-text"><strong>Admin User</strong><br><span>admin@printsmart.com</span></div>
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="brand-icon">
+                    <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z"
+                        fill="currentColor" />
+                    <path d="M16 3H8V8H16V3Z" fill="currentColor" />
+                    <path d="M16 15H8V19H16V15Z" fill="#FFFFFF" />
+                </svg>
+                PrintSmart
             </div>
-            <a href="../login.html" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
-        </div>
-    </aside>
-
-    <main class="main">
-        <header class="top-bar">
-            <div class="header-text">
-                <h1>Order Management</h1>
-                <p>Directory of all Orders and their details.</p>
-            </div>
-            <div style="display:flex; gap:16px; align-items:center;">
-                <div class="search-box">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="searchInput" placeholder="Search order by ID or name" style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
+            <nav class="menu">
+                <a href="../index.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg> Dashboard</a>
+                <a href="orders.html" class="menu-item active"><svg width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg> Order Management</a>
+                <a href="customers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                        <path d="M16 3.13a4 4 0 010 7.75" />
+                    </svg> Customer Management</a>
+                <a href="suppliers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg> Supplier Management</a>
+                <a href="employees.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg> Employee Management</a>
+                <a href="expenses.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg> Expense Management</a>
+            </nav>
+            <div class="user-info-box mt-auto" style="margin-top:auto;">
+                <div class="user-profile">
+                    <div class="user-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg></div>
+                    <div class="user-text"><strong>Admin User</strong><br><span>admin@printsmart.com</span></div>
                 </div>
-                <button class="btn-primary" id="openAddorderModal">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                    Add Order
-                </button>
+                <a href="../login.html" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg> Log out</a>
             </div>
-        </header>
+        </aside>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th><th>Customer</th><th>Deadline</th>
-                        <th>Status</th><th>Total Amount</th><th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
+        <main class="main">
+            <header class="top-bar">
+                <div class="header-text">
+                    <h1>Order Management</h1>
+                    <p>Directory of all Orders and their details.</p>
+                </div>
+                <div style="display:flex; gap:16px; align-items:center;">
+                    <div class="search-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search order by ID or name"
+                            style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
+                    </div>
+                    <button class="btn-primary" id="openAddorderModal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="vertical-align:middle; margin-right:4px;">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="8.5" cy="7" r="4" />
+                            <line x1="20" y1="8" x2="20" y2="14" />
+                            <line x1="23" y1="11" x2="17" y2="11" />
+                        </svg>
+                        Add Order
+                    </button>
+                </div>
+            </header>
 
-        <button class="report-btn" id="reportBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="11" y2="17"/></svg>
-            Generate a Report
-        </button>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+
+            <button class="report-btn" id="reportBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="9" y1="9" x2="15" y2="9" />
+                    <line x1="9" y1="13" x2="15" y2="13" />
+                    <line x1="9" y1="17" x2="11" y2="17" />
+                </svg>
+                Generate a Report
+            </button>
     </div>
-</div>
+    </div>
 
-<!-- Add Order Modal -->
-<div id="addorderModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header"><h2>Add a New Order</h2></div>
-        <div class="modal-body">
-            <div class="form-group"><label>Customer</label><select id="customer_id" required><option value="" disabled selected>Select Customer</option></select></div>
-            <div class="form-row">
-                <div class="form-group half"><label>Order Placed Date</label><input type="date" id="order_placed_date" required></div>
-                <div class="form-group half"><label>Deadline</label><input type="date" id="deadline" required></div>
+    <!-- Add Order Modal -->
+    <div id="addorderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add a New Order</h2>
             </div>
-            <div class="form-group"><label>Status</label>
-                <select id="status" required>
-                    <option value="" disabled selected>Select Status</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                </select>
+            <div class="modal-body">
+                <div class="form-group"><label>Customer</label><select id="customer_id" required>
+                        <option value="" disabled selected>Select Customer</option>
+                    </select></div>
+                <div class="form-row">
+                    <div class="form-group half"><label>Order Placed Date</label><input type="date"
+                            id="order_placed_date" required></div>
+                    <div class="form-group half"><label>Deadline</label><input type="date" id="deadline" required></div>
+                </div>
+                <div class="form-group"><label>Status</label>
+                    <select id="status" required>
+                        <option value="" disabled selected>Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Total Amount</label><input type="number" id="total_amount"
+                        placeholder="Enter Total Amount" required></div>
+                <div class="form-group"><label>Order Details</label><textarea id="order_details" rows="3"
+                        placeholder="Enter Order Details"></textarea></div>
             </div>
-            <div class="form-group"><label>Total Amount</label><input type="number" id="total_amount" placeholder="Enter Total Amount" required></div>
-            <div class="form-group"><label>Order Details</label><textarea id="order_details" rows="3" placeholder="Enter Order Details"></textarea></div>
-        </div>
-        <div class="modal-footer">
-            <button class="cancel-btn" id="closeAddorderModal">Cancel</button>
-            <button class="save-btn" id="saveOrderBtn">Save Order</button>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeAddorderModal">Cancel</button>
+                <button class="save-btn" id="saveOrderBtn">Save Order</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    const ORDER_API = '../../Backend/api/orders.php';
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadOrders();
+            loadCustomers();
 
-    $(document).ready(function () {
-        loadOrders();
-        loadCustomers();
-
-        function loadOrders() {
-            $.ajax({ url: ORDER_API, type: 'GET', data: { action: 'get_orders' }, dataType: 'json',
-                success: function (r) { if (r.success) displayOrders(r.data); else showToast('Error: ' + r.message, 'error'); },
-                error: function () { showToast('Error connecting to server', 'error'); }
-            });
-        }
-
-        function loadCustomers() {
-            $.ajax({ url: ORDER_API, type: 'GET', data: { action: 'get_customers' }, dataType: 'json',
-                success: function (r) {
-                    if (r.success) {
-                        const sel = $('#customer_id');
-                        sel.empty().append('<option value="" disabled selected>Select Customer</option>');
-                        r.data.forEach(c => sel.append(`<option value="${c.id}">${c.name}</option>`));
+            // -------------------------------load orders------------------------------------
+            function loadOrders() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_orders' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            displayOrders(response.data);
+                        } else {
+                            showToast('Error loading orders: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
                     }
-                }
-            });
-        }
-
-        function displayOrders(orders) {
-            const tbody = $('#ordersTableBody');
-            tbody.empty();
-            if (!orders.length) { tbody.html('<tr><td colspan="6" style="text-align:center;">No orders found</td></tr>'); return; }
-            orders.forEach(function (o) {
-                tbody.append(`
-                    <tr data-id="${o.id}">
-                        <td class="id-color">${o.order_number}</td>
-                        <td>${o.customer_name}</td>
-                        <td>${formatDate(o.deadline)}</td>
-                        <td><span class="badge ${o.status.toLowerCase()}">${o.status}</span></td>
-                        <td>LKR ${parseFloat(o.total_amount).toLocaleString('en-IN',{minimumFractionDigits:2})}</td>
-                        <td class="actions">
-                            <i class="fa-regular fa-trash-can delete-order" data-id="${o.id}"></i>
-                        </td>
-                    </tr>`);
-            });
-        }
-
-        function formatDate(d) { if(!d) return 'N/A'; return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
-
-        $('#saveOrderBtn').click(function () {
-            const orderData = { customer_id: $('#customer_id').val(), order_date: $('#order_placed_date').val(),
-                deadline: $('#deadline').val(), status: $('#status').val(), total_amount: $('#total_amount').val(),
-                order_details: $('#order_details').val().trim() };
-            if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
-                showToast('Please fill all required fields', 'error'); return;
-            }
-            $.ajax({ url: ORDER_API, type: 'POST', data: { action: 'add_order', order: orderData }, dataType: 'json',
-                success: function (r) { if(r.success) { showToast('Order added!'); $('#addorderModal').hide(); resetModal(); loadOrders(); } else showToast('Error: ' + r.message, 'error'); },
-                error: function () { showToast('Error saving order', 'error'); }
-            });
-        });
-
-        $(document).on('click', '.delete-order', function () {
-            const id = $(this).data('id');
-            if (confirm('Delete this order?')) {
-                $.ajax({ url: ORDER_API, type: 'POST', data: { action: 'delete_order', id: id }, dataType: 'json',
-                    success: function (r) { if(r.success) { showToast('Order deleted!'); loadOrders(); } else showToast('Error: ' + r.message,'error'); }
                 });
             }
-        });
 
-        $('#searchInput').on('keyup', function () {
-            const t = $(this).val().toLowerCase();
-            $('#ordersTableBody tr').each(function () {
-                const show = $(this).find('td:first').text().toLowerCase().includes(t) || $(this).find('td:eq(1)').text().toLowerCase().includes(t);
-                $(this).toggle(show);
+            // -----------------------------------load customers-------------------------------
+            function loadCustomers() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_customers' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const select = $('#customer_id');
+                            select.empty();
+                            select.append('<option value="" disabled selected>Select Customer</option>');
+                            response.data.forEach(function (customer) {
+                                select.append(`<option value="${customer.id}">${customer.name}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
+
+            //------------------------------------------Display orders-----------------------------------------------
+            function displayOrders(orders) {
+                const tbody = $('#ordersTableBody');
+                tbody.empty();
+
+                if (orders.length === 0) {
+                    tbody.html('<tr><td colspan="6" style="text-align: center;">No orders found</td></tr>');
+                    return;
+                }
+
+                orders.forEach(function (order) {
+                    const statusClass = order.status.toLowerCase();
+                    const row = `
+                    <tr data-id="${order.id}">
+                        <td class="id-color">${order.order_number}</td>
+                        <td>${order.customer_name}</td>
+                        <td>${formatDate(order.deadline)}</td>
+                        <td><span class="badge ${statusClass}">${order.status}</span></td>
+                        <td>LKR ${parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td class="actions">
+                            <i class="fa-regular fa-eye view-order" data-id="${order.id}"></i>
+                            <i class="fa-regular fa-pen-to-square edit-order" data-id="${order.id}"></i>
+                            <i class="fa-regular fa-trash-can delete-order" data-id="${order.id}"></i>
+                        </td>
+                    </tr>
+                `;
+                    tbody.append(row);
+                });
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            // ------------------------------save new order-------------------------------------------------
+            $('#saveOrderBtn').click(function () {
+                const orderData = {
+                    customer_id: $('#customer_id').val(),
+                    order_date: $('#order_placed_date').val(),
+                    deadline: $('#deadline').val(),
+                    status: $('#status').val(),
+                    total_amount: $('#total_amount').val(),
+                    order_details: $('#order_details').val().trim()
+                };
+
+                if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
+                    showToast('Please fill all required fields', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'POST',
+                    data: { action: 'add_order', order: orderData },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showToast('Order added successfully!');
+                            $('#addorderModal').hide();
+                            resetModal();
+                            loadOrders();
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error saving order', 'error');
+                    }
+                });
             });
+
+
+            function resetModal() {
+                $('#customer_id').val('');
+                $('#order_placed_date').val('');
+                $('#deadline').val('');
+                $('#status').val('');
+                $('#total_amount').val('');
+                $('#order_details').val('');
+            }
+
+
+            $('#openAddorderModal').click(function () {
+                resetModal();
+                $('#addorderModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            });
+
+            $('#closeAddorderModal').click(function () {
+                $('#addorderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#addorderModal')) {
+                    $('#addorderModal').hide();
+                }
+            });
+
+            // ------------------------------------------Delete order----------------------------------------------
+            $(document).on('click', '.delete-order', function () {
+                const orderId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this order?')) {
+                    $.ajax({
+                        url: '../../Backend/api/orders.php',
+                        type: 'POST',
+                        data: { action: 'delete_order', id: orderId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                showToast('Order deleted successfully!');
+                                loadOrders();
+                            } else {
+                                showToast('Error: ' + response.message, 'error');
+                            }
+                        },
+                        error: function () {
+                            showToast('Error deleting order', 'error');
+                        }
+                    });
+                }
+            });
+
+
+
+            //-------------------------------search-----------------------------------------------------------
+
+            $('#searchInput').on('keyup', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#ordersTableBody tr').each(function () {
+                    const orderId = $(this).find('td:first').text().toLowerCase();
+                    const customerName = $(this).find('td:eq(1)').text().toLowerCase();
+                    if (orderId.includes(searchTerm) || customerName.includes(searchTerm)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+
+
+
+            //---------------------------------------toast-------------------------------------------
+            function showToast(message, type = 'success') {
+                const toast = $(`<div class="toast-notification ${type}">${message}</div>`);
+                $('body').append(toast);
+                setTimeout(function () {
+                    toast.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }, 3000);
+            }
         });
-
-        $('#openAddorderModal').click(function () { resetModal(); $('#addorderModal').css({'display':'flex','align-items':'center','justify-content':'center'}); });
-        $('#closeAddorderModal').click(function () { $('#addorderModal').hide(); });
-        $(window).click(function (e) { if ($(e.target).is('#addorderModal')) $('#addorderModal').hide(); });
-
-        function resetModal() { $('#customer_id,#order_placed_date,#deadline,#status,#total_amount,#order_details').val(''); }
-
-        function showToast(msg, type = 'success') {
-            const t = $(`<div class="toast-notification ${type}">${msg}</div>`);
-            $('body').append(t);
-            setTimeout(() => t.fadeOut(300, function(){ $(this).remove(); }), 3000);
-        }
-    });
-</script>
+    </script>
 </body>
-</html>
 
+</html>
