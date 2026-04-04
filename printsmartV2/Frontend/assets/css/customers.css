@@ -1,0 +1,133 @@
+/* customers.css - specific styles for this module */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-content {
+    background-color: white;
+    width: 550px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+    background-color: #0c4ea3;
+    color: white;
+    padding: 20px 25px;
+}
+.modal-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+.modal-body {
+    padding: 25px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-group.half {
+    flex: 1;
+}
+.form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #111827;
+    box-sizing: border-box;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #9ca3af;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0c4ea3;
+}
+.modal-footer {
+    padding: 0 25px 25px 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    align-items: center;
+}
+.cancel-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+}
+.save-btn {
+    background-color: #0c4ea3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.save-btn:hover {
+    background-color: #093b7b;
+}
+.toast-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.toast-message {
+    background-color: #0c5025;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+}
+.actions svg.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.actions svg.disabled:hover {
+    color: inherit;
+}

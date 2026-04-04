@@ -1,0 +1,264 @@
+/* employees.css - specific styles for this module */
+
+.name-cell {
+    display: flex;
+    align-items: center;
+}
+
+.text-gray {
+    color: #6b7280;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Exact Avatar Colors */
+.blue-avatar {
+    background-color: #e0e7ff;
+    color: #1e40af;
+}
+
+.yellow-avatar {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.purple-avatar {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+}
+
+/* Role Badges Exact Colors */
+.role-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.designer {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.operator {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.manager {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.lead {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.analyst {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+
+.tech {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.actions {
+    color: #9ca3af;
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.actions svg {
+    transition: color 0.2s;
+}
+
+.actions svg:hover {
+    color: #374151;
+}
+
+/* Floating Report Button */
+.report-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    background-color: #61738c;
+    /* Exact nice gray-blue color */
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styling (Simple & Clean) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent dark background */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    width: 550px;
+    border-radius: 8px;
+    overflow: hidden;
+    /* Makes the header blue cut cleanly at corners */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #0c4ea3;
+    /* Matches Add Button */
+    color: white;
+    padding: 20px 25px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group.half {
+    flex: 1;
+    /* Takes exactly half space */
+}
+
+/* Form Labels */
+.form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* Form Inputs and Textarea */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #111827;
+    box-sizing: border-box;
+    /* Makes padding behave nicely */
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #9ca3af;
+}
+
+/* Remove default focus outline and make it blue */
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #0c4ea3;
+}
+
+.modal-footer {
+    padding: 0 25px 25px 25px;
+    display: flex;
+    justify-content: flex-end;
+    /* Align buttons to the right */
+    gap: 15px;
+    align-items: center;
+}
+
+.cancel-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+}
+
+.save-btn {
+    background-color: #0c4ea3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background-color: #093b7b;
+}
+
+/* Added Notification */
+.toast-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Dimmed background */
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.toast-message {
+    background-color: #0c5025;
+    /* Vibrant green */
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: 2px solid #0c5025;
+    /* Darker green border */
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
