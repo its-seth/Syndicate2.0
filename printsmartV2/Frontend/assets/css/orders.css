@@ -211,17 +211,17 @@
             transform: translateY(-1px);
         }
 
-        .completed {
+        .badge.completed {
             background: #d1fae5;
             color: #059669;
         }
 
-        .pending {
+        .badge.pending {
             background: #fef3c7;
             color: #d97706;
         }
 
-        .processing {
+        .badge.processing {
             background: #dbeafe;
             color: #2563eb;
         }
