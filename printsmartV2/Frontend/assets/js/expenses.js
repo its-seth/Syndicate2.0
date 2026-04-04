@@ -18,6 +18,7 @@ const apiDelete = (url, id) => {
     fetch(`${url}?id=${id}`, { method: 'DELETE' }).catch(e => console.warn('API Delete failed (Offline mode)', e));
 };
 
+const searchExpenseInput     = document.getElementById('searchExpenseInput');
 const btnNotifications       = document.getElementById('btnNotifications');
 const backFromRemindersBtn   = document.getElementById('backFromRemindersBtn');
 const reminderOverlayModal   = document.getElementById('reminderOverlayModal');
@@ -69,11 +70,19 @@ if (closeReminderOverlayBtn) closeReminderOverlayBtn.addEventListener('click', c
 
 const renderTable = () => {
     expenseTableBody.innerHTML = '';
-    if (!Array.isArray(expenses) || !expenses.length) {
+    const searchTerm = searchExpenseInput ? searchExpenseInput.value.toLowerCase() : '';
+    const filteredExpenses = expenses.filter(expense => 
+        expense.category.toLowerCase().includes(searchTerm) || 
+        expense.status.toLowerCase().includes(searchTerm) ||
+        expense.id.toString().includes(searchTerm) ||
+        expense.amount.toString().includes(searchTerm)
+    );
+
+    if (!Array.isArray(filteredExpenses) || !filteredExpenses.length) {
         expenseTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);">No expenses found.</td></tr>`;
         return;
     }
-    expenses.forEach(expense => {
+    filteredExpenses.forEach(expense => {
         const tr = document.createElement('tr');
         const statusClass = `status-${expense.status.toLowerCase()}`;
         tr.innerHTML = `
@@ -105,7 +114,18 @@ if (markAllPaidBtn) markAllPaidBtn.addEventListener('click', () => {
 const renderReminders = () => {
     remindersListContainer.innerHTML = '';
     if (!Array.isArray(reminders) || !reminders.length) { remindersListContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">No pending bills.</p>'; return; }
-    reminders.forEach(r => {
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    sortedReminders.forEach(r => {
+        const rDate = new Date(r.date);
+        if (rDate < today && r.status !== 'Paid' && r.status !== 'Overdue') {
+            r.status = 'Overdue';
+        }
+
         const isOverdue = r.status === 'Overdue';
         remindersListContainer.insertAdjacentHTML('beforeend', `
             <div class="reminder-card ${isOverdue?'card-red':'card-blue'}">
@@ -188,3 +208,127 @@ if (addReminderBtn) addReminderBtn.addEventListener('click', () => {
     const rm = document.getElementById('reminderModal');
     if (rm) openModal(rm);
 });
+
+if (searchExpenseInput) {
+    searchExpenseInput.addEventListener('input', renderTable);
+}
+
+const generateReportBtn = document.getElementById('generateReportBtn');
+if (generateReportBtn) {
+    generateReportBtn.addEventListener('click', () => {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            alert('PDF library is loading or failed to load. Please try again.');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(18);
+        doc.text("PrintSmart - Expense Report", 14, 20);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+        
+        const searchTerm = searchExpenseInput ? searchExpenseInput.value.toLowerCase() : '';
+        const filteredExpenses = expenses.filter(expense => 
+            expense.category.toLowerCase().includes(searchTerm) || 
+            expense.status.toLowerCase().includes(searchTerm) ||
+            expense.id.toString().includes(searchTerm) ||
+            expense.amount.toString().includes(searchTerm)
+        );
+
+        let totalExpensesAmount = 0;
+        let categoryTotals = {};
+        let statusTotals = {};
+
+        filteredExpenses.forEach(e => {
+            const amt = parseFloat(e.amount) || 0;
+            totalExpensesAmount += amt;
+            if (!categoryTotals[e.category]) categoryTotals[e.category] = 0;
+            categoryTotals[e.category] += amt;
+            if (!statusTotals[e.status]) statusTotals[e.status] = 0;
+            statusTotals[e.status] += amt;
+        });
+
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text("Expense Analysis Summary", 14, 40);
+
+        doc.setFontSize(11);
+        doc.text(`Total Expense Amount: ${formatCurrency(totalExpensesAmount)}`, 14, 48);
+
+        const categoryData = Object.keys(categoryTotals).map(cat => [cat, formatCurrency(categoryTotals[cat])]);
+        doc.autoTable({
+            head: [['Category Breakdown', 'Total Amount']],
+            body: categoryData,
+            startY: 55,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 4 },
+            headStyles: { fillColor: [46, 204, 113] }
+        });
+
+        let finalY = doc.lastAutoTable.finalY || 55;
+
+        const statusData = Object.keys(statusTotals).map(st => [st, formatCurrency(statusTotals[st])]);
+        doc.autoTable({
+            head: [['Status Breakdown', 'Total Amount']],
+            body: statusData,
+            startY: finalY + 10,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 4 },
+            headStyles: { fillColor: [243, 156, 18] }
+        });
+
+        finalY = doc.lastAutoTable.finalY || (finalY + 10);
+
+        doc.setFontSize(14);
+        doc.text("Expense Details", 14, finalY + 15);
+
+        const tableBody = filteredExpenses.map(e => [
+            `#EXP-${e.id}`, 
+            e.category, 
+            formatCurrency(e.amount),
+            formatDate(e.date).replace(',', ''), 
+            e.status
+        ]);
+        
+        doc.autoTable({
+            head: [['Expense ID', 'Category', 'Amount', 'Date', 'Status']],
+            body: tableBody,
+            startY: finalY + 20,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 4 },
+            headStyles: { fillColor: [30, 64, 175] }
+        });
+
+        if (Array.isArray(reminders) && reminders.length > 0) {
+            let nextY = doc.lastAutoTable.finalY + 15;
+            if (nextY > 270) { doc.addPage(); nextY = 20; }
+
+            doc.setFontSize(14);
+            doc.setTextColor(0);
+            doc.text("Upcoming & Pending Reminders", 14, nextY);
+
+            const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
+            const remindersBody = sortedReminders.map(r => [
+                r.title, 
+                formatCurrency(r.amount),
+                formatDate(r.date).replace(',', ''), 
+                r.status.toUpperCase()
+            ]);
+
+            doc.autoTable({
+                head: [['Reminder / Bill', 'Amount', 'Due Date', 'Status']],
+                body: remindersBody,
+                startY: nextY + 5,
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 4 },
+                headStyles: { fillColor: [231, 76, 60] }
+            });
+        }
+        
+        doc.save("PrintSmart_Expense_Report.pdf");
+    });
+}
