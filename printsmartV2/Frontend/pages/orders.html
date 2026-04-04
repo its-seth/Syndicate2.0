@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/orders.css">
+
 </head>
 
 <body>
@@ -168,6 +169,154 @@
             <div class="modal-footer">
                 <button class="cancel-btn" id="closeAddorderModal">Cancel</button>
                 <button class="save-btn" id="saveOrderBtn">Save Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div id="editOrderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Order</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_order_id">
+                <div class="form-group">
+                    <label>Customer</label>
+                    <select id="edit_customer_id" required>
+                        <option value="" disabled>Select Customer</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Order Placed Date</label>
+                        <input type="date" id="edit_order_placed_date" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>Deadline</label>
+                        <input type="date" id="edit_deadline" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="edit_status" required>
+                        <option value="" disabled>Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Total Amount</label>
+                    <input type="number" id="edit_total_amount" placeholder="Enter Total Amount" required>
+                </div>
+                <div class="form-group">
+                    <label>Order Details</label>
+                    <textarea id="edit_order_details" rows="3" placeholder="Enter Order Details"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeEditOrderModal">Cancel</button>
+                <button class="save-btn" id="updateOrderBtn">Update Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Order Modal -->
+    <div id="viewOrderModal" class="modal">
+        <div class="modal-content" style="width: 500px; background-color: #f9fafb;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; background-color: #0c4ea3; padding: 20px 24px;">
+                <h2 style="font-size: 16px; font-weight: 600; margin: 0; color: white;">Order Details</h2>
+                <button id="closeViewOrderModal"
+                    style="background:none; border:none; color:white; cursor:pointer; font-size: 20px;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; max-height: 80vh; overflow-y: auto;">
+
+                <!-- Top Card with Order ID -->
+                <div class="profile-card">
+                    <div style="font-size: 28px; font-weight: 700; color: #0c4ea3; margin-bottom: 8px;"
+                        id="viewOrderNumber">#ORD-001</div>
+                    <div style="margin-top: 8px;"><span id="viewOrderStatus" class="badge"
+                            style="display: inline-block;">Pending</span></div>
+                </div>
+
+                <!-- Order Details Section -->
+                <div class="profile-section">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-calendar" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Order Information
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <i class="fa-regular fa-calendar-check"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">ORDER PLACED DATE</span>
+                                <span class="info-value" id="viewOrderDate">Jan 15, 2024</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-regular fa-clock"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">DEADLINE</span>
+                                <span class="info-value" id="viewDeadline">Jan 30, 2024</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-solid fa-money-bill"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">TOTAL AMOUNT</span>
+                                <span class="info-value" id="viewTotalAmount">LKR 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Information Section -->
+                <div class="profile-section">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-user" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Customer Information
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <i class="fa-regular fa-user"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">CUSTOMER NAME</span>
+                                <span class="info-value" id="viewCustomerName">John Doe</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-regular fa-id-card"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">CUSTOMER ID</span>
+                                <span class="info-value" id="viewCustomerId">CUS-001</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Description Section -->
+                <div class="profile-section" style="margin-bottom:0;">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-file-lines" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Order Description
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <div>
+                                <span class="info-value" id="viewOrderDetails" style="line-height: 1.5;">No additional
+                                    details provided.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -346,7 +495,7 @@
             });
 
 
-
+            //-------------------------------------search-----------------------------------------------
 
             $('#searchInput').on('keyup', function () {
                 const searchTerm = $(this).val().toLowerCase();
@@ -361,9 +510,191 @@
                 });
             });
 
+            //------------------------------edit order------------------------------------------------
+
+            // Load customers for edit dropdown
+            function loadCustomersForEdit() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_customers' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const select = $('#edit_customer_id');
+                            select.empty();
+                            select.append('<option value="" disabled>Select Customer</option>');
+                            response.data.forEach(function (customer) {
+                                select.append(`<option value="${customer.id}">${customer.name}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
 
 
+            // Get order details for editing
+            function getOrderForEdit(orderId) {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_order_details', id: orderId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const order = response.data;
+                            // Fill the edit form with order data
+                            $('#edit_order_id').val(order.id);
+                            $('#edit_customer_id').val(order.customer_id);
+                            $('#edit_order_placed_date').val(order.order_date);
+                            $('#edit_deadline').val(order.deadline);
+                            $('#edit_status').val(order.status);
+                            $('#edit_total_amount').val(order.total_amount);
+                            $('#edit_order_details').val(order.order_details || '');
 
+                            // Show the modal
+                            $('#editOrderModal').css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                        } else {
+                            showToast('Error loading order: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
+                    }
+                });
+            }
+
+            // Edit order button click
+            $(document).on('click', '.edit-order', function () {
+                const orderId = $(this).data('id');
+                loadCustomersForEdit(); // Load customers first
+                getOrderForEdit(orderId); // Then load order details
+            });
+
+            // Update order
+            $('#updateOrderBtn').click(function () {
+                const orderData = {
+                    id: $('#edit_order_id').val(),
+                    customer_id: $('#edit_customer_id').val(),
+                    order_date: $('#edit_order_placed_date').val(),
+                    deadline: $('#edit_deadline').val(),
+                    status: $('#edit_status').val(),
+                    total_amount: $('#edit_total_amount').val(),
+                    order_details: $('#edit_order_details').val().trim()
+                };
+
+                // Validation
+                if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
+                    showToast('Please fill all required fields', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'POST',
+                    data: { action: 'update_order', order: orderData },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showToast('Order updated successfully!');
+                            $('#editOrderModal').hide();
+                            loadOrders(); // Refresh the orders table
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error updating order', 'error');
+                    }
+                });
+            });
+
+            // Close edit order modal
+            $('#closeEditOrderModal').click(function () {
+                $('#editOrderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#editOrderModal')) {
+                    $('#editOrderModal').hide();
+                }
+            });
+
+            //------------------------------view order details------------------------------------------
+
+            // View order details
+            $(document).on('click', '.view-order', function () {
+                const orderId = $(this).data('id');
+                getOrderDetails(orderId);
+            });
+            // Function to get single order details
+            function getOrderDetails(orderId) {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_order_details', id: orderId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            displayOrderDetails(response.data);
+                        } else {
+                            showToast('Error loading order details: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
+                    }
+                });
+            }
+
+            // Function to display order details in modal
+            function displayOrderDetails(order) {
+                // Set Order Number (enlarged at top)
+                $('#viewOrderNumber').text(order.order_number);
+
+                // Set Status with appropriate class
+                const statusClass = order.status.toLowerCase();
+                $('#viewOrderStatus').removeClass('pending processing completed').addClass(statusClass);
+                $('#viewOrderStatus').text(order.status);
+
+                // Set Order Information
+                $('#viewOrderDate').text(formatDate(order.order_date));
+                $('#viewDeadline').text(formatDate(order.deadline));
+                $('#viewTotalAmount').text('LKR ' + parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+                // Set Customer Information
+                $('#viewCustomerName').text(order.customer_name);
+                $('#viewCustomerId').text(order.customer_code || 'N/A');
+
+                // Set Order Description
+                const orderDetails = order.order_details && order.order_details.trim() !== '' ? order.order_details : 'No additional details provided.';
+                $('#viewOrderDetails').text(orderDetails);
+
+                // Show the modal
+                $('#viewOrderModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            }
+
+            // Close view order modal
+            $('#closeViewOrderModal').click(function () {
+                $('#viewOrderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#viewOrderModal')) {
+                    $('#viewOrderModal').hide();
+                }
+            });
+
+
+            //---------------------------toast--------------------------------------------------
 
             function showToast(message, type = 'success') {
                 const toast = $(`<div class="toast-notification ${type}">${message}</div>`);

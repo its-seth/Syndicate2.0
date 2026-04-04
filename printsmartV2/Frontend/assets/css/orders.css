@@ -289,3 +289,130 @@
                 margin: 20px;
             }
         }
+
+        /*-------------------------------- view order details*/
+        /* View Order Modal Styles */
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.profile-section {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 20px 0;
+}
+
+.section-title svg {
+    color: #0c4ea3;
+}
+
+.info-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.info-item.full {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-item.full svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9CA3AF;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.info-value {
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+}
+
+/* Status badge styles for view modal */
+#viewOrderStatus {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#viewOrderStatus.completed {
+    background: #d1fae5;
+    color: #059669;
+}
+
+#viewOrderStatus.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+#viewOrderStatus.processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Order number styling */
+#viewOrderNumber {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0c4ea3;
+    letter-spacing: 0.5px;
+}
+
+/* Modal body scrolling */
+.modal-body {
+    padding: 24px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-card, .profile-section {
+        padding: 16px;
+    }
+    
+    #viewOrderNumber {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+    
+    .info-value {
+        font-size: 13px;
+    }
+}

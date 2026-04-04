@@ -26,7 +26,15 @@ switch ($action) {
     case 'delete_order':
         deleteOrder($conn);
         break;
-    
+
+    case 'get_order_details':
+        getOrderDetails($conn);
+        break;
+
+    case 'update_order':
+        updateOrder($conn);
+        break;
+
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
         break;
@@ -94,7 +102,7 @@ function addOrder($conn)
 
 
     if ($conn->query($sql) === TRUE) {
-        
+
         $new_id = $conn->insert_id;
 
         echo json_encode([
@@ -115,7 +123,7 @@ function addOrder($conn)
 function deleteOrder($conn)
 {
     $order_id = $_POST['id'];
-    
+
     if ($conn->query("DELETE FROM orders WHERE id = $order_id")) {
         echo json_encode(['success' => true, 'message' => 'Order deleted']);
     } else {
@@ -140,5 +148,69 @@ function getCustomers($conn)
     echo json_encode(['success' => true, 'data' => $customers]);
 }
 
+//-----------------------------------------------------------------get single order details---------------------------------------------------------
+function getOrderDetails($conn)
+{
+    $order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+    if ($order_id <= 0) {
+        echo json_encode(['success' => false, 'message' => 'Invalid order ID']);
+        return;
+    }
+
+    $sql = "SELECT o.*, c.name as customer_name, c.customer_id as customer_code 
+            FROM orders o 
+            LEFT JOIN customers c ON o.customer_id = c.id 
+            WHERE o.id = $order_id";
+
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        $order = $result->fetch_assoc();
+        echo json_encode(['success' => true, 'data' => $order]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Order not found']);
+    }
+}
+
+//-----------------------------------------------------------------update order---------------------------------------------------------
+function updateOrder($conn)
+{
+    if (!isset($_POST['order'])) {
+        echo json_encode(['success' => false, 'message' => 'No order data received']);
+        return;
+    }
+
+    $order = $_POST['order'];
+
+    $id = (int)$order['id'];
+    $customer_id = (int)$order['customer_id'];
+    $order_date = $order['order_date'];
+    $deadline = $order['deadline'];
+    $status = $order['status'];
+    $total_amount = (float)$order['total_amount'];
+    $order_details = $conn->real_escape_string($order['order_details']);
+
+    $sql = "UPDATE orders SET 
+            customer_id = $customer_id,
+            order_date = '$order_date',
+            deadline = '$deadline',
+            status = '$status',
+            total_amount = $total_amount,
+            order_details = '$order_details'
+            WHERE id = $id";
+
+    if ($conn->query($sql) === TRUE) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Order updated successfully'
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to update order: ' . $conn->error
+        ]);
+    }
+}
 
 ?>
