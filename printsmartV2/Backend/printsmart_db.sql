@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE CASCADE
 );
 
+
 -- 5. Suppliers Table
 CREATE TABLE IF NOT EXISTS `suppliers` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
