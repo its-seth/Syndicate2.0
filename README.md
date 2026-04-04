@@ -2,14 +2,19 @@ PrintSmart Management System
 PrintSmart is a comprehensive, web-based management system tailored for printing shops. It streamlines daily operations by centralizing order tracking, customer relationships, supplier management, employee administration, and expense logging into a single, unified dashboard.
 
 🚀 Key Features
+
+
 Dashboard Analytics: Get an instant overview of recent orders, recent transactions, and aggregate business stats.
 Order Management: Track customer printing orders, order details, totals, and payment status seamlessly.
 Customer Management: Maintain a directory of clients for easy access to their contact details.
 Supplier Management: Monitor suppliers, track consumable stock amounts, and manage payment deadlines.
 Employee Management: Organize staff roles, designations, salaries, and contact details centrally.
 Expense Management: Log printing shop expenses, categorize them, and keep track of pending bills or receipts.
+
+
+
 💻 Technology Stack
-Frontend: HTML5, CSS3, Vanilla JavaScript. Features a completely bespoke, modern design system utilizing CSS variables and flexbox for a cleanly unified, premium layout.
+Frontend: HTML5, CSS3, JavaScript. Features a completely bespoke, modern design system utilizing CSS variables and flexbox for a cleanly unified, premium layout.
 Backend: PHP (8.x) structured to offer modular RESTful APIs that return JSON.
 Database: MySQL (accessed strictly via PHP PDO for secure, prepared SQL queries).
 Environment: Designed to run seamlessly on a WAMP64 or any standard Apache server environment.
@@ -25,6 +30,8 @@ PrintSmart/
 └── Backend/              # Server-side PHP scripts
     ├── api/              # API endpoints to handle database CRUD operations
     └── config/           # Database connection handling (db_connect.php)
+
+	
 🛠️ Setup Instructions (Local Environment)
 To run this project locally on your machine:
 
@@ -36,6 +43,7 @@ Open phpMyAdmin and create a MySQL database (ensure the name matches what is req
 Make sure you run the appropriate DB migration SQL files for your users, orders, suppliers, expenses, and customers tables.
 Run Application: Access the system by pointing your web browser to:
 http://localhost/PrintSmart/Frontend/index.html
+
 🎨 Theme & Design
 The project features a highly unified, responsive visual language initialized via a streamlined CSS approach:
 
