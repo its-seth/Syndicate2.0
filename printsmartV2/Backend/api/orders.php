@@ -1,70 +1,86 @@
 <?php
-// Backend/api/orders.php — Orders API (MySQL)
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit(0); }
 
-require_once __DIR__ . '/../config/db_connect.php';
+require_once '../config/db_connect.php';
 
-$action = $_REQUEST['action'] ?? '';
-
+//action req
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 switch ($action) {
-    case 'get_orders':  
-        getOrders($pdo);    
+    case 'get_orders':
+        getOrders($conn);
         break;
 
-    case 'get_customers': 
-        getCustomers($pdo); 
+    case 'get_customers':
+        getCustomers($conn);
         break;
 
-    case 'add_order':     
-        addOrder($pdo);     
+    case 'add_order':
+        addOrder($conn);
         break;
 
-    case 'delete_order':  
-        deleteOrder($pdo);  
+    case 'delete_order':
+        deleteOrder($conn);
         break;
-
-    default: 
-    echo json_encode(['success' => false, 'message' => 'Invalid action']);
+    
+    default:
+        echo json_encode(['success' => false, 'message' => 'Invalid action']);
+        break;
 }
 
-function getOrders($pdo): void {
+//-----------------------------------------------------------------get order---------------------------------------------------------
+function getOrders($conn)
+{
     $sql = "SELECT o.*, c.name as customer_name, c.customer_id as customer_code 
             FROM orders o 
             LEFT JOIN customers c ON o.customer_id = c.id 
             ORDER BY o.id DESC";
-    $stmt = $pdo->query($sql);
-    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    
-    
+    $result = $conn->query($sql);
+
+    $orders = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+        }
+    }
+
     echo json_encode(['success' => true, 'data' => $orders]);
 }
 
-function addOrder($pdo): void {
-    if (!isset($_POST['order'])) {
-         echo json_encode(['success' => false, 'message' => 'No order data received']); 
-         return; 
-         }
 
-    $order        = $_POST['order'];
-    $customerId   = $order['customer_id'];
-    $order_date   = $order['order_date'];
-    $deadline     = $order['deadline'];
-    $status       = $order['status'];
+
+//------------------------------------------------------------add order--------------------------------------------------------------
+function addOrder($conn)
+{
+
+    if (!isset($_POST['order'])) {
+        echo json_encode(['success' => false, 'message' => 'No order data received']);
+        return;
+    }
+
+    $order = $_POST['order'];
+
+    $customer_id = $order['customer_id'];
+    $order_date = $order['order_date'];
+    $deadline = $order['deadline'];
+    $status = $order['status'];
     $total_amount = $order['total_amount'];
     $order_details = $order['order_details'];
-    
-    $stmt = $pdo->query("SELECT COUNT(id) FROM orders");
-    $count = $stmt->fetchColumn();
 
-    $next_number = $count + 1;
-    
+    $customer_id = (int)$customer_id;
+
+    $total_amount = (float)$total_amount;
+
+    $count_result = $conn->query("SELECT COUNT(*) as total FROM orders");
+    $count_row = $count_result->fetch_assoc();
+    $order_count = $count_row['total'];
+
+    $next_number = $order_count + 1;
+
     if ($next_number < 10) {
         $order_number = "#ORD-00" . $next_number;
     } elseif ($next_number < 100) {
@@ -72,29 +88,57 @@ function addOrder($pdo): void {
     } else {
         $order_number = "#ORD-" . $next_number;
     }
-    
-    $sql = "INSERT INTO orders (customer_id, order_number, order_date, deadline, status, total_amount, order_details) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$customerId, $order_number, $order_date, $deadline, $status, $total_amount, $order_details]);
-    
-    echo json_encode(['success' => true, 'message' => 'Order added successfully']);
-}
 
-function deleteOrder($pdo): void {
-    $id = $_POST['id'] ?? null;
-    if (!$id) { echo json_encode(['success' => false, 'message' => 'No ID provided']); return; }
-    try {
-        $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
-        $stmt->execute([$id]);
-        echo json_encode(['success' => true, 'message' => 'Order deleted']);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Delete failed: ' . $e->getMessage()]);
+    $sql = "INSERT INTO orders (customer_id, order_number, order_date, deadline, status, total_amount, order_details) 
+            VALUES ($customer_id, '$order_number', '$order_date', '$deadline', '$status', $total_amount, '$order_details')";
+
+
+    if ($conn->query($sql) === TRUE) {
+        
+        $new_id = $conn->insert_id;
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Order added successfully',
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to add order: ' . $conn->error
+        ]);
     }
 }
 
-function getCustomers($pdo): void {
-    $stmt = $pdo->query("SELECT id, name, customer_id FROM customers ORDER BY name ASC");
-    $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+//--------------------------------------------------------------------delete order--------------------------------------------------------------------------
+function deleteOrder($conn)
+{
+    $order_id = $_POST['id'];
+    
+    if ($conn->query("DELETE FROM orders WHERE id = $order_id")) {
+        echo json_encode(['success' => true, 'message' => 'Order deleted']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Delete failed: ' . $conn->error]);
+    }
+}
+
+
+//------------------------------------------------------------------------------get customers---------------------------------------------------
+function getCustomers($conn)
+{
+    $sql = "SELECT id, name FROM customers ORDER BY name";
+    $result = $conn->query($sql);
+
+    $customers = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $customers[] = $row;
+        }
+    }
+
     echo json_encode(['success' => true, 'data' => $customers]);
 }
+
+
+?>
