@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `total_amount` DECIMAL(10,2) DEFAULT 0.00,
     `order_details` TEXT,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE SET NULL
+    FOREIGN KEY (`customer_id`) REFERENCES `customers`(`id`) ON DELETE CASCADE
 );
 
 -- 5. Suppliers Table
