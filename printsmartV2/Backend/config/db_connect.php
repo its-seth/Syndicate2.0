@@ -1,6 +1,5 @@
 <?php
-// config/db_connect.php
-// MySQL Connection using PDO
+
 
 $host = 'localhost';
 $user = 'root';
@@ -22,5 +21,10 @@ try {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => "Connection failed: " . $e->getMessage()]);
     exit();
+}
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die(json_encode(['success' => false, 'message' => 'Database connection failed: ' . $conn->connect_error]));
 }
 ?>
