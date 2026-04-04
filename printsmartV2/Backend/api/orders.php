@@ -35,6 +35,10 @@ switch ($action) {
         updateOrder($conn);
         break;
 
+    case 'get_monthly_report':
+        getMonthlyReport($conn);
+        break;
+
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
         break;
@@ -213,4 +217,84 @@ function updateOrder($conn)
     }
 }
 
+//-----------------------------------------------------------------get monthly report---------------------------------------------------------
+function getMonthlyReport($conn)
+{
+    $month = isset($_GET['month']) ? (int)$_GET['month'] : 0;
+    $year = isset($_GET['year']) ? (int)$_GET['year'] : 0;
+
+    if ($month <= 0 || $month > 12 || $year <= 0) {
+        echo json_encode(['success' => false, 'message' => 'Invalid month or year']);
+        return;
+    }
+
+    // Get start and end dates for the month
+    $start_date = "$year-$month-01";
+    $end_date = date("Y-m-t", strtotime($start_date));
+
+    // Get all orders for the month
+    $sql = "SELECT o.*, c.name as customer_name, c.customer_id 
+            FROM orders o 
+            LEFT JOIN customers c ON o.customer_id = c.id 
+            WHERE o.order_date BETWEEN '$start_date' AND '$end_date'
+            ORDER BY o.order_date DESC";
+
+    $result = $conn->query($sql);
+    $orders = [];
+    $total_revenue = 0;
+    $status_count = ['completed' => 0, 'processing' => 0, 'pending' => 0];
+    $customer_totals = [];
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+            $total_revenue += $row['total_amount'];
+
+            // Count statuses
+            $status = strtolower($row['status']);
+            if (isset($status_count[$status])) {
+                $status_count[$status]++;
+            }
+
+            // Track customer totals for top customers
+            $customer_id = $row['customer_id'];
+            if (!isset($customer_totals[$customer_id])) {
+                $customer_totals[$customer_id] = [
+                    'name' => $row['customer_name'],
+                    'customer_id' => $row['customer_id'],
+                    'total_spent' => 0,
+                    'order_count' => 0
+                ];
+            }
+            $customer_totals[$customer_id]['total_spent'] += $row['total_amount'];
+            $customer_totals[$customer_id]['order_count']++;
+        }
+    }
+
+    // Calculate metrics
+    $total_orders = count($orders);
+    $avg_order_value = $total_orders > 0 ? $total_revenue / $total_orders : 0;
+    $completed_orders = $status_count['completed'];
+    $completion_rate = $total_orders > 0 ? round(($completed_orders / $total_orders) * 100, 1) : 0;
+
+    // Get top 5 customers
+    usort($customer_totals, function ($a, $b) {
+        return $b['total_spent'] <=> $a['total_spent'];
+    });
+    $top_customers = array_slice($customer_totals, 0, 5);
+
+    echo json_encode([
+        'success' => true,
+        'data' => [
+            'orders' => $orders,
+            'total_orders' => $total_orders,
+            'total_revenue' => $total_revenue,
+            'avg_order_value' => $avg_order_value,
+            'completed_orders' => $completed_orders,
+            'completion_rate' => $completion_rate,
+            'status_breakdown' => $status_count,
+            'top_customers' => array_values($top_customers)
+        ]
+    ]);
+}
 ?>

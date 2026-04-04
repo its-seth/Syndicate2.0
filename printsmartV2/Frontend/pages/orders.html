@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/orders.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 
@@ -317,6 +320,45 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- Month Selection Modal for Report -->
+    <div id="reportMonthModal" class="modal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h2>Generate Monthly Report</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Month</label>
+                    <select id="reportMonth" required>
+                        <option value="" disabled selected>Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Year</label>
+                    <select id="reportYear" required>
+                        <option value="" disabled selected>Select Year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeReportModal">Cancel</button>
+                <button class="save-btn" id="generateReportBtn">Generate Report</button>
             </div>
         </div>
     </div>
@@ -692,6 +734,193 @@
                     $('#viewOrderModal').hide();
                 }
             });
+
+            //-------------------------------------------------Report Generation---------------------------------------------------------
+            // Populate years in the report modal
+            function populateYears() {
+                const currentYear = new Date().getFullYear();
+                const yearSelect = $('#reportYear');
+                yearSelect.empty();
+                yearSelect.append('<option value="" disabled selected>Select Year</option>');
+                for (let year = currentYear - 2; year <= currentYear; year++) {
+                    yearSelect.append(`<option value="${year}">${year}</option>`);
+                }
+            }
+
+            // Open report modal
+            $('#reportBtn').click(function () {
+                populateYears();
+                $('#reportMonthModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            });
+
+            // Close report modal
+            $('#closeReportModal').click(function () {
+                $('#reportMonthModal').hide();
+            });
+
+            // Generate report
+            $('#generateReportBtn').click(function () {
+                const month = $('#reportMonth').val();
+                const year = $('#reportYear').val();
+
+                if (!month || !year) {
+                    showToast('Please select both month and year', 'error');
+                    return;
+                }
+
+                // Fetch report data
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: {
+                        action: 'get_monthly_report',
+                        month: month,
+                        year: year
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            generatePDF(response.data, month, year);
+                            $('#reportMonthModal').hide();
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error generating report', 'error');
+                    }
+                });
+            });
+
+            // Generate PDF report
+            // Generate PDF report (without detailed orders list)
+            function generatePDF(reportData, month, year) {
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+                const monthName = monthNames[parseInt(month) - 1];
+
+                // Create report HTML
+                const reportHTML = `
+        <div class="report-container">
+            <div class="report-header">
+                <h1>PrintSmart</h1>
+                <h2>Monthly Order Report</h2>
+                <p>${monthName} ${year}</p>
+                <p>Generated on: ${new Date().toLocaleString()}</p>
+            </div>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="label">Total Orders</div>
+                    <div class="value">${reportData.total_orders}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Total Revenue</div>
+                    <div class="value">LKR ${reportData.total_revenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Average Order Value</div>
+                    <div class="value">LKR ${reportData.avg_order_value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Completion Rate</div>
+                    <div class="value">${reportData.completion_rate}%</div>
+                    <div class="sub-value">${reportData.completed_orders} of ${reportData.total_orders} completed</div>
+                </div>
+            </div>
+            
+            <div class="status-breakdown">
+                <h3>Order Status Distribution</h3>
+                ${renderStatusBreakdown(reportData.status_breakdown, reportData.total_orders)}
+            </div>
+            
+            <div class="top-customers">
+                <h3>Top 5 Customers</h3>
+                ${renderTopCustomers(reportData.top_customers)}
+            </div>
+            
+            <div class="report-footer">
+                <p>Report generated by: Admin User | PrintSmart Order Management System</p>
+                <p>This is a computer-generated document. No signature required.</p>
+            </div>
+        </div>
+    `;
+
+                // Create a temporary div to hold the report
+                const element = document.createElement('div');
+                element.innerHTML = reportHTML;
+                document.body.appendChild(element);
+
+                // Generate PDF
+                html2pdf().from(element).set({
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: `PrintSmart_Report_${monthName}_${year}.pdf`,
+                    html2canvas: { scale: 2, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).save().then(() => {
+                    document.body.removeChild(element);
+                });
+            }
+
+            // Helper function to render status breakdown
+            function renderStatusBreakdown(breakdown, total) {
+                let html = '';
+                const statuses = ['completed', 'processing', 'pending'];
+                const statusLabels = { completed: 'Completed', processing: 'Processing', pending: 'Pending' };
+                const colors = { completed: '#059669', processing: '#2563eb', pending: '#d97706' };
+
+                for (const status of statuses) {
+                    const count = breakdown[status] || 0;
+                    const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                    html += `
+            <div class="status-item">
+                <div class="status-name">${statusLabels[status]}</div>
+                <div class="status-bar">
+                    <div class="status-fill ${status}" style="width: ${percentage}%;">
+                        ${percentage > 15 ? percentage + '%' : ''}
+                    </div>
+                </div>
+                <div class="status-count">${count} orders</div>
+            </div>
+        `;
+                }
+                return html;
+            }
+
+            // Helper function to render top customers
+            function renderTopCustomers(customers) {
+                if (!customers || customers.length === 0) {
+                    return '<p>No customer data available</p>';
+                }
+
+                let html = `
+        <table class="customers-table">
+            <thead>
+                <tr><th>Customer Name</th><th>Customer ID</th><th>Number of Orders</th><th>Total Spent</th></tr>
+            </thead>
+            <tbody>
+    `;
+
+                customers.forEach(customer => {
+                    html += `
+            <tr>
+                <td>${customer.name}</td>
+                <td>${customer.customer_id}</td>
+                <td>${customer.order_count}</td>
+                <td>LKR ${parseFloat(customer.total_spent).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+            </tr>
+        `;
+                });
+
+                html += `</tbody></table>`;
+                return html;
+            }
+
+            
 
 
             //---------------------------toast--------------------------------------------------
