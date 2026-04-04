@@ -189,6 +189,27 @@ body {
     color: var(--text-secondary);
 }
 
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--sidebar-bg);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    width: 300px;
+    transition: all 0.2s ease-in-out;
+}
+
+.search-box:hover,
+.search-box:focus-within {
+    background-color: var(--primary-light);
+    border-color: var(--primary-blue);
+}
+
+.search-box:focus-within svg {
+    stroke: var(--primary-blue) !important;
+}
+
 /* Generic Table Styles */
 .table-container {
     background-color: #FFFFFF;
