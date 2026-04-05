@@ -84,6 +84,30 @@
     color: #111827;
     cursor: pointer;
 }
+
+.report-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background-color: #61738c;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .report-btn:hover {
+            background-color: #4a5a70;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
 .save-btn {
     background-color: #0c4ea3;
     color: white;
@@ -131,3 +155,115 @@
 .actions svg.disabled:hover {
     color: inherit;
 }
+
+/* ========== ENHANCED SEARCH BAR ========== */
+ .search-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .search-box:focus-within {
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30,64,175,0.1);
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 260px;
+            font-size: 14px;
+        }
+
+/* ========== DELETE ICON – RED ========== */
+.actions svg.action-delete {
+    stroke: #dc2626;
+}
+.actions svg.action-delete:hover {
+    stroke: #b91c1c;
+    transform: scale(1.05);
+}
+
+ /* Additional styles for profile modal and search bar alignment */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .header-text {
+            flex: 1;
+        }
+        .top-bar-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+       
+/* Profile modal - uses same blue header as add/edit form */
+        .profile-modal .modal-header {
+            background-color: #0c4ea3;
+            color: white;
+            padding: 20px 25px;
+        }
+        .profile-modal .modal-header h2 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .profile-modal .modal-body {
+            padding: 25px;
+        }
+        .info-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 0; /* no order history, so no bottom margin needed */
+        }
+        .info-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .info-item label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748b;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .info-item .value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1e293b;
+            word-break: break-word;
+        }
+        .actions svg.action-delete {
+            stroke: #dc2626;
+        }
+        .actions svg.action-delete:hover {
+            stroke: #b91c1c;
+            transform: scale(1.05);
+        }
+        .actions svg.action-view:hover,
+        .actions svg.action-edit:hover {
+            stroke: #1e40af;
+            transform: scale(1.05);
+        }
