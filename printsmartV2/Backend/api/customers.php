@@ -25,12 +25,11 @@ function generateCustomerId($pdo): string {
 try {
     switch ($method) {
         case 'GET':
-            // Get filter parameters
             $from_date = $_GET['from_date'] ?? null;
             $to_date = $_GET['to_date'] ?? null;
             $search = $_GET['search'] ?? '';
 
-            // Check which columns exist in the table
+            // Check which columns exist
             $stmt = $pdo->query("SHOW COLUMNS FROM customers");
             $existingColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
             
@@ -50,9 +49,11 @@ try {
                 $params[] = $to_date . ' 23:59:59';
             }
             if ($search) {
-                $sql .= " AND (name LIKE ? OR phone LIKE ? OR email LIKE ?)";
+                // Search only by customer_id OR name (not phone/email)
+                $sql .= " AND (customer_id LIKE ? OR name LIKE ?)";
                 $like = "%$search%";
-                $params = array_merge($params, [$like, $like, $like]);
+                $params[] = $like;
+                $params[] = $like;
             }
             $sql .= " ORDER BY id DESC";
 
@@ -61,7 +62,7 @@ try {
             $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['success' => true, 'data' => $customers]);
             break;
-
+            
         case 'POST':
             $data = json_decode(file_get_contents('php://input'), true);
             if (!$data) { echo json_encode(['success' => false, 'message' => 'Invalid JSON']); break; }
