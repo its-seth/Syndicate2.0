@@ -4,54 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrintSmart - Customer Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/customers.css">
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+
 </head>
 <body>
 <div class="page-container">
+    <!-- SIDEBAR  -->
     <aside class="sidebar">
         <div class="logo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="brand-icon">
-                <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z" fill="currentColor"/>
-                <path d="M16 3H8V8H16V3Z" fill="currentColor"/>
-                <path d="M16 15H8V19H16V15Z" fill="#FFFFFF"/>
+                <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z" fill="#1D4ED8"/>
+                <path d="M16 3H8V8H16V3Z" fill="#1D4ED8"/>
+                <path d="M16 15H8V19H16V15Z" fill="#ffffff"/>
             </svg>
             PrintSmart
         </div>
         <nav class="menu">
-            <a href="../index.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</a>
-            <a href="orders.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Order Management</a>
-            <a href="customers.html" class="menu-item active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Customer Management</a>
-            <a href="suppliers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Supplier Management</a>
-            <a href="employees.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Employee Management</a>
-            <a href="expenses.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Expense Management</a>
+            <a href="../index.html" class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="orders.html" class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Order Management
+            </a>
+            <a href="customers.html" class="menu-item active">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Customer Management
+            </a>
+            <a href="suppliers.html" class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Supplier Management
+            </a>
+            <a href="employees.html" class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Employee Management
+            </a>
+            <a href="expenses.html" class="menu-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                Expense Management
+            </a>
         </nav>
-        <div class="user-info-box mt-auto" style="margin-top:auto;">
+        <div class="user-info-box">
             <div class="user-profile">
-                <div class="user-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                <div class="user-text"><strong>Admin User</strong><br><span>admin@printsmart.com</span></div>
+                <div class="user-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="user-text">
+                    <strong>Admin User</strong><br>
+                    <span>admin@printsmart.com</span>
+                </div>
             </div>
-            <a href="#" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
+            <a href="#" class="logout-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Log out
+            </a>
         </div>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main">
-        <header class="top-bar">
+        <div class="top-bar">
             <div class="header-text">
                 <h1>Customer Management</h1>
                 <p>Monitor and manage all customers.</p>
             </div>
-            <div style="display:flex; gap:16px; align-items:center;">
+            <div class="top-bar-actions">
                 <div class="search-box">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="searchInput" placeholder="Search customers..." disabled style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
+                    <input type="text" id="searchInput" placeholder="Search by name, email or phone...">
                 </div>
                 <button class="btn-primary" id="openAddCustomerBtn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                    Add New Customer
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                    Add Customer
                 </button>
             </div>
-        </header>
+        </div>
 
         <div class="table-container">
             <table>
@@ -69,27 +104,68 @@
                     <tr><td colspan="6" class="loading">Loading customers...</td></tr>
                 </tbody>
             </table>
+        
         </div>
 
-        <button class="report-btn" id="reportBtn" disabled>
+        <button class="report-btn" id="reportBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="11" y2="17"/></svg>
             Generate a Report
         </button>
+        <!-- Modal for date range selection -->
+<div id="reportModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:400px;">
+        <div class="modal-header">
+            <h2>Select Report Period</h2>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>From Date</label>
+                <input type="date" id="reportFromDate" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>To Date</label>
+                <input type="date" id="reportToDate" class="form-control">
+            </div>
+            <p id="dateRangeError" style="color:#b91c1c; font-size:12px; display:none;">Maximum range is 1 year (365 days).</p>
+        </div>
+        <div class="modal-footer">
+            <button class="cancel-btn" id="closeReportModalBtn">Cancel</button>
+            <button class="save-btn" id="confirmReportBtn">Generate Report</button>
+        </div>
     </div>
 </div>
+    </main>
+</div>
 
-<!-- Customer Modal -->
+<!-- MODAL: Add / Edit Customer -->
 <div id="customerModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2 id="modalTitle">Add New Customer</h2></div>
+        <div class="modal-header">
+            <h2 id="modalTitle">Add New Customer</h2>
+        </div>
         <div class="modal-body">
-            <div class="form-group"><label>CUSTOMER NAME *</label><input type="text" id="custName" placeholder="Enter customer name"></div>
-            <div class="form-row">
-                <div class="form-group half"><label>EMAIL</label><input type="email" id="custEmail" placeholder="Enter Email"></div>
-                <div class="form-group half"><label>CONTACT NUMBER *</label><input type="text" id="custPhone" placeholder="Enter Phone Number"></div>
+            <div class="form-group">
+                <label>CUSTOMER NAME *</label>
+                <input type="text" id="custName" placeholder="Enter customer name">
             </div>
-            <div class="form-group"><label>ADDRESS</label><input type="text" id="custAddress" placeholder="Enter Address"></div>
-            <div class="form-group"><label>ADDITIONAL DETAILS (OPTIONAL)</label><textarea id="custDetails" placeholder="Enter customer preferences" rows="3"></textarea></div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>EMAIL</label>
+                    <input type="email" id="custEmail" placeholder="Enter Email">
+                </div>
+                <div class="form-group half">
+                    <label>CONTACT NUMBER *</label>
+                    <input type="text" id="custPhone" placeholder="Enter Phone Number (digits only)">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>ADDRESS</label>
+                <input type="text" id="custAddress" placeholder="Enter Address">
+            </div>
+            <div class="form-group">
+                <label>ADDITIONAL DETAILS (OPTIONAL)</label>
+                <textarea id="custDetails" placeholder="Enter customer preferences (notes only)" rows="3"></textarea>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="cancel-btn" id="closeModalBtn">Cancel</button>
@@ -98,36 +174,96 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- MODAL: Delete Confirmation -->
 <div id="deleteConfirmModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header"><h2>Confirm Deletion</h2></div>
-        <div class="modal-body"><p id="deleteMessage">Are you sure you want to delete this customer?</p></div>
+        <div class="modal-header">
+            <h2>Confirm Deletion</h2>
+        </div>
+        <div class="modal-body">
+            <p id="deleteMessage">Are you sure you want to delete this customer?</p>
+        </div>
         <div class="modal-footer">
             <button class="cancel-btn" id="closeDeleteModalBtn">Cancel</button>
-            <button class="save-btn" id="confirmDeleteBtn" style="background-color:#b91c1c;">Delete</button>
+            <button class="save-btn" id="confirmDeleteBtn" style="background-color: #b91c1c;">Delete</button>
         </div>
     </div>
 </div>
 
+<!-- MODAL: View Customer Profile  -->
+<div id="viewProfileModal" class="modal">
+    <div class="modal-content profile-modal">
+        <div class="modal-header">
+            <h2 id="viewModalTitle">Customer Profile</h2>
+        </div>
+        <div class="modal-body">
+            <div class="info-section">
+                <h3>Personal Information</h3>
+                <div class="info-grid">
+                    <div class="info-item"><label>EMAIL</label>
+                        <div class="value" id="viewEmail">—</div></div>
+                    <div class="info-item"><label>PHONE</label><div class="value" id="viewPhone">—</div></div>
+                    <div class="info-item"><label>ADDRESS</label><div class="value" id="viewAddress">—</div></div>
+                    <div class="info-item"><label>ADDITIONAL DETAILS</label><div class="value" id="viewDetails">—</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="save-btn" id="closeViewModalBtn" style="background-color: #b91c1c;">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
 <div id="toastOverlay" class="toast-overlay">
-    <div class="toast-message" id="toastMessage">Added Successfully !!!</div>
+    <div class="toast-message" id="toastMessage">Success !</div>
 </div>
 
 <script>
+    // ========================
+    // CUSTOMER MANAGEMENT JS (with modal report + pie chart + calendars)
+    // ========================
+    
     const API_URL = '../../Backend/api/customers.php';
+    let currentSearch = '';
 
-    const tbody       = document.getElementById('customerTableBody');
-    const modal       = document.getElementById('customerModal');
-    const modalTitle  = document.getElementById('modalTitle');
-    const saveBtn     = document.getElementById('saveCustomerBtn');
+    // DOM Elements
+    const tbody = document.getElementById('customerTableBody');
+    const paginationDiv = document.getElementById('paginationControls');
+    const searchInput = document.getElementById('searchInput');
+    const openAddBtn = document.getElementById('openAddCustomerBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('customerModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const saveBtn = document.getElementById('saveCustomerBtn');
     const toastOverlay = document.getElementById('toastOverlay');
-    const toastMsg    = document.getElementById('toastMessage');
+    const toastMsg = document.getElementById('toastMessage');
+    const reportBtn = document.getElementById('reportBtn');
     const deleteModal = document.getElementById('deleteConfirmModal');
+    const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
     const deleteMessageSpan = document.getElementById('deleteMessage');
 
-    let pendingDeleteId = null, pendingDeleteName = '', editingCustomerId = null;
+    // Form fields
+    const custName = document.getElementById('custName');
+    const custEmail = document.getElementById('custEmail');
+    const custPhone = document.getElementById('custPhone');
+    const custAddress = document.getElementById('custAddress');
+    const custDetails = document.getElementById('custDetails');
 
+    // Report modal elements (assumes modal HTML is already present)
+    const reportModal = document.getElementById('reportModal');
+    const reportFromDate = document.getElementById('reportFromDate');
+    const reportToDate = document.getElementById('reportToDate');
+    const closeReportModalBtn = document.getElementById('closeReportModalBtn');
+    const confirmReportBtn = document.getElementById('confirmReportBtn');
+    const dateRangeError = document.getElementById('dateRangeError');
+
+    let editingCustomerId = null;
+    let pendingDeleteId = null;
+    let pendingDeleteName = '';
+
+    // ========== Helper functions (unchanged) ==========
     function showToast(message, isError = false) {
         toastMsg.textContent = message;
         toastMsg.style.backgroundColor = isError ? '#b91c1c' : '#0c5025';
@@ -136,76 +272,14 @@
     }
 
     function resetModalToAdd() {
-        modalTitle.textContent = 'Add New Customer'; saveBtn.textContent = 'Save Customer';
+        modalTitle.textContent = 'Add New Customer';
+        saveBtn.textContent = 'Save Customer';
         editingCustomerId = null;
-        ['custName','custEmail','custPhone','custAddress','custDetails'].forEach(id => document.getElementById(id).value = '');
-    }
-
-    async function loadCustomers() {
-        try {
-            const res  = await fetch(API_URL);
-            const data = await res.json();
-            if (data.success) renderTable(data.data);
-            else showToast('Failed to load customers', true);
-        } catch { showToast('Server error', true); }
-    }
-
-    function renderTable(customers) {
-        if (!customers.length) { tbody.innerHTML = '<tr><td colspan="6" class="loading">No customers found</td></tr>'; return; }
-        tbody.innerHTML = customers.map(c => `
-            <tr>
-                <td class="id-color">${escapeHtml(c.customer_id)}</td>
-                <td><b>${escapeHtml(c.name)}</b></td>
-                <td class="text-gray">${escapeHtml(c.phone)}</td>
-                <td class="text-gray">${escapeHtml(c.address||'')}</td>
-                <td><b>${escapeHtml(c.email||'')}</b></td>
-                <td class="actions">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" onclick="editCustomer('${c.id}','${escapeHtml(c.name)}','${escapeHtml(c.phone)}','${escapeHtml(c.email||'')}','${escapeHtml(c.address||'')}')"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" onclick="showDeleteConfirm('${c.id}','${escapeHtml(c.name)}')"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                </td>
-            </tr>`).join('');
-    }
-
-    function showDeleteConfirm(id, name) {
-        pendingDeleteId = id; pendingDeleteName = name;
-        deleteMessageSpan.textContent = `Delete "${name}"? This cannot be undone.`;
-        deleteModal.style.display = 'flex';
-    }
-
-    async function performDelete() {
-        if (!pendingDeleteId) return;
-        try {
-            const res  = await fetch(`${API_URL}/${pendingDeleteId}`, { method: 'DELETE' });
-            const data = await res.json();
-            if (data.success) { showToast(`✅ "${pendingDeleteName}" deleted`); loadCustomers(); }
-            else showToast('Delete failed: ' + data.message, true);
-        } catch { showToast('Server error', true); }
-        finally { deleteModal.style.display = 'none'; pendingDeleteId = null; }
-    }
-
-    async function saveCustomer() {
-        const name = document.getElementById('custName').value.trim();
-        const phone = document.getElementById('custPhone').value.trim();
-        const email = document.getElementById('custEmail').value.trim();
-        const address = document.getElementById('custAddress').value.trim();
-        if (!name || !phone) { showToast('Name and Phone are required!', true); return; }
-
-        const url    = editingCustomerId ? `${API_URL}/${editingCustomerId}` : API_URL;
-        const method = editingCustomerId ? 'PUT' : 'POST';
-        try {
-            const res  = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify({name,phone,email,address}) });
-            const data = await res.json();
-            if (data.success) { showToast(editingCustomerId ? '✅ Customer updated' : '✅ Customer added'); modal.style.display = 'none'; resetModalToAdd(); loadCustomers(); }
-            else showToast('Error: ' + data.message, true);
-        } catch { showToast('Server error', true); }
-    }
-
-    function editCustomer(id, name, phone, email, address) {
-        modalTitle.textContent = 'Edit Customer Details'; saveBtn.textContent = 'Update Customer';
-        editingCustomerId = id;
-        document.getElementById('custName').value = name; document.getElementById('custPhone').value = phone;
-        document.getElementById('custEmail').value = email; document.getElementById('custAddress').value = address;
-        modal.style.display = 'flex';
+        custName.value = '';
+        custEmail.value = '';
+        custPhone.value = '';
+        custAddress.value = '';
+        custDetails.value = '';
     }
 
     function escapeHtml(str) {
@@ -213,13 +287,582 @@
         return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
     }
 
-    document.getElementById('openAddCustomerBtn').addEventListener('click', () => { resetModalToAdd(); modal.style.display = 'flex'; });
-    document.getElementById('closeModalBtn').addEventListener('click', () => { modal.style.display = 'none'; resetModalToAdd(); });
-    saveBtn.addEventListener('click', saveCustomer);
-    document.getElementById('closeDeleteModalBtn').addEventListener('click', () => { deleteModal.style.display = 'none'; });
-    document.getElementById('confirmDeleteBtn').addEventListener('click', performDelete);
-    toastOverlay.addEventListener('click', () => { toastOverlay.style.display = 'none'; });
+    function escapeJsString(str) {
+        if (!str) return '';
+        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
 
+    // ========== Load & render customers (no pagination) ==========
+    async function loadCustomers() {
+        try {
+            let url = `${API_URL}?limit=10000`;
+            if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.success) {
+                renderTable(data.data);
+            } else {
+                showToast('Failed to load customers', true);
+                tbody.innerHTML = '<tr><td colspan="6" class="loading">Error loading data</td></tr>';
+            }
+        } catch (err) {
+            showToast('Server error - unable to connect', true);
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Connection error</td></tr>';
+        }
+    }
+
+    function renderTable(customers) {
+        if (!customers.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">No customers found</td></tr>';
+            return;
+        }
+        let html = '';
+        customers.forEach(c => {
+            const safeId = c.id;
+            const safeCustId = escapeHtml(c.customer_id);
+            const safeName = escapeHtml(c.name);
+            const safePhone = escapeHtml(c.phone);
+            const safeAddress = escapeHtml(c.address || '');
+            const safeEmail = escapeHtml(c.email || '');
+            html += `
+                <tr data-customer-id="${safeId}" data-name="${escapeJsString(c.name)}" data-phone="${escapeJsString(c.phone)}" data-email="${escapeJsString(c.email || '')}" data-address="${escapeJsString(c.address || '')}" data-details="${escapeJsString(c.additional_details || '')}">
+                    <td class="id-color">${safeCustId}</td>
+                    <td><b>${safeName}</b></td>
+                    <td class="text-gray">${safePhone}</td>
+                    <td class="text-gray">${safeAddress}</td>
+                    <td><b>${safeEmail}</b></td>
+                    <td class="actions">
+                        <svg class="action-view" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="action-edit" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <svg class="action-delete" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // ========== CRUD operations (unchanged) ==========
+    function showDeleteConfirm(id, name) {
+        pendingDeleteId = id;
+        pendingDeleteName = name;
+        deleteMessageSpan.textContent = `Delete "${name}"? This action cannot be undone.`;
+        deleteModal.style.display = 'flex';
+    }
+
+    async function performDelete() {
+        if (!pendingDeleteId) return;
+        try {
+            const res = await fetch(`${API_URL}/${pendingDeleteId}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✅ "${pendingDeleteName}" deleted successfully`);
+                loadCustomers();
+            } else {
+                showToast('Delete failed: ' + data.message, true);
+            }
+        } catch (err) {
+            showToast('Server error during deletion', true);
+        } finally {
+            deleteModal.style.display = 'none';
+            pendingDeleteId = null;
+        }
+    }
+
+    async function addCustomer() {
+        const name = custName.value.trim();
+        const phone = custPhone.value.trim();
+        const email = custEmail.value.trim();
+        const address = custAddress.value.trim();
+        const additional = custDetails.value.trim();
+
+        if (!name || !phone) {
+            showToast('Name and Phone number are required!', true);
+            return;
+        }
+        if (!/^\d+$/.test(phone)) {
+            showToast('Phone number must contain only digits', true);
+            return;
+        }
+        if (email && !/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email)) {
+            showToast('Please enter a valid email address', true);
+            return;
+        }
+
+        const payload = { name, phone, email, address, additional_details: additional };
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ Customer added successfully');
+                modal.style.display = 'none';
+                resetModalToAdd();
+                loadCustomers();
+            } else {
+                showToast('Error: ' + data.message, true);
+            }
+        } catch (err) {
+            showToast('Server error - add failed', true);
+        }
+    }
+
+    async function updateCustomer() {
+        if (!editingCustomerId) {
+            showToast('No customer selected', true);
+            return;
+        }
+        const name = custName.value.trim();
+        const phone = custPhone.value.trim();
+        const email = custEmail.value.trim();
+        const address = custAddress.value.trim();
+        const additional = custDetails.value.trim();
+
+        if (!name || !phone) {
+            showToast('Name and Phone are required!', true);
+            return;
+        }
+        if (!/^\d+$/.test(phone)) {
+            showToast('Phone number must contain only digits', true);
+            return;
+        }
+        if (email && !/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email)) {
+            showToast('Please enter a valid email address', true);
+            return;
+        }
+
+        const payload = { name, phone, email, address, additional_details: additional };
+        try {
+            const res = await fetch(`${API_URL}/${editingCustomerId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✅ Customer updated successfully`);
+                modal.style.display = 'none';
+                resetModalToAdd();
+                loadCustomers();
+            } else {
+                showToast('Update failed: ' + data.message, true);
+            }
+        } catch (err) {
+            showToast('Server error - update failed', true);
+        }
+    }
+
+    function openEditModal(customerRow) {
+        const id = customerRow.dataset.customerId;
+        const name = customerRow.dataset.name;
+        const phone = customerRow.dataset.phone;
+        const email = customerRow.dataset.email;
+        const address = customerRow.dataset.address;
+        const details = customerRow.dataset.details || '';
+
+        editingCustomerId = id;
+        modalTitle.textContent = 'Edit Customer Details';
+        saveBtn.textContent = 'Update Customer';
+        custName.value = name || '';
+        custPhone.value = phone || '';
+        custEmail.value = email || '';
+        custAddress.value = address || '';
+        custDetails.value = details;
+        modal.style.display = 'flex';
+    }
+
+    async function viewCustomerProfile(customerId) {
+        try {
+            const res = await fetch(`${API_URL}?limit=1000`);
+            const data = await res.json();
+            if (!data.success) throw new Error('Failed to fetch customer');
+            const customer = data.data.find(c => c.id == customerId);
+            if (!customer) throw new Error('Customer not found');
+
+            document.getElementById('viewModalTitle').innerText = `Customer Profile - ${customer.name}`;
+            document.getElementById('viewEmail').innerText = customer.email || '—';
+            document.getElementById('viewPhone').innerText = customer.phone;
+            document.getElementById('viewAddress').innerText = customer.address || '—';
+            document.getElementById('viewDetails').innerText = customer.additional_details || '—';
+
+            document.getElementById('viewProfileModal').style.display = 'flex';
+        } catch (err) {
+            console.error(err);
+            showToast('Failed to load customer details', true);
+        }
+    }
+
+    // ========== District extraction (unchanged) ==========
+    function extractDistrictFromAddress(address) {
+        if (!address) return null;
+        const lower = address.toLowerCase();
+        const districts = [
+            'colombo', 'galle', 'kandy', 'gampaha', 'kalutara', 'matara', 'hambantota',
+            'jaffna', 'kilinochchi', 'mannar', 'mullaitivu', 'vavuniya', 'puttalam',
+            'kurunegala', 'anuradhapura', 'polonnaruwa', 'trincomalee', 'batticaloa',
+            'ampara', 'badulla', 'monaragala', 'ratnapura', 'kegalle', 'matale', 'nuwara eliya'
+        ];
+        for (const district of districts) {
+            if (lower.includes(district)) {
+                return district.charAt(0).toUpperCase() + district.slice(1);
+            }
+        }
+        return null;
+    }
+
+    // ========== NEW REPORT LOGIC (modal + pie chart + calendars) ==========
+    // Open modal when "Generate a Report" button is clicked
+    reportBtn.addEventListener('click', () => {
+        if (!reportModal) {
+            showToast('Report modal not found. Please add the modal HTML.', true);
+            return;
+        }
+        // Set default dates: last 30 days
+        const today = new Date();
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setDate(today.getDate() - 30);
+        reportFromDate.value = oneMonthAgo.toISOString().slice(0,10);
+        reportToDate.value = today.toISOString().slice(0,10);
+        reportModal.style.display = 'flex';
+        if (dateRangeError) dateRangeError.style.display = 'none';
+    });
+
+    // Close modal
+    if (closeReportModalBtn) {
+        closeReportModalBtn.addEventListener('click', () => {
+            reportModal.style.display = 'none';
+            if (dateRangeError) dateRangeError.style.display = 'none';
+        });
+    }
+
+    // Confirm and generate report
+    if (confirmReportBtn) {
+        confirmReportBtn.addEventListener('click', async () => {
+            const from = reportFromDate.value;
+            const to = reportToDate.value;
+            if (!from || !to) {
+                showToast('Please select both dates', true);
+                return;
+            }
+            const fromDate = new Date(from);
+            const toDate = new Date(to);
+            const diffDays = Math.ceil(Math.abs(toDate - fromDate) / (1000*60*60*24));
+            if (diffDays > 365) {
+                if (dateRangeError) dateRangeError.style.display = 'block';
+                return;
+            }
+            if (dateRangeError) dateRangeError.style.display = 'none';
+            reportModal.style.display = 'none';
+            await generateReportWithDates(from, to);
+        });
+    }
+
+    async function generateReportWithDates(fromDate, toDate) {
+    try {
+        showToast('Generating report...', false);
+        
+        // Fetch customers filtered by date range
+        let url = `${API_URL}?limit=10000`;
+        if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
+        if (fromDate) url += `&from_date=${fromDate}`;
+        if (toDate) url += `&to_date=${toDate}`;
+        
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        if (!data.success || !data.data.length) {
+            showToast('No customers in selected period', true);
+            return;
+        }
+        
+        const customers = data.data;
+        const now = new Date();
+        const total = customers.length;
+        
+        // Added this month (within the filtered period)
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const addedThisMonth = customers.filter(c => {
+            if (!c.created_at) return false;
+            return new Date(c.created_at) >= firstDayOfMonth;
+        }).length;
+        
+        // District counts for pie chart
+        const districtCounts = {};
+        customers.forEach(c => {
+            const district = extractDistrictFromAddress(c.address);
+            if (district) districtCounts[district] = (districtCounts[district] || 0) + 1;
+        });
+        
+        // ----- Page 1: Header, cards, pie chart, calendars, addition log -----
+        const page1 = document.createElement('div');
+        page1.style.padding = '20px';
+        page1.style.fontFamily = 'Inter, sans-serif';
+        page1.style.backgroundColor = 'white';
+        page1.style.width = '1000px';
+        page1.innerHTML = `
+            <div style="text-align:center; margin-bottom:20px;">
+                <h1 style="color:#0c4ea3;">PrintSmart - Customer Report</h1>
+                <p style="font-size:14px; margin:5px 0;">Period: ${fromDate} to ${toDate}</p>
+                <p style="font-size:11px; color:#64748b;">Generated date: ${now.toLocaleDateString()}</p>
+            </div>
+            <div style="display:flex; gap:20px; margin-bottom:30px;">
+                <div style="flex:1; background:#f8fafc; padding:15px; border-radius:12px; text-align:center;">
+                    <div style="font-size:28px; font-weight:800;">${total}</div>
+                    <div>Total Customers</div>
+                </div>
+                <div style="flex:1; background:#f8fafc; padding:15px; border-radius:12px; text-align:center;">
+                    <div style="font-size:28px; font-weight:800;">${addedThisMonth}</div>
+                    <div>Added This Month</div>
+                </div>
+            </div>
+            <div style="text-align:center; margin:20px 0;">
+                <h3>📊 Customer Distribution by District</h3>
+                <canvas id="pieChartCanvas" width="400" height="400" style="max-width:100%; height:auto;"></canvas>
+                <div id="pieLegend" style="margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px;"></div>
+            </div>
+        `;
+        
+        document.body.appendChild(page1);
+        
+        // Draw pie chart
+        const canvas = page1.querySelector('#pieChartCanvas');
+        if (canvas && Object.keys(districtCounts).length > 0) {
+            const ctx = canvas.getContext('2d');
+            const width = 400, height = 400;
+            canvas.width = width; canvas.height = height;
+            const centerX = width/2, centerY = height/2;
+            const radius = 150;
+            const colors = ['#0c4ea3', '#f97316', '#10b981', '#ef4444', '#8b5cf6', '#f59e0b', '#ec489a', '#06b6d4', '#84cc16', '#6b7280'];
+            let startAngle = -Math.PI/2;
+            const totalCount = Object.values(districtCounts).reduce((a,b)=>a+b,0);
+            let legendHtml = '';
+            let colorIndex = 0;
+            for (const [district, count] of Object.entries(districtCounts)) {
+                const angle = (count / totalCount) * 2 * Math.PI;
+                const endAngle = startAngle + angle;
+                ctx.beginPath();
+                ctx.fillStyle = colors[colorIndex % colors.length];
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.fill();
+                legendHtml += `<div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:12px; height:12px; background:${colors[colorIndex % colors.length]}; border-radius:2px;"></span> ${district}: ${count}</div>`;
+                startAngle = endAngle;
+                colorIndex++;
+            }
+            const legendDiv = page1.querySelector('#pieLegend');
+            if (legendDiv) legendDiv.innerHTML = legendHtml;
+        } else {
+            const legendDiv = page1.querySelector('#pieLegend');
+            if (legendDiv) legendDiv.innerHTML = '<p>No district data available.</p>';
+        }
+        
+        // ----- Mini calendars for each month in the range -----
+        const startDate = new Date(fromDate);
+        const endDate = new Date(toDate);
+        const monthsMap = new Map(); // key: "YYYY-MM", value: Set of day numbers
+        customers.forEach(c => {
+            if (c.created_at) {
+                const d = new Date(c.created_at);
+                if (d >= startDate && d <= endDate) {
+                    const yearMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                    if (!monthsMap.has(yearMonth)) monthsMap.set(yearMonth, new Set());
+                    monthsMap.get(yearMonth).add(d.getDate());
+                }
+            }
+        });
+        
+        const sortedMonths = Array.from(monthsMap.keys()).sort();
+        let calendarsHtml = '<h3>📅 Customer Addition Dates</h3><div style="display:flex; flex-wrap:wrap; gap:20px; margin-bottom:20px;">';
+        for (const yearMonth of sortedMonths) {
+            const [year, month] = yearMonth.split('-').map(Number);
+            const firstDay = new Date(year, month-1, 1);
+            const lastDay = new Date(year, month, 0);
+            const daysInMonth = lastDay.getDate();
+            const startWeekday = firstDay.getDay(); // 0 = Sunday
+            const datesWithCustomers = monthsMap.get(yearMonth) || new Set();
+            
+            let calendarTable = `<table style="border-collapse:collapse; margin:0 auto; font-size:12px;">
+                <caption style="font-weight:bold; margin-bottom:5px;">${firstDay.toLocaleString('default', { month:'long', year:'numeric' })}</caption>
+                <thead><tr>${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<th style="padding:4px;">${d}</th>`).join('')}</thead>
+                <tbody><tr>`;
+            for (let i = 0; i < startWeekday; i++) calendarTable += '<td style="padding:4px;"> </td>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const hasCustomer = datesWithCustomers.has(day);
+                calendarTable += `<td style="padding:4px; text-align:center; position:relative;">
+                    ${day}
+                    ${hasCustomer ? '<span style="display:inline-block; width:6px; height:6px; background:#0c4ea3; border-radius:50%; position:absolute; bottom:2px; left:50%; transform:translateX(-50%);"></span>' : ''}
+                </td>`;
+                if ((startWeekday + day) % 7 === 0 && day !== daysInMonth) calendarTable += `</tr><tr>`;
+            }
+            const remaining = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
+            for (let i = 0; i < remaining; i++) calendarTable += '<td style="padding:4px;"> </td>';
+            calendarTable += `</tr></tbody></table>`;
+            calendarsHtml += `<div style="border:1px solid #e2e8f0; border-radius:8px; padding:8px; background:#f9fafb;">${calendarTable}</div>`;
+        }
+        calendarsHtml += '</div>';
+        
+        // ----- Addition log: which customers were added on each date -----
+        // Build an array of { date, customer_id, name } sorted by date
+        const additionEvents = [];
+        customers.forEach(c => {
+            if (c.created_at) {
+                const d = new Date(c.created_at);
+                if (d >= startDate && d <= endDate) {
+                    additionEvents.push({
+                        date: d.toISOString().slice(0,10),
+                        customer_id: c.customer_id,
+                        name: c.name
+                    });
+                }
+            }
+        });
+        additionEvents.sort((a,b) => a.date.localeCompare(b.date));
+        
+        let additionLogHtml = '<h3>📋 Customer Additions by Date</h3><table style="width:100%; border-collapse:collapse; margin-bottom:20px;">';
+        additionLogHtml += '<thead><tr style="background:#0c4ea3; color:white;"><th style="padding:8px;">Date</th><th>Customer ID</th><th>Customer Name</th></tr></thead><tbody>';
+        for (const ev of additionEvents) {
+            additionLogHtml += `<tr style="border-bottom:1px solid #e2e8f0;">
+                <td style="padding:8px;">${ev.date}</td>
+                <td style="padding:8px;">${escapeHtml(ev.customer_id)}</td>
+                <td style="padding:8px;">${escapeHtml(ev.name)}</td>
+            </tr>`;
+        }
+        additionLogHtml += '</tbody></table>';
+        
+        // Append calendars and addition log to page1
+        const calendarsContainer = document.createElement('div');
+        calendarsContainer.innerHTML = calendarsHtml + additionLogHtml;
+        page1.appendChild(calendarsContainer);
+        
+        // Capture page1
+        const canvas1 = await html2canvas(page1, { scale: 2 });
+        const imgData1 = canvas1.toDataURL('image/png');
+        document.body.removeChild(page1);
+        
+        // ----- Page 2: Full customer details table -----
+        const page2 = document.createElement('div');
+        page2.style.padding = '20px';
+        page2.style.fontFamily = 'Inter, sans-serif';
+        page2.style.backgroundColor = 'white';
+        page2.style.width = '1000px';
+        page2.innerHTML = `
+            <h3>📋 Complete Customer Details</h3>
+            <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead><tr style="background:#0c4ea3; color:white;">
+                    <th style="padding:8px;">Cust ID</th><th>Name</th><th>Phone</th><th>Address</th><th>Email</th>
+                </tr></thead>
+                <tbody>
+                    ${customers.map(c => `
+                        <tr style="border-bottom:1px solid #e2e8f0;">
+                            <td style="padding:8px;">${escapeHtml(c.customer_id)}</td>
+                            <td style="padding:8px;">${escapeHtml(c.name)}</td>
+                            <td style="padding:8px;">${escapeHtml(c.phone)}</td>
+                            <td style="padding:8px;">${escapeHtml(c.address || '—')}</td>
+                            <td style="padding:8px;">${escapeHtml(c.email || '—')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <div style="margin-top:20px; text-align:center; font-size:10px;">Generated ${now.toLocaleString()}</div>
+        `;
+        
+        document.body.appendChild(page2);
+        const canvas2 = await html2canvas(page2, { scale: 2 });
+        const imgData2 = canvas2.toDataURL('image/png');
+        document.body.removeChild(page2);
+        
+        // Build PDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210;
+        const imgHeight1 = (canvas1.height * imgWidth) / canvas1.width;
+        pdf.addImage(imgData1, 'PNG', 0, 0, imgWidth, imgHeight1);
+        pdf.addPage();
+        const imgHeight2 = (canvas2.height * imgWidth) / canvas2.width;
+        pdf.addImage(imgData2, 'PNG', 0, 0, imgWidth, imgHeight2);
+        pdf.save(`customers_report_${fromDate}_to_${toDate}.pdf`);
+        showToast('✅ Report downloaded');
+        
+    } catch (err) {
+        console.error(err);
+        showToast('Failed to generate report: ' + err.message, true);
+    }
+}
+
+    // ========== Event listeners ==========
+    tbody.addEventListener('click', (e) => {
+        let target = e.target;
+        while (target && target.tagName !== 'svg' && target !== tbody) {
+            target = target.parentElement;
+        }
+        if (!target || target.tagName !== 'svg') return;
+        const row = target.closest('tr');
+        if (!row) return;
+        const customerId = row.dataset.customerId;
+        if (target.classList.contains('action-view')) {
+            viewCustomerProfile(customerId);
+        } else if (target.classList.contains('action-edit')) {
+            openEditModal(row);
+        } else if (target.classList.contains('action-delete')) {
+            const name = row.dataset.name;
+            if (customerId && name) showDeleteConfirm(customerId, name);
+        }
+    });
+
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentSearch = e.target.value.trim();
+            loadCustomers();
+        }, 500);
+    });
+
+    openAddBtn.addEventListener('click', () => {
+        resetModalToAdd();
+        modal.style.display = 'flex';
+    });
+    closeModalBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        resetModalToAdd();
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            resetModalToAdd();
+        }
+        if (e.target === deleteModal) {
+            deleteModal.style.display = 'none';
+            pendingDeleteId = null;
+        }
+        if (e.target === document.getElementById('viewProfileModal')) {
+            document.getElementById('viewProfileModal').style.display = 'none';
+        }
+        if (e.target === reportModal) {
+            reportModal.style.display = 'none';
+            if (dateRangeError) dateRangeError.style.display = 'none';
+        }
+    });
+    saveBtn.addEventListener('click', () => {
+        if (editingCustomerId) updateCustomer();
+        else addCustomer();
+    });
+    closeDeleteModalBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+        pendingDeleteId = null;
+    });
+    confirmDeleteBtn.addEventListener('click', performDelete);
+    toastOverlay.addEventListener('click', () => {
+        toastOverlay.style.display = 'none';
+    });
+    document.getElementById('closeViewModalBtn').addEventListener('click', () => {
+        document.getElementById('viewProfileModal').style.display = 'none';
+    });
+
+    // Initial load
     loadCustomers();
 </script>
 </body>
