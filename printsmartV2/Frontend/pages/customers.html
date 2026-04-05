@@ -607,7 +607,7 @@
                     </div>
                 </div>
                 <div style="text-align:center; margin:20px 0;">
-                    <h3>📊 Customer Distribution by District</h3>
+                    <h3> Customer Distribution by District</h3>
                     <canvas id="pieChartCanvas" width="400" height="400" style="max-width:100%; height:auto;"></canvas>
                     <div id="pieLegend" style="margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px;"></div>
                 </div>
@@ -664,7 +664,7 @@
             });
             
             const sortedMonths = Array.from(monthsMap.keys()).sort();
-                let calendarsHtml = '<div style="margin:30px 0;"><h3 style="text-align:center; margin-bottom:20px;">📅 Customer Addition Dates</h3><div style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;">';
+                let calendarsHtml = '<div style="margin:30px 0;"><h3 style="text-align:center; margin-bottom:20px;"> Customer Addition Dates</h3><div style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;">';
                 for (const yearMonth of sortedMonths) {
                 const [year, month] = yearMonth.split('-').map(Number);
                 const firstDay = new Date(year, month-1, 1);
@@ -703,7 +703,7 @@
             const detailsSection = document.createElement('div');
             detailsSection.style.marginTop = '40px';
             detailsSection.innerHTML = `
-                <h3 style="margin-bottom:15px;">📋 Complete Customer Details</h3>
+                <h3 style="margin-bottom:15px;"> Complete Customer Details</h3>
                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                     <thead><tr style="background:#0c4ea3; color:white;">
                         <th style="padding:8px;">Cust ID</th>
@@ -737,11 +737,28 @@
             
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgWidth = 210;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            const pageWidth = 210;  
+            const pageHeight = 297; 
+            const margin = 10;       
+            const contentWidth = pageWidth - (margin * 2);
+            const contentHeight = pageHeight - (margin * 2);
+
+            let imgWidth = contentWidth;
+            let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            // If image height exceeds content height, scale to fit height instead
+            if (imgHeight > contentHeight) {
+                imgHeight = contentHeight;
+                imgWidth = (canvas.width * imgHeight) / canvas.height;
+            }
+
+            
+            const xOffset = margin + (contentWidth - imgWidth) / 2;
+            const yOffset = margin;
+
+            pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
             pdf.save(`customers_report_${fromDate}_to_${toDate}.pdf`);
-            showToast('✅ Report downloaded');
+                        showToast('✅ Report downloaded');
             
         } catch (err) {
             console.error(err);
