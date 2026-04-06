@@ -1,6 +1,30 @@
-/* suppliers.css - specific styles for this module */
+/* suppliers.css - matches orders.css style */
+/* Report button (same as orders) */
+.report-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background-color: #61738c;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+.report-btn:hover {
+    background-color: #4a5a70;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+}
 
-/* Modal styles */
+/* Modal styling (identical to orders) */
 .modal {
     display: none;
     position: fixed;
@@ -8,150 +32,141 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     align-items: center;
     justify-content: center;
-    z-index: 1100;
+    z-index: 1000;
 }
 .modal-content {
-    background: white;
-    border-radius: 28px;
-    width: 90%;
-    max-width: 520px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+    background-color: white;
+    width: 550px;
+    max-width: 90%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 .modal-header {
-    background: #3b82f6;
+    background-color: #0c4ea3;
     color: white;
-    padding: 18px 24px;
-    border-radius: 28px 28px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 20px 25px;
 }
-.modal-header h3 {
+.modal-header h2, .modal-header h3 {
     margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: white;
-}
-.modal-header .close-modal {
-    color: white;
-    font-size: 22px;
-    cursor: pointer;
-    opacity: 0.8;
-}
-.modal-header .close-modal:hover {
-    opacity: 1;
+    font-size: 16px;
+    font-weight: 700;
 }
 .modal-body {
-    padding: 24px;
+    padding: 25px;
 }
+.modal-footer {
+    padding: 0 25px 25px 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+.cancel-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+}
+.cancel-btn:hover {
+    color: #0c4ea3;
+}
+.save-btn {
+    background-color: #0c4ea3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.save-btn:hover {
+    background-color: #093b7b;
+}
+
+/* Form groups inside modals */
 .form-group {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 .form-group label {
     display: block;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #334155;
-    font-size: 13px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 .form-group input, .form-group textarea, .form-group select {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    font-size: 13px;
-    font-family: inherit;
-}
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 24px;
-}
-
-/* Supplier details view */
-.supplier-detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eef2f6;
-    font-size: 13px;
-}
-.supplier-detail-label {
-    font-weight: 600;
-    color: #475569;
-}
-.reminder-list {
-    margin-top: 20px;
-}
-.reminder-item {
-    background: #f8fafc;
-    border-radius: 14px;
     padding: 12px;
-    margin-bottom: 10px;
-    font-size: 13px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-group.half {
+    flex: 1;
 }
 
-/* Toast container centered */
-#toastContainer {
+/* Toast notifications (top-right, slide-in) */
+.toast-notification {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    pointer-events: none;
-}
-.toast {
-    background: white;
-    border-radius: 48px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    top: 20px;
+    right: 20px;
+    background-color: #10b981;
+    color: white;
     padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    pointer-events: auto;
-    animation: fadeInUp 0.3s ease;
-    border-left: 4px solid #10b981;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 3000;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-.toast.success {
-    border-left-color: #10b981;
+.toast-notification.error {
+    background-color: #ef4444;
 }
-.toast.success i {
-    color: #10b981;
-}
-.toast.error {
-    border-left-color: #ef4444;
-}
-.toast.error i {
-    color: #ef4444;
-}
-.toast.warning {
-    border-left-color: #f59e0b;
-}
-.toast i {
-    font-size: 18px;
-}
-.toast .toast-message {
-    color: #1e293b;
-}
-@keyframes fadeInUp {
+@keyframes slideIn {
     from {
+        transform: translateX(100%);
         opacity: 0;
-        transform: translateY(20px);
     }
     to {
+        transform: translateX(0);
         opacity: 1;
-        transform: translateY(0);
     }
+}
+
+/* Action buttons inside table */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+.action-buttons i {
+    cursor: pointer;
+    color: #9ca3af;
+    transition: all 0.2s;
+}
+.action-buttons i:hover {
+    color: #374151;
+    transform: scale(1.1);
+}
+/* Specific icon colors (optional) */
+.btn-view { color: #3b82f6; }
+.btn-edit { color: #f59e0b; }
+.btn-delete { color: #ef4444; }
+.btn-reminder { color: #8b5cf6; }
+
+/* Supplier ID column style (like order ID) */
+.id-color {
+    color: #1d4ed8;
+    font-weight: 500;
 }
