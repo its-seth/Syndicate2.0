@@ -211,17 +211,17 @@
             transform: translateY(-1px);
         }
 
-        .completed {
+        .badge.completed {
             background: #d1fae5;
             color: #059669;
         }
 
-        .pending {
+        .badge.pending {
             background: #fef3c7;
             color: #d97706;
         }
 
-        .processing {
+        .badge.processing {
             background: #dbeafe;
             color: #2563eb;
         }
@@ -289,3 +289,324 @@
                 margin: 20px;
             }
         }
+
+        /*-------------------------------- view order details*/
+        /* View Order Modal Styles */
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.profile-section {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 20px 0;
+}
+
+.section-title svg {
+    color: #0c4ea3;
+}
+
+.info-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.info-item.full {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-item.full svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9CA3AF;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.info-value {
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+}
+
+/* Status badge styles for view modal */
+#viewOrderStatus {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#viewOrderStatus.completed {
+    background: #d1fae5;
+    color: #059669;
+}
+
+#viewOrderStatus.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+#viewOrderStatus.processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Order number styling */
+#viewOrderNumber {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0c4ea3;
+    letter-spacing: 0.5px;
+}
+
+/* Modal body scrolling */
+.modal-body {
+    padding: 24px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-card, .profile-section {
+        padding: 16px;
+    }
+    
+    #viewOrderNumber {
+        font-size: 24px;
+    }
+    
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+    
+    .info-value {
+        font-size: 13px;
+    }
+}
+
+
+/*-----------------------------------------------------------report---------------------------------------------------*/
+/* Report Styles */
+.report-container {
+    padding: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: white;
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #0c4ea3;
+}
+
+.report-header h1 {
+    color: #0c4ea3;
+    margin: 0;
+    font-size: 28px;
+}
+
+.report-header h2 {
+    color: #374151;
+    margin: 10px 0 5px;
+    font-size: 20px;
+}
+
+.report-header p {
+    color: #6b7280;
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.summary-card {
+    flex: 1;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #0c4ea3;
+    min-width: 150px;
+}
+
+.summary-card .label {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.summary-card .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.summary-card .sub-value {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.status-breakdown {
+    margin-bottom: 30px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.status-breakdown h3 {
+    margin: 0 0 15px 0;
+    color: #374151;
+    font-size: 16px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: white;
+    border-radius: 6px;
+}
+
+.status-name {
+    width: 100px;
+    font-weight: 600;
+}
+
+.status-bar {
+    flex: 1;
+    height: 30px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+}
+
+.status-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-fill.completed { background: #059669; }
+.status-fill.processing { background: #2563eb; }
+.status-fill.pending { background: #d97706; }
+
+.status-count {
+    width: 80px;
+    text-align: right;
+    font-weight: 600;
+}
+
+.top-customers {
+    margin-bottom: 30px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.top-customers h3 {
+    margin: 0 0 15px 0;
+    color: #374151;
+    font-size: 16px;
+}
+
+.customers-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.customers-table th,
+.customers-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.customers-table th {
+    background: #e5e7eb;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.detailed-orders {
+    margin-top: 30px;
+}
+
+.detailed-orders h3 {
+    margin: 0 0 15px 0;
+    color: #374151;
+    font-size: 16px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #e5e7eb;
+    padding: 8px;
+    text-align: left;
+}
+
+.report-table th {
+    background: #f3f4f6;
+    font-weight: 600;
+}
+
+.report-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    text-align: center;
+    border-top: 1px solid #e5e7eb;
+    font-size: 10px;
+    color: #6b7280;
+}

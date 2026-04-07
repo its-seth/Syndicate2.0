@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,190 +8,934 @@
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/orders.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 </head>
+
 <body>
-<div class="page-container">
-    <aside class="sidebar">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="brand-icon">
-                <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z" fill="currentColor"/>
-                <path d="M16 3H8V8H16V3Z" fill="currentColor"/>
-                <path d="M16 15H8V19H16V15Z" fill="#FFFFFF"/>
-            </svg>
-            PrintSmart
-        </div>
-        <nav class="menu">
-            <a href="../index.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</a>
-            <a href="orders.html" class="menu-item active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg> Order Management</a>
-            <a href="customers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> Customer Management</a>
-            <a href="suppliers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Supplier Management</a>
-            <a href="employees.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Employee Management</a>
-            <a href="expenses.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Expense Management</a>
-        </nav>
-        <div class="user-info-box mt-auto" style="margin-top:auto;">
-            <div class="user-profile">
-                <div class="user-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                <div class="user-text"><strong>Admin User</strong><br><span>admin@printsmart.com</span></div>
+    <div class="page-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="brand-icon">
+                    <path d="M19 8H5C3.34315 8 2 9.34315 2 11V17H6V21H18V17H22V11C22 9.34315 20.6569 8 19 8Z"
+                        fill="currentColor" />
+                    <path d="M16 3H8V8H16V3Z" fill="currentColor" />
+                    <path d="M16 15H8V19H16V15Z" fill="#FFFFFF" />
+                </svg>
+                PrintSmart
             </div>
-            <a href="#" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Log out</a>
-        </div>
-    </aside>
-
-    <main class="main">
-        <header class="top-bar">
-            <div class="header-text">
-                <h1>Order Management</h1>
-                <p>Directory of all Orders and their details.</p>
-            </div>
-            <div style="display:flex; gap:16px; align-items:center;">
-                <div class="search-box">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    <input type="text" id="searchInput" placeholder="Search order by ID or name" style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
+            <nav class="menu">
+                <a href="../index.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg> Dashboard</a>
+                <a href="orders.html" class="menu-item active"><svg width="18" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg> Order Management</a>
+                <a href="customers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                        <path d="M16 3.13a4 4 0 010 7.75" />
+                    </svg> Customer Management</a>
+                <a href="suppliers.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg> Supplier Management</a>
+                <a href="employees.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg> Employee Management</a>
+                <a href="expenses.html" class="menu-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg> Expense Management</a>
+            </nav>
+            <div class="user-info-box mt-auto" style="margin-top:auto;">
+                <div class="user-profile">
+                    <div class="user-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg></div>
+                    <div class="user-text"><strong>Admin User</strong><br><span>admin@printsmart.com</span></div>
                 </div>
-                <button class="btn-primary" id="openAddorderModal">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                    Add Order
-                </button>
+                <a href="../login.html" class="logout-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg> Log out</a>
             </div>
-        </header>
+        </aside>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th><th>Customer</th><th>Deadline</th>
-                        <th>Status</th><th>Total Amount</th><th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTableBody"></tbody>
-            </table>
-        </div>
+        <main class="main">
+            <header class="top-bar">
+                <div class="header-text">
+                    <h1>Order Management</h1>
+                    <p>Directory of all Orders and their details.</p>
+                </div>
+                <div style="display:flex; gap:16px; align-items:center;">
+                    <div class="search-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search order by ID or name"
+                            style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
+                    </div>
+                    <button class="btn-primary" id="openAddorderModal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" style="vertical-align:middle; margin-right:4px;">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="8.5" cy="7" r="4" />
+                            <line x1="20" y1="8" x2="20" y2="14" />
+                            <line x1="23" y1="11" x2="17" y2="11" />
+                        </svg>
+                        Add Order
+                    </button>
+                </div>
+            </header>
 
-        <button class="report-btn" id="reportBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="11" y2="17"/></svg>
-            Generate a Report
-        </button>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th>Total Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+
+            <button class="report-btn" id="reportBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="9" y1="9" x2="15" y2="9" />
+                    <line x1="9" y1="13" x2="15" y2="13" />
+                    <line x1="9" y1="17" x2="11" y2="17" />
+                </svg>
+                Generate a Report
+            </button>
     </div>
-</div>
+    </div>
 
-<!-- Add Order Modal -->
-<div id="addorderModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header"><h2>Add a New Order</h2></div>
-        <div class="modal-body">
-            <div class="form-group"><label>Customer</label><select id="customer_id" required><option value="" disabled selected>Select Customer</option></select></div>
-            <div class="form-row">
-                <div class="form-group half"><label>Order Placed Date</label><input type="date" id="order_placed_date" required></div>
-                <div class="form-group half"><label>Deadline</label><input type="date" id="deadline" required></div>
+    <!-- Add Order Modal -->
+    <div id="addorderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add a New Order</h2>
             </div>
-            <div class="form-group"><label>Status</label>
-                <select id="status" required>
-                    <option value="" disabled selected>Select Status</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                </select>
+            <div class="modal-body">
+                <div class="form-group"><label>Customer</label><select id="customer_id" required>
+                        <option value="" disabled selected>Select Customer</option>
+                    </select></div>
+                <div class="form-row">
+                    <div class="form-group half"><label>Order Placed Date</label><input type="date"
+                            id="order_placed_date" required></div>
+                    <div class="form-group half"><label>Deadline</label><input type="date" id="deadline" required></div>
+                </div>
+                <div class="form-group"><label>Status</label>
+                    <select id="status" required>
+                        <option value="" disabled selected>Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Total Amount</label><input type="number" id="total_amount"
+                        placeholder="Enter Total Amount" required></div>
+                <div class="form-group"><label>Order Details</label><textarea id="order_details" rows="3"
+                        placeholder="Enter Order Details"></textarea></div>
             </div>
-            <div class="form-group"><label>Total Amount</label><input type="number" id="total_amount" placeholder="Enter Total Amount" required></div>
-            <div class="form-group"><label>Order Details</label><textarea id="order_details" rows="3" placeholder="Enter Order Details"></textarea></div>
-        </div>
-        <div class="modal-footer">
-            <button class="cancel-btn" id="closeAddorderModal">Cancel</button>
-            <button class="save-btn" id="saveOrderBtn">Save Order</button>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeAddorderModal">Cancel</button>
+                <button class="save-btn" id="saveOrderBtn">Save Order</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    const ORDER_API = '../../Backend/api/orders.php';
+    <!-- Edit Order Modal -->
+    <div id="editOrderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Order</h2>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit_order_id">
+                <div class="form-group">
+                    <label>Customer</label>
+                    <select id="edit_customer_id" required>
+                        <option value="" disabled>Select Customer</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Order Placed Date</label>
+                        <input type="date" id="edit_order_placed_date" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>Deadline</label>
+                        <input type="date" id="edit_deadline" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="edit_status" required>
+                        <option value="" disabled>Select Status</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Total Amount</label>
+                    <input type="number" id="edit_total_amount" placeholder="Enter Total Amount" required>
+                </div>
+                <div class="form-group">
+                    <label>Order Details</label>
+                    <textarea id="edit_order_details" rows="3" placeholder="Enter Order Details"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeEditOrderModal">Cancel</button>
+                <button class="save-btn" id="updateOrderBtn">Update Order</button>
+            </div>
+        </div>
+    </div>
 
-    $(document).ready(function () {
-        loadOrders();
-        loadCustomers();
+    <!-- View Order Modal -->
+    <div id="viewOrderModal" class="modal">
+        <div class="modal-content" style="width: 500px; background-color: #f9fafb;">
+            <div class="modal-header"
+                style="display:flex; justify-content:space-between; align-items:center; background-color: #0c4ea3; padding: 20px 24px;">
+                <h2 style="font-size: 16px; font-weight: 600; margin: 0; color: white;">Order Details</h2>
+                <button id="closeViewOrderModal"
+                    style="background:none; border:none; color:white; cursor:pointer; font-size: 20px;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px; max-height: 80vh; overflow-y: auto;">
 
-        function loadOrders() {
-            $.ajax({ url: ORDER_API, type: 'GET', data: { action: 'get_orders' }, dataType: 'json',
-                success: function (r) { if (r.success) displayOrders(r.data); else showToast('Error: ' + r.message, 'error'); },
-                error: function () { showToast('Error connecting to server', 'error'); }
-            });
-        }
+                <!-- Top Card with Order ID -->
+                <div class="profile-card">
+                    <div style="font-size: 28px; font-weight: 700; color: #0c4ea3; margin-bottom: 8px;"
+                        id="viewOrderNumber">#ORD-001</div>
+                    <div style="margin-top: 8px;"><span id="viewOrderStatus" class="badge"
+                            style="display: inline-block;">Pending</span></div>
+                </div>
 
-        function loadCustomers() {
-            $.ajax({ url: ORDER_API, type: 'GET', data: { action: 'get_customers' }, dataType: 'json',
-                success: function (r) {
-                    if (r.success) {
-                        const sel = $('#customer_id');
-                        sel.empty().append('<option value="" disabled selected>Select Customer</option>');
-                        r.data.forEach(c => sel.append(`<option value="${c.id}">${c.name}</option>`));
+                <!-- Order Details Section -->
+                <div class="profile-section">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-calendar" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Order Information
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <i class="fa-regular fa-calendar-check"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">ORDER PLACED DATE</span>
+                                <span class="info-value" id="viewOrderDate">Jan 15, 2024</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-regular fa-clock"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">DEADLINE</span>
+                                <span class="info-value" id="viewDeadline">Jan 30, 2024</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-solid fa-money-bill"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">TOTAL AMOUNT</span>
+                                <span class="info-value" id="viewTotalAmount">LKR 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Information Section -->
+                <div class="profile-section">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-user" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Customer Information
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <i class="fa-regular fa-user"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">CUSTOMER NAME</span>
+                                <span class="info-value" id="viewCustomerName">John Doe</span>
+                            </div>
+                        </div>
+                        <div class="info-item full">
+                            <i class="fa-regular fa-id-card"
+                                style="width: 18px; color: #9ca3af; margin-right: 12px; margin-top: 2px;"></i>
+                            <div>
+                                <span class="info-label">CUSTOMER ID</span>
+                                <span class="info-value" id="viewCustomerId">CUS-001</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Description Section -->
+                <div class="profile-section" style="margin-bottom:0;">
+                    <h4 class="section-title">
+                        <i class="fa-regular fa-file-lines" style="margin-right: 8px; color: #0c4ea3;"></i>
+                        Order Description
+                    </h4>
+                    <div class="info-grid">
+                        <div class="info-item full">
+                            <div>
+                                <span class="info-value" id="viewOrderDetails" style="line-height: 1.5;">No additional
+                                    details provided.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Month Selection Modal for Report -->
+    <div id="reportMonthModal" class="modal">
+        <div class="modal-content" style="width: 400px;">
+            <div class="modal-header">
+                <h2>Generate Monthly Report</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Month</label>
+                    <select id="reportMonth" required>
+                        <option value="" disabled selected>Select Month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Year</label>
+                    <select id="reportYear" required>
+                        <option value="" disabled selected>Select Year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeReportModal">Cancel</button>
+                <button class="save-btn" id="generateReportBtn">Generate Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadOrders();
+            loadCustomers();
+
+            // -------------------------------load orders------------------------------------
+            function loadOrders() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_orders' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            displayOrders(response.data);
+                        } else {
+                            showToast('Error loading orders: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
                     }
-                }
-            });
-        }
-
-        function displayOrders(orders) {
-            const tbody = $('#ordersTableBody');
-            tbody.empty();
-            if (!orders.length) { tbody.html('<tr><td colspan="6" style="text-align:center;">No orders found</td></tr>'); return; }
-            orders.forEach(function (o) {
-                tbody.append(`
-                    <tr data-id="${o.id}">
-                        <td class="id-color">${o.order_number}</td>
-                        <td>${o.customer_name}</td>
-                        <td>${formatDate(o.deadline)}</td>
-                        <td><span class="badge ${o.status.toLowerCase()}">${o.status}</span></td>
-                        <td>LKR ${parseFloat(o.total_amount).toLocaleString('en-IN',{minimumFractionDigits:2})}</td>
-                        <td class="actions">
-                            <i class="fa-regular fa-trash-can delete-order" data-id="${o.id}"></i>
-                        </td>
-                    </tr>`);
-            });
-        }
-
-        function formatDate(d) { if(!d) return 'N/A'; return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
-
-        $('#saveOrderBtn').click(function () {
-            const orderData = { customer_id: $('#customer_id').val(), order_date: $('#order_placed_date').val(),
-                deadline: $('#deadline').val(), status: $('#status').val(), total_amount: $('#total_amount').val(),
-                order_details: $('#order_details').val().trim() };
-            if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
-                showToast('Please fill all required fields', 'error'); return;
-            }
-            $.ajax({ url: ORDER_API, type: 'POST', data: { action: 'add_order', order: orderData }, dataType: 'json',
-                success: function (r) { if(r.success) { showToast('Order added!'); $('#addorderModal').hide(); resetModal(); loadOrders(); } else showToast('Error: ' + r.message, 'error'); },
-                error: function () { showToast('Error saving order', 'error'); }
-            });
-        });
-
-        $(document).on('click', '.delete-order', function () {
-            const id = $(this).data('id');
-            if (confirm('Delete this order?')) {
-                $.ajax({ url: ORDER_API, type: 'POST', data: { action: 'delete_order', id: id }, dataType: 'json',
-                    success: function (r) { if(r.success) { showToast('Order deleted!'); loadOrders(); } else showToast('Error: ' + r.message,'error'); }
                 });
             }
-        });
 
-        $('#searchInput').on('keyup', function () {
-            const t = $(this).val().toLowerCase();
-            $('#ordersTableBody tr').each(function () {
-                const show = $(this).find('td:first').text().toLowerCase().includes(t) || $(this).find('td:eq(1)').text().toLowerCase().includes(t);
-                $(this).toggle(show);
+            // -----------------------------------load customers-------------------------------
+            function loadCustomers() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_customers' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const select = $('#customer_id');
+                            select.empty();
+                            select.append('<option value="" disabled selected>Select Customer</option>');
+                            response.data.forEach(function (customer) {
+                                select.append(`<option value="${customer.id}">${customer.name}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
+
+            //------------------------------------------Display orders-----------------------------------------------
+            function displayOrders(orders) {
+                const tbody = $('#ordersTableBody');
+                tbody.empty();
+
+                if (orders.length === 0) {
+                    tbody.html('<tr><td colspan="6" style="text-align: center;">No orders found</td></tr>');
+                    return;
+                }
+
+                orders.forEach(function (order) {
+                    const statusClass = order.status.toLowerCase();
+                    const row = `
+                    <tr data-id="${order.id}">
+                        <td class="id-color">${order.order_number}</td>
+                        <td>${order.customer_name}</td>
+                        <td>${formatDate(order.deadline)}</td>
+                        <td><span class="badge ${statusClass}">${order.status}</span></td>
+                        <td>LKR ${parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td class="actions">
+                            <i class="fa-regular fa-eye view-order" data-id="${order.id}"></i>
+                            <i class="fa-regular fa-pen-to-square edit-order" data-id="${order.id}"></i>
+                            <i class="fa-regular fa-trash-can delete-order" data-id="${order.id}"></i>
+                        </td>
+                    </tr>
+                `;
+                    tbody.append(row);
+                });
+            }
+
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            // ------------------------------save new order-------------------------------------------------
+            $('#saveOrderBtn').click(function () {
+                const orderData = {
+                    customer_id: $('#customer_id').val(),
+                    order_date: $('#order_placed_date').val(),
+                    deadline: $('#deadline').val(),
+                    status: $('#status').val(),
+                    total_amount: $('#total_amount').val(),
+                    order_details: $('#order_details').val().trim()
+                };
+
+                if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
+                    showToast('Please fill all required fields', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'POST',
+                    data: { action: 'add_order', order: orderData },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showToast('Order added successfully!');
+                            $('#addorderModal').hide();
+                            resetModal();
+                            loadOrders();
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error saving order', 'error');
+                    }
+                });
             });
+
+
+            function resetModal() {
+                $('#customer_id').val('');
+                $('#order_placed_date').val('');
+                $('#deadline').val('');
+                $('#status').val('');
+                $('#total_amount').val('');
+                $('#order_details').val('');
+            }
+
+
+            $('#openAddorderModal').click(function () {
+                resetModal();
+                $('#addorderModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            });
+
+            $('#closeAddorderModal').click(function () {
+                $('#addorderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#addorderModal')) {
+                    $('#addorderModal').hide();
+                }
+            });
+
+            // ------------------------------------------Delete order----------------------------------------------
+            $(document).on('click', '.delete-order', function () {
+                const orderId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this order?')) {
+                    $.ajax({
+                        url: '../../Backend/api/orders.php',
+                        type: 'POST',
+                        data: { action: 'delete_order', id: orderId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                showToast('Order deleted successfully!');
+                                loadOrders();
+                            } else {
+                                showToast('Error: ' + response.message, 'error');
+                            }
+                        },
+                        error: function () {
+                            showToast('Error deleting order', 'error');
+                        }
+                    });
+                }
+            });
+
+
+            //-------------------------------------search-----------------------------------------------
+
+            $('#searchInput').on('keyup', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#ordersTableBody tr').each(function () {
+                    const orderId = $(this).find('td:first').text().toLowerCase();
+                    const customerName = $(this).find('td:eq(1)').text().toLowerCase();
+                    if (orderId.includes(searchTerm) || customerName.includes(searchTerm)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            //------------------------------edit order------------------------------------------------
+
+            // Load customers for edit dropdown
+            function loadCustomersForEdit() {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_customers' },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const select = $('#edit_customer_id');
+                            select.empty();
+                            select.append('<option value="" disabled>Select Customer</option>');
+                            response.data.forEach(function (customer) {
+                                select.append(`<option value="${customer.id}">${customer.name}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
+
+
+            // Get order details for editing
+            function getOrderForEdit(orderId) {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_order_details', id: orderId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            const order = response.data;
+                            // Fill the edit form with order data
+                            $('#edit_order_id').val(order.id);
+                            $('#edit_customer_id').val(order.customer_id);
+                            $('#edit_order_placed_date').val(order.order_date);
+                            $('#edit_deadline').val(order.deadline);
+                            $('#edit_status').val(order.status);
+                            $('#edit_total_amount').val(order.total_amount);
+                            $('#edit_order_details').val(order.order_details || '');
+
+                            // Show the modal
+                            $('#editOrderModal').css({
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'center'
+                            });
+                        } else {
+                            showToast('Error loading order: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
+                    }
+                });
+            }
+
+            // Edit order button click
+            $(document).on('click', '.edit-order', function () {
+                const orderId = $(this).data('id');
+                loadCustomersForEdit(); // Load customers first
+                getOrderForEdit(orderId); // Then load order details
+            });
+
+            // Update order
+            $('#updateOrderBtn').click(function () {
+                const orderData = {
+                    id: $('#edit_order_id').val(),
+                    customer_id: $('#edit_customer_id').val(),
+                    order_date: $('#edit_order_placed_date').val(),
+                    deadline: $('#edit_deadline').val(),
+                    status: $('#edit_status').val(),
+                    total_amount: $('#edit_total_amount').val(),
+                    order_details: $('#edit_order_details').val().trim()
+                };
+
+                // Validation
+                if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
+                    showToast('Please fill all required fields', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'POST',
+                    data: { action: 'update_order', order: orderData },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showToast('Order updated successfully!');
+                            $('#editOrderModal').hide();
+                            loadOrders(); // Refresh the orders table
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error updating order', 'error');
+                    }
+                });
+            });
+
+            // Close edit order modal
+            $('#closeEditOrderModal').click(function () {
+                $('#editOrderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#editOrderModal')) {
+                    $('#editOrderModal').hide();
+                }
+            });
+
+            //------------------------------view order details------------------------------------------
+
+            // View order details
+            $(document).on('click', '.view-order', function () {
+                const orderId = $(this).data('id');
+                getOrderDetails(orderId);
+            });
+            // Function to get single order details
+            function getOrderDetails(orderId) {
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: { action: 'get_order_details', id: orderId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            displayOrderDetails(response.data);
+                        } else {
+                            showToast('Error loading order details: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error connecting to server', 'error');
+                    }
+                });
+            }
+
+            // Function to display order details in modal
+            function displayOrderDetails(order) {
+                // Set Order Number (enlarged at top)
+                $('#viewOrderNumber').text(order.order_number);
+
+                // Set Status with appropriate class
+                const statusClass = order.status.toLowerCase();
+                $('#viewOrderStatus').removeClass('pending processing completed').addClass(statusClass);
+                $('#viewOrderStatus').text(order.status);
+
+                // Set Order Information
+                $('#viewOrderDate').text(formatDate(order.order_date));
+                $('#viewDeadline').text(formatDate(order.deadline));
+                $('#viewTotalAmount').text('LKR ' + parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+                // Set Customer Information
+                $('#viewCustomerName').text(order.customer_name);
+                $('#viewCustomerId').text(order.customer_code || 'N/A');
+
+                // Set Order Description
+                const orderDetails = order.order_details && order.order_details.trim() !== '' ? order.order_details : 'No additional details provided.';
+                $('#viewOrderDetails').text(orderDetails);
+
+                // Show the modal
+                $('#viewOrderModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            }
+
+            // Close view order modal
+            $('#closeViewOrderModal').click(function () {
+                $('#viewOrderModal').hide();
+            });
+
+            $(window).click(function (e) {
+                if ($(e.target).is('#viewOrderModal')) {
+                    $('#viewOrderModal').hide();
+                }
+            });
+
+            //-------------------------------------------------Report Generation---------------------------------------------------------
+            // Populate years in the report modal
+            function populateYears() {
+                const currentYear = new Date().getFullYear();
+                const yearSelect = $('#reportYear');
+                yearSelect.empty();
+                yearSelect.append('<option value="" disabled selected>Select Year</option>');
+                for (let year = currentYear - 2; year <= currentYear; year++) {
+                    yearSelect.append(`<option value="${year}">${year}</option>`);
+                }
+            }
+
+            // Open report modal
+            $('#reportBtn').click(function () {
+                populateYears();
+                $('#reportMonthModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            });
+
+            // Close report modal
+            $('#closeReportModal').click(function () {
+                $('#reportMonthModal').hide();
+            });
+
+            // Generate report
+            $('#generateReportBtn').click(function () {
+                const month = $('#reportMonth').val();
+                const year = $('#reportYear').val();
+
+                if (!month || !year) {
+                    showToast('Please select both month and year', 'error');
+                    return;
+                }
+
+                // Fetch report data
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'GET',
+                    data: {
+                        action: 'get_monthly_report',
+                        month: month,
+                        year: year
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            generatePDF(response.data, month, year);
+                            $('#reportMonthModal').hide();
+                        } else {
+                            showToast('Error: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Error generating report', 'error');
+                    }
+                });
+            });
+
+            // Generate PDF report
+            // Generate PDF report (without detailed orders list)
+            function generatePDF(reportData, month, year) {
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+                const monthName = monthNames[parseInt(month) - 1];
+
+                // Create report HTML
+                const reportHTML = `
+        <div class="report-container">
+            <div class="report-header">
+                <h1>PrintSmart</h1>
+                <h2>Monthly Order Report</h2>
+                <p>${monthName} ${year}</p>
+                <p>Generated on: ${new Date().toLocaleString()}</p>
+            </div>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="label">Total Orders</div>
+                    <div class="value">${reportData.total_orders}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Total Revenue</div>
+                    <div class="value">LKR ${reportData.total_revenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Average Order Value</div>
+                    <div class="value">LKR ${reportData.avg_order_value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Completion Rate</div>
+                    <div class="value">${reportData.completion_rate}%</div>
+                    <div class="sub-value">${reportData.completed_orders} of ${reportData.total_orders} completed</div>
+                </div>
+            </div>
+            
+            <div class="status-breakdown">
+                <h3>Order Status Distribution</h3>
+                ${renderStatusBreakdown(reportData.status_breakdown, reportData.total_orders)}
+            </div>
+            
+            <div class="top-customers">
+                <h3>Top 5 Customers</h3>
+                ${renderTopCustomers(reportData.top_customers)}
+            </div>
+            
+            <div class="report-footer">
+                <p>Report generated by: Admin User | PrintSmart Order Management System</p>
+                <p>This is a computer-generated document. No signature required.</p>
+            </div>
+        </div>
+    `;
+
+                // Create a temporary div to hold the report
+                const element = document.createElement('div');
+                element.innerHTML = reportHTML;
+                document.body.appendChild(element);
+
+                // Generate PDF
+                html2pdf().from(element).set({
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: `PrintSmart_Report_${monthName}_${year}.pdf`,
+                    html2canvas: { scale: 2, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                }).save().then(() => {
+                    document.body.removeChild(element);
+                });
+            }
+
+            // Helper function to render status breakdown
+            function renderStatusBreakdown(breakdown, total) {
+                let html = '';
+                const statuses = ['completed', 'processing', 'pending'];
+                const statusLabels = { completed: 'Completed', processing: 'Processing', pending: 'Pending' };
+                const colors = { completed: '#059669', processing: '#2563eb', pending: '#d97706' };
+
+                for (const status of statuses) {
+                    const count = breakdown[status] || 0;
+                    const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                    html += `
+            <div class="status-item">
+                <div class="status-name">${statusLabels[status]}</div>
+                <div class="status-bar">
+                    <div class="status-fill ${status}" style="width: ${percentage}%;">
+                        ${percentage > 15 ? percentage + '%' : ''}
+                    </div>
+                </div>
+                <div class="status-count">${count} orders</div>
+            </div>
+        `;
+                }
+                return html;
+            }
+
+            // Helper function to render top customers
+            function renderTopCustomers(customers) {
+                if (!customers || customers.length === 0) {
+                    return '<p>No customer data available</p>';
+                }
+
+                let html = `
+        <table class="customers-table">
+            <thead>
+                <tr><th>Customer Name</th><th>Customer ID</th><th>Number of Orders</th><th>Total Spent</th></tr>
+            </thead>
+            <tbody>
+    `;
+
+                customers.forEach(customer => {
+                    html += `
+            <tr>
+                <td>${customer.name}</td>
+                <td>${customer.customer_id}</td>
+                <td>${customer.order_count}</td>
+                <td>LKR ${parseFloat(customer.total_spent).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+            </tr>
+        `;
+                });
+
+                html += `</tbody></table>`;
+                return html;
+            }
+
+            
+
+
+            //---------------------------toast--------------------------------------------------
+
+            function showToast(message, type = 'success') {
+                const toast = $(`<div class="toast-notification ${type}">${message}</div>`);
+                $('body').append(toast);
+                setTimeout(function () {
+                    toast.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }, 3000);
+            }
         });
-
-        $('#openAddorderModal').click(function () { resetModal(); $('#addorderModal').css({'display':'flex','align-items':'center','justify-content':'center'}); });
-        $('#closeAddorderModal').click(function () { $('#addorderModal').hide(); });
-        $(window).click(function (e) { if ($(e.target).is('#addorderModal')) $('#addorderModal').hide(); });
-
-        function resetModal() { $('#customer_id,#order_placed_date,#deadline,#status,#total_amount,#order_details').val(''); }
-
-        function showToast(msg, type = 'success') {
-            const t = $(`<div class="toast-notification ${type}">${msg}</div>`);
-            $('body').append(t);
-            setTimeout(() => t.fadeOut(300, function(){ $(this).remove(); }), 3000);
-        }
-    });
-</script>
+    </script>
 </body>
+
 </html>

@@ -27,15 +27,7 @@
     color: #1e40af;
 }
 
-.yellow-avatar {
-    background-color: #fef3c7;
-    color: #d97706;
-}
 
-.purple-avatar {
-    background-color: #f3e8ff;
-    color: #7e22ce;
-}
 
 /* Role Badges Exact Colors */
 .role-badge {
@@ -261,4 +253,135 @@
     font-size: 14px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+}
+
+/* View Profile Modal Styles */
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.profile-role {
+    font-size: 14px;
+    color: #2563EB;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+}
+
+.profile-id-badge {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.profile-section {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 20px 0;
+}
+
+.section-title svg {
+    color: #3b82f6;
+}
+
+.badge-status {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.info-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.info-grid.dual {
+    grid-template-columns: 1fr 1fr;
+}
+
+.info-item.full {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-item.col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9CA3AF;
+    letter-spacing: 0.05em;
+}
+
+.info-value {
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* User Custom Hover States for Specific Buttons */
+.delete-btn:hover {
+    stroke: red !important;
+}
+
+#saveEditEmployeeBtn:hover {
+    background-color: black !important;
+    border-color: black !important;
+}
+
+.edit-btn:hover,
+.view-btn:hover {
+    stroke: black !important;
 }
