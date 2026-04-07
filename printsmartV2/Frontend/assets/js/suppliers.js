@@ -1,12 +1,25 @@
-// assets/js/suppliers.js — All API paths updated to Backend/api/suppliers.php
-
-const SUPP_API   = '../../Backend/api/suppliers.php';
-const REPORT_URL = '../../Backend/reports/suppliers.php';
+// assets/js/suppliers.js — rewritten to match order page style
+const SUPP_API = '/Syndicate/Syndicate2.0/printsmartV2/Backend/api/suppliers.php';
+const REPORT_URL = '/Syndicate/Syndicate2.0/printsmartV2/Backend/reports/suppliers.php';
 
 $(document).ready(function () {
+    // Load suppliers on page load
+    loadSuppliers();
 
-    $('#addSupplierBtn').click(function () { $('#addModal').show(); });
+    // Search with debounce
+    let searchTimer;
+    $('#searchInput').on('input', function () {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => loadSuppliers($(this).val().trim()), 300);
+    });
 
+    // Add Supplier button
+    $('#addSupplierBtn').click(function () {
+        resetAddModal();
+        $('#addModal').css('display', 'flex');
+    });
+
+    // Add form submission
     $('#addSupplierForm').submit(function (e) {
         e.preventDefault();
         $.post(SUPP_API, { action: 'add', data: $(this).serialize() }, function (response) {
@@ -15,10 +28,13 @@ $(document).ready(function () {
                 $('#addModal').hide();
                 $('#addSupplierForm')[0].reset();
                 loadSuppliers();
-            } else { showToast('Error: ' + (response.message || 'Unknown error'), 'error'); }
+            } else {
+                showToast('Error: ' + (response.message || 'Unknown error'), 'error');
+            }
         }, 'json').fail(() => showToast('Server error', 'error'));
     });
 
+    // Edit form submission
     $('#editSupplierForm').submit(function (e) {
         e.preventDefault();
         $.post(SUPP_API, { action: 'edit', data: $(this).serialize() }, function (response) {
@@ -26,10 +42,13 @@ $(document).ready(function () {
                 showToast('Supplier updated successfully!', 'success');
                 $('#editModal').hide();
                 loadSuppliers();
-            } else { showToast('Error: ' + (response.message || 'Unknown error'), 'error'); }
+            } else {
+                showToast('Error: ' + (response.message || 'Unknown error'), 'error');
+            }
         }, 'json').fail(() => showToast('Server error', 'error'));
     });
 
+    // Reminder form submission
     $('#reminderForm').submit(function (e) {
         e.preventDefault();
         $.post(SUPP_API, { action: 'add_reminder', data: $(this).serialize() }, function (response) {
@@ -37,28 +56,35 @@ $(document).ready(function () {
                 showToast('Reminder set successfully!', 'success');
                 $('#reminderModal').hide();
                 $('#reminderForm')[0].reset();
-            } else { showToast('Error adding reminder', 'error'); }
+                // Refresh reminders if view modal is open
+                let supplierId = $('#reminder_supplier_id').val();
+                if (supplierId && $('#viewModal').is(':visible')) {
+                    loadReminders(supplierId);
+                }
+            } else {
+                showToast('Error adding reminder', 'error');
+            }
         }, 'json').fail(() => showToast('Server error', 'error'));
     });
 
-    $('#generateReportBtn').click(function () { window.open(REPORT_URL, '_blank'); });
+    // Generate Report button
+    $('#generateReportBtn').click(function () {
+        window.open(REPORT_URL, '_blank');
+    });
 
-    $(document).on('click', '.close-modal, .modal', function (e) {
-        if ($(e.target).hasClass('modal') || $(e.target).hasClass('close-modal')) {
+    // Close modals when clicking on background or X
+    $(document).on('click', '.modal', function (e) {
+        if ($(e.target).is('.modal')) {
             $('.modal').hide();
         }
     });
-
-    let searchTimer;
-    $('#searchInput').on('input', function () {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => loadSuppliers($(this).val().trim()), 300);
+    $(document).on('click', '.close-modal', function () {
+        $(this).closest('.modal').hide();
     });
-
-    loadSuppliers();
 });
 
 function loadSuppliers(search = '') {
+    $('#supplierTableBody').html('<tr><td colspan="6" style="text-align:center;">Loading...</td></tr>');
     $.post(SUPP_API, { action: 'list', search: search }, function (data) {
         let html = '';
         if (!data.length) {
@@ -67,73 +93,101 @@ function loadSuppliers(search = '') {
             data.forEach(function (s) {
                 html += `
                     <tr>
-                        <td>#SUP-${s.SID.slice(-4).toUpperCase()}</td>
-                        <td>${escHtml(s.SName)}</td>
-                        <td>${escHtml(s.supply_type)}</td>
-                        <td>${escHtml(s.SContact_No)}</td>
-                        <td>${escHtml(s.SEmail)}</td>
+                        <td class="id-color">${escapeHtml(s.supplier_id)}</td>
+                        <td>${escapeHtml(s.SName)}</td>
+                        <td>${escapeHtml(s.supply_type)}</td>
+                        <td>${escapeHtml(s.SContact_No)}</td>
+                        <td>${escapeHtml(s.SEmail)}</td>
                         <td class="action-buttons">
-                            <button class="btn-view" onclick="loadSupplierDetails('${s.SID}')">View</button>
-                            <button class="btn-edit" onclick="loadSupplierForEdit('${s.SID}')">Edit</button>
-                            <button class="btn-delete" onclick="deleteSupplier('${s.SID}')">Delete</button>
+                            <i class="fa-regular fa-eye btn-view" onclick="viewSupplier(${s.id})" title="View"></i>
+                            <i class="fa-regular fa-pen-to-square btn-edit" onclick="editSupplier(${s.id})" title="Edit"></i>
+                            <i class="fa-regular fa-trash-can btn-delete" onclick="deleteSupplier(${s.id})" title="Delete"></i>
+                            <i class="fa-regular fa-bell btn-reminder" onclick="openReminderModal(${s.id}, '${escapeHtml(s.SName)}')" title="Set Reminder"></i>
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
         }
         $('#supplierTableBody').html(html);
-    }, 'json').fail(() => $('#supplierTableBody').html('<tr><td colspan="6">Failed to load. Is the server running?</td></tr>'));
+    }, 'json').fail(() => {
+        $('#supplierTableBody').html('<tr><td colspan="6">Failed to load. Is the server running?</td></tr>');
+        showToast('Error connecting to server', 'error');
+    });
 }
 
-function loadSupplierDetails(id) {
+function viewSupplier(id) {
     $.post(SUPP_API, { action: 'view', id: id }, function (s) {
-        if (s.error) { showToast(s.error, 'error'); return; }
-        const dueDate = s.SDueDate || 'N/A';
-        const today   = new Date(); const due = new Date(dueDate);
-        const overdue = due < today ? '<span style="color:red;"> (OVERDUE)</span>' : '';
+        if (s.error) {
+            showToast(s.error, 'error');
+            return;
+        }
+        const dueDate = s.SDueDate ? new Date(s.SDueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+        const today = new Date();
+        const due = new Date(s.SDueDate);
+        const overdue = (s.SDueDate && due < today) ? '<span style="color:red;"> (OVERDUE)</span>' : '';
+        
         $('#viewModalBody').html(`
-            <p><strong>Name:</strong> ${escHtml(s.SName)}</p>
-            <p><strong>Email:</strong> ${escHtml(s.SEmail)}</p>
-            <p><strong>Contact:</strong> ${escHtml(s.SContact_No)}</p>
-            <p><strong>Address:</strong> ${escHtml(s.SAddress)}</p>
-            <p><strong>Supplies:</strong> ${escHtml(s.supply_type)}</p>
-            <p><strong>Details:</strong> ${escHtml(s.supply_details)}</p>
-            <p><strong>Total Amount:</strong> LKR ${parseFloat(s.Stotal).toFixed(2)}</p>
-            <p><strong>Due Date:</strong> ${dueDate}${overdue}</p>
+            <div style="margin-bottom:20px;">
+                <p><strong>Supplier ID:</strong> ${escapeHtml(s.supplier_id)}</p>
+                <p><strong>Name:</strong> ${escapeHtml(s.SName)}</p>
+                <p><strong>Email:</strong> ${escapeHtml(s.SEmail)}</p>
+                <p><strong>Contact:</strong> ${escapeHtml(s.SContact_No)}</p>
+                <p><strong>Address:</strong> ${escapeHtml(s.SAddress || 'N/A')}</p>
+                <p><strong>Supplies:</strong> ${escapeHtml(s.supply_type)}</p>
+                <p><strong>Details:</strong> ${escapeHtml(s.supply_details || 'N/A')}</p>
+                <p><strong>Total Amount:</strong> LKR ${parseFloat(s.Stotal).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                <p><strong>Due Date:</strong> ${dueDate}${overdue}</p>
+            </div>
             <hr>
-            <div id="remindersContainer"></div>
-            <button class="btn-primary" style="margin-top:12px;" onclick="openReminderModal('${s.SID}','${escHtml(s.SName)}')">Set Reminder</button>
-            <button class="btn-delete" style="margin-top:12px;margin-left:8px;" onclick="deleteSupplier('${s.SID}',true)">Delete Supplier</button>
+            <div id="remindersContainer"><p>Loading reminders...</p></div>
+            <div style="margin-top:20px; display:flex; gap:10px;">
+                <button class="save-btn" onclick="openReminderModal(${s.id}, '${escapeHtml(s.SName)}')">Set Reminder</button>
+                <button class="cancel-btn" onclick="deleteSupplier(${s.id}, true)">Delete Supplier</button>
+            </div>
         `);
-        loadReminders(s.SID);
-        $('#viewModal').show();
-    }, 'json');
+        $('#viewModal').css('display', 'flex');
+        loadReminders(s.id);
+    }, 'json').fail(() => showToast('Error loading supplier details', 'error'));
 }
 
 function loadReminders(supplierId) {
     $.post(SUPP_API, { action: 'get_reminders', id: supplierId }, function (reminders) {
-        let html = reminders.length ? '<h4>Reminders:</h4>' : '<p>No reminders set.</p>';
-        reminders.forEach(r => {
-            html += `<div class="reminder-item"><strong>${escHtml(r.reminder_name)}</strong> — ${r.reminder_date} ${r.reminder_time || ''}</div>`;
-        });
+        let html = '';
+        if (reminders.length === 0) {
+            html = '<p>No reminders set.</p>';
+        } else {
+            html = '<h4 style="margin-bottom:10px;">Reminders:</h4>';
+            reminders.forEach(r => {
+                html += `<div style="background:#f8fafc; border-radius:8px; padding:10px; margin-bottom:8px;">
+                            <strong>${escapeHtml(r.reminder_name)}</strong><br>
+                            ${r.reminder_date} ${r.reminder_time || ''}<br>
+                            ${r.reminder_type ? 'Type: ' + escapeHtml(r.reminder_type) : ''}
+                            ${r.notes ? '<br>Notes: ' + escapeHtml(r.notes) : ''}
+                         </div>`;
+            });
+        }
         $('#remindersContainer').html(html);
-    }, 'json');
+    }, 'json').fail(() => $('#remindersContainer').html('<p>Error loading reminders</p>'));
 }
 
-function loadSupplierForEdit(id) {
+function editSupplier(id) {
     $.post(SUPP_API, { action: 'get_supplier', id: id }, function (s) {
-        if (s.error) { showToast(s.error, 'error'); return; }
-        const f = $('#editSupplierForm');
-        f.find('[name="SID"]').val(s.SID);
-        f.find('[name="SName"]').val(s.SName);
-        f.find('[name="SEmail"]').val(s.SEmail);
-        f.find('[name="SContact_No"]').val(s.SContact_No);
-        f.find('[name="SAddress"]').val(s.SAddress);
-        f.find('[name="supply_type"]').val(s.supply_type);
-        f.find('[name="supply_details"]').val(s.supply_details);
-        f.find('[name="Stotal"]').val(s.Stotal);
-        f.find('[name="SDueDate"]').val(s.SDueDate);
-        $('#editModal').show();
-    }, 'json');
+        if (s.error) {
+            showToast(s.error, 'error');
+            return;
+        }
+        const form = $('#editSupplierForm');
+        form.find('[name="SID"]').val(s.id);
+        form.find('[name="SName"]').val(s.SName);
+        form.find('[name="SEmail"]').val(s.SEmail);
+        form.find('[name="SContact_No"]').val(s.SContact_No);
+        form.find('[name="SAddress"]').val(s.SAddress);
+        form.find('[name="supply_type"]').val(s.supply_type);
+        form.find('[name="supply_details"]').val(s.supply_details);
+        form.find('[name="Stotal"]').val(s.Stotal);
+        form.find('[name="SDueDate"]').val(s.SDueDate);
+        $('#editModal').css('display', 'flex');
+    }, 'json').fail(() => showToast('Error loading supplier for edit', 'error'));
 }
 
 function deleteSupplier(id, fromView = false) {
@@ -143,24 +197,39 @@ function deleteSupplier(id, fromView = false) {
                 showToast('Supplier deleted.', 'error');
                 if (fromView) $('#viewModal').hide();
                 loadSuppliers();
-            } else { showToast('Delete failed', 'error'); }
-        }, 'json');
+            } else {
+                showToast('Delete failed: ' + (r.message || 'Unknown error'), 'error');
+            }
+        }, 'json').fail(() => showToast('Server error', 'error'));
     }
 }
 
-function openReminderModal(sid, sname) {
-    $('#reminder_supplier_id').val(sid);
-    $('#reminder_supplier_name').val(sname);
-    $('#reminderModal').show();
+function openReminderModal(supplierId, supplierName) {
+    $('#reminder_supplier_id').val(supplierId);
+    $('#reminder_supplier_name').val(supplierName);
+    $('#reminderForm')[0].reset();
+    $('#reminderModal').css('display', 'flex');
 }
 
+function resetAddModal() {
+    $('#addSupplierForm')[0].reset();
+}
+
+// Toast notification (matches order page style)
 function showToast(message, type = 'success') {
-    const toast = $(`<div class="toast ${type}">${message}</div>`);
-    $('#toastContainer').append(toast);
-    setTimeout(() => toast.fadeOut(400, function () { $(this).remove(); }), 3000);
+    const toast = $(`<div class="toast-notification ${type}">${message}</div>`);
+    $('body').append(toast);
+    setTimeout(() => {
+        toast.fadeOut(300, function() { $(this).remove(); });
+    }, 3000);
 }
 
-function escHtml(str) {
+function escapeHtml(str) {
     if (!str) return '';
-    return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    return String(str).replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }

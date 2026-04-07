@@ -3,8 +3,13 @@
 require_once __DIR__ . '/../config/db_connect.php';
 session_start();
 
-$action = $_POST['action'] ?? '';
+$action = $_POST['action'] ?? $_GET['action'] ?? '';
 $empId  = (int) ($_SESSION['EmpID'] ?? 1);
+
+// Helper: format supplier ID
+function formatSupplierId($id) {
+    return 'SUP-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+}
 
 if ($action === 'list') {
     $search = trim($_POST['search'] ?? '');
@@ -20,11 +25,14 @@ if ($action === 'list') {
     
     $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Remap id to SID to match frontend expectations
+    // Add formatted supplier_id and ensure Stotal is float
     foreach($suppliers as &$sup) {
-        $sup['SID'] = $sup['id'];
+        $sup['supplier_id'] = formatSupplierId($sup['id']);
+        $sup['Stotal'] = (float)$sup['Stotal'];
+        $sup['SID'] = $sup['id']; // keep for compatibility
     }
-    echo json_encode($suppliers); exit;
+    echo json_encode($suppliers);
+    exit;
 }
 
 if ($action === 'add') {
@@ -35,7 +43,8 @@ if ($action === 'add') {
         $data['SAddress'] ?? '', $data['supply_type'] ?? '', $data['supply_details'] ?? '', 
         (float)($data['Stotal'] ?? 0), empty($data['SDueDate']) ? null : $data['SDueDate']
     ]);
-    echo json_encode(['status' => 'success']); exit;
+    echo json_encode(['status' => 'success']);
+    exit;
 }
 
 if ($action === 'edit') {
@@ -51,7 +60,9 @@ if ($action === 'edit') {
             $sid, $empId
         ]);
         echo json_encode(['status' => 'success']);
-    } catch (PDOException $e) { echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); }
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
     exit;
 }
 
@@ -62,7 +73,9 @@ if ($action === 'delete') {
         $stmt = $pdo->prepare("DELETE FROM suppliers WHERE id=? AND EmpID=?");
         $stmt->execute([$id, $empId]);
         echo json_encode(['status' => 'success']);
-    } catch (PDOException $e) { echo json_encode(['status' => 'error', 'message' => $e->getMessage()]); }
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    }
     exit;
 }
 
@@ -73,10 +86,16 @@ if ($action === 'view' || $action === 'get_supplier') {
         $stmt = $pdo->prepare("SELECT * FROM suppliers WHERE id=? AND EmpID=?");
         $stmt->execute([$id, $empId]);
         $doc = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (!$doc) { echo json_encode(['error' => 'Supplier not found']); }
-        else { $doc['SID'] = $doc['id']; echo json_encode($doc); }
-    } catch (PDOException $e) { echo json_encode(['error' => $e->getMessage()]); }
+        if (!$doc) {
+            echo json_encode(['error' => 'Supplier not found']);
+        } else {
+            $doc['supplier_id'] = formatSupplierId($doc['id']);
+            $doc['Stotal'] = (float)$doc['Stotal'];
+            echo json_encode($doc);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['error' => $e->getMessage()]);
+    }
     exit;
 }
 
@@ -89,7 +108,8 @@ if ($action === 'add_reminder') {
         empty($data['reminder_time']) ? null : $data['reminder_time'], 
         $data['notes'] ?? ''
     ]);
-    echo json_encode(['status' => 'success']); exit;
+    echo json_encode(['status' => 'success']);
+    exit;
 }
 
 if ($action === 'get_reminders') {
@@ -97,11 +117,8 @@ if ($action === 'get_reminders') {
     $stmt = $pdo->prepare("SELECT * FROM supplier_reminders WHERE supplier_id=? ORDER BY reminder_date ASC");
     $stmt->execute([$supplierId]);
     $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    foreach($reminders as &$rem) {
-        $rem['rid'] = $rem['id'];
-    }
-    echo json_encode($reminders); exit;
+    echo json_encode($reminders);
+    exit;
 }
 
 echo json_encode(['status' => 'error', 'message' => 'Unknown action']);
