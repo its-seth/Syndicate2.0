@@ -647,57 +647,57 @@
                 if (legendDiv) legendDiv.innerHTML = '<p>No district data available.</p>';
             }
             
-            //  Prepare calendars 
-            const startDate = new Date(fromDate);
-            const endDate = new Date(toDate);
-            const monthsMap = new Map();
-            
-            customers.forEach(c => {
-                if (c.created_at) {
-                    const d = new Date(c.created_at);
-                    if (!isNaN(d.getTime()) && d >= startDate && d <= endDate) {
-                        const yearMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-                        if (!monthsMap.has(yearMonth)) monthsMap.set(yearMonth, new Set());
-                        monthsMap.get(yearMonth).add(d.getDate());
-                    }
-                }
-            });
-            
-            const sortedMonths = Array.from(monthsMap.keys()).sort();
-                let calendarsHtml = '<div style="margin:30px 0;"><h3 style="text-align:center; margin-bottom:20px;"> Customer Addition Dates</h3><div style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;">';
-                for (const yearMonth of sortedMonths) {
-                const [year, month] = yearMonth.split('-').map(Number);
-                const firstDay = new Date(year, month-1, 1);
-                const lastDay = new Date(year, month, 0);
-                const daysInMonth = lastDay.getDate();
-                const startWeekday = firstDay.getDay();
-                const datesWithCustomers = monthsMap.get(yearMonth) || new Set();
-    
+            //  Prepare calendars using date strings (no timezone)
+const startDateStr = fromDate;
+const endDateStr = toDate;
+const monthsMap = new Map();
 
+customers.forEach(c => {
+    if (c.created_at) {
+        const dateStr = c.created_at.slice(0,10); // "YYYY-MM-DD"
+        if (dateStr >= startDateStr && dateStr <= endDateStr) {
+            const [year, month, day] = dateStr.split('-');
+            const yearMonth = `${year}-${month}`;
+            if (!monthsMap.has(yearMonth)) monthsMap.set(yearMonth, new Set());
+            monthsMap.get(yearMonth).add(parseInt(day));
+        }
+    }
+});
+
+        const sortedMonths = Array.from(monthsMap.keys()).sort();
+        let calendarsHtml = '<div style="margin:30px 0;"><h3 style="text-align:center; margin-bottom:20px;">📅 Customer Addition Dates</h3><div style="display:flex; flex-wrap:wrap; gap:25px; justify-content:center;">';
+        for (const yearMonth of sortedMonths) {
+        const [year, month] = yearMonth.split('-').map(Number);
+        const firstDay = new Date(year, month-1, 1);
+        const lastDay = new Date(year, month, 0);
+        const daysInMonth = lastDay.getDate();
+        const startWeekday = firstDay.getDay();
+        const datesWithCustomers = monthsMap.get(yearMonth) || new Set();
+            
         let calendarTable = `<table style="border-collapse:collapse; margin:0 auto; font-size:14px;">
-        <caption style="font-weight:bold; margin-bottom:8px;">${firstDay.toLocaleString('default', { month:'long', year:'numeric' })}</caption>
-        <thead><tr>${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<th style="padding:8px;">${d}</th>`).join('')} </thead>
-        <tbody><tr>`;
-         for (let i = 0; i < startWeekday; i++) calendarTable += '<td style="padding:8px;"> </td>';
+                <caption style="font-weight:bold; margin-bottom:8px;">${firstDay.toLocaleString('default', { month:'long', year:'numeric' })}</caption>
+                <thead><tr>${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d => `<th style="padding:8px;">${d}</th>`).join('')} </thead>
+                <tbody><tr>`;
+            for (let i = 0; i < startWeekday; i++) calendarTable += '<td style="padding:8px;"> </td>';
             for (let day = 1; day <= daysInMonth; day++) {
                 const hasCustomer = datesWithCustomers.has(day);
                 calendarTable += `<td style="padding:8px; text-align:center; position:relative;">
-                ${day}
-                ${hasCustomer ? '<span style="display:inline-block; width:8px; height:8px; background:#0c4ea3; border-radius:50%; position:absolute; bottom:4px; left:50%; transform:translateX(-50%);"></span>' : ''}
-             </td>`;
-             if ((startWeekday + day) % 7 === 0 && day !== daysInMonth) calendarTable += `<tr></tr>`;
-         }
+                    ${day}
+                    ${hasCustomer ? '<span style="display:inline-block; width:8px; height:8px; background:#0c4ea3; border-radius:50%; position:absolute; bottom:4px; left:50%; transform:translateX(-50%);"></span>' : ''}
+                </td>`;
+                if ((startWeekday + day) % 7 === 0 && day !== daysInMonth) calendarTable += `<tr></tr>`;
+                }
         const remaining = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
         for (let i = 0; i < remaining; i++) calendarTable += '<td style="padding:8px;"> </td>';
-        calendarTable += `</tr></tbody><tr>`;
+        calendarTable += `</tr></tbody></table>`;
         calendarsHtml += `<div style="border:1px solid #e2e8f0; border-radius:8px; padding:12px; background:#f9fafb;">${calendarTable}</div>`;
-        }
+    }
         calendarsHtml += '</div></div>';
             
             // Add calendars to container
             const calendarsDiv = document.createElement('div');
             calendarsDiv.innerHTML = calendarsHtml;
-            container.appendChild(calendarsDiv);
+            container.appendChild(calendarsDiv);        
             
             //  Main customer details table
             const detailsSection = document.createElement('div');
