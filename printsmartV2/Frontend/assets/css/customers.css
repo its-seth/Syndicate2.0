@@ -124,25 +124,30 @@
 .toast-overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    align-items: center;
-    justify-content: center;
+    top: 20px;
+    right: 20px;
+    left: auto;
+    width: auto;
+    height: auto;
+    background-color: transparent;
     z-index: 2000;
 }
 .toast-message {
     background-color: #0c5025;
     color: white;
-    padding: 12px 30px;
+    padding: 12px 24px;
     border-radius: 8px;
     font-weight: 700;
     font-size: 14px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    animation: slideIn 0.3s ease;
 }
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
 .loading {
     text-align: center;
     padding: 2rem;
@@ -180,14 +185,6 @@
             font-size: 14px;
         }
 
-/* ========== DELETE ICON – RED ========== */
-.actions svg.action-delete {
-    stroke: #dc2626;
-}
-.actions svg.action-delete:hover {
-    stroke: #b91c1c;
-    transform: scale(1.05);
-}
 
  /* Additional styles for profile modal and search bar alignment */
         .top-bar {
@@ -255,15 +252,20 @@
             color: #1e293b;
             word-break: break-word;
         }
-        .actions svg.action-delete {
-            stroke: #dc2626;
-        }
-        .actions svg.action-delete:hover {
-            stroke: #b91c1c;
-            transform: scale(1.05);
-        }
-        .actions svg.action-view:hover,
-        .actions svg.action-edit:hover {
-            stroke: #1e40af;
-            transform: scale(1.05);
-        }
+       /* Default grey for all action icons */
+.actions svg {
+    stroke: #9ca3af;
+    transition: all 0.2s ease;
+}
+/* View & Edit – hover becomes black */
+.actions svg.action-view:hover,
+.actions svg.action-edit:hover {
+    stroke: #1e293b;
+    transform: scale(1.05);
+}
+/* Delete – hover becomes red */
+.actions svg.action-delete:hover {
+    stroke: #dc2626;
+    transform: scale(1.05);
+}
+       
