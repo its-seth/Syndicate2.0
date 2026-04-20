@@ -1,5 +1,6 @@
-/* suppliers.css - matches orders.css style */
-/* Report button (same as orders) */
+/* suppliers.css*/
+
+/* Report button*/
 .report-btn {
     position: fixed;
     bottom: 40px;
@@ -24,7 +25,7 @@
     box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
 }
 
-/* Modal styling (identical to orders) */
+/* Modal styling */
 .modal {
     display: none;
     position: fixed;
@@ -89,7 +90,7 @@
     background-color: #093b7b;
 }
 
-/* Form groups inside modals */
+/* Form groups inside the modals */
 .form-group {
     margin-bottom: 20px;
 }
@@ -117,7 +118,7 @@
     flex: 1;
 }
 
-/* Toast notifications (top-right, slide-in) */
+/* Toast notifications at top-right */
 .toast-notification {
     position: fixed;
     top: 20px;
@@ -165,7 +166,7 @@
 .btn-delete { color: #ef4444; }
 .btn-reminder { color: #8b5cf6; }
 
-/* Supplier ID column style (like order ID) */
+/* Supplier ID column style */
 .id-color {
     color: #1d4ed8;
     font-weight: 500;
