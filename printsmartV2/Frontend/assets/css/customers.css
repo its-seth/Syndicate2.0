@@ -257,16 +257,16 @@
 
 .actions i.action-view:hover,
 .actions i.action-edit:hover {
-    color: #1e293b;
+    color: #1e293b !important;
     transform: scale(1.05);
 }
 
 .actions i.action-delete:hover {
-    color: #dc2626;
+    color: #dc2626 !important;
     transform: scale(1.05);
 }
        
 .id-color {
-    color: #1d4ed8;
+    color: #1d4ed8 !important;
     font-weight: 500;
 }
