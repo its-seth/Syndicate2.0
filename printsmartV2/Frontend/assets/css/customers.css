@@ -129,8 +129,9 @@
     left: auto;
     width: auto;
     height: auto;
-    background-color: transparent;
+    background: transparent;
     z-index: 2000;
+   
 }
 .toast-message {
     background-color: #0c5025;
@@ -253,19 +254,22 @@
             word-break: break-word;
         }
        /* Default grey for all action icons */
+
 .actions svg {
     stroke: #9ca3af;
     transition: all 0.2s ease;
 }
-/* View & Edit – hover becomes black */
 .actions svg.action-view:hover,
 .actions svg.action-edit:hover {
     stroke: #1e293b;
     transform: scale(1.05);
 }
-/* Delete – hover becomes red */
 .actions svg.action-delete:hover {
     stroke: #dc2626;
     transform: scale(1.05);
 }
        
+.id-color {
+    color: #1d4ed8;
+    font-weight: 500;
+}
