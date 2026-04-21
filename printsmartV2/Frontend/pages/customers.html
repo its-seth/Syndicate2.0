@@ -773,17 +773,20 @@ customers.forEach(c => {
             showToast('Failed to generate report: ' + err.message, true);
         }
     }
-
+ 
     //  Event listeners 
     tbody.addEventListener('click', (e) => {
         let target = e.target;
-        while (target && target.tagName !== 'svg' && target !== tbody) {
-            target = target.parentElement;
+        // Find the closest <i> element if clicked inside it
+        if (target.tagName !== 'I') {
+            target = target.closest('i');
         }
-        if (!target || target.tagName !== 'svg') return;
+        if (!target) return;
+        
         const row = target.closest('tr');
         if (!row) return;
         const customerId = row.dataset.customerId;
+        
         if (target.classList.contains('action-view')) {
             viewCustomerProfile(customerId);
         } else if (target.classList.contains('action-edit')) {
@@ -837,9 +840,6 @@ customers.forEach(c => {
         pendingDeleteId = null;
     });
     confirmDeleteBtn.addEventListener('click', performDelete);
-    toastOverlay.addEventListener('click', () => {
-        toastOverlay.style.display = 'none';
-    });
     document.getElementById('closeViewModalBtn').addEventListener('click', () => {
         document.getElementById('viewProfileModal').style.display = 'none';
     });
