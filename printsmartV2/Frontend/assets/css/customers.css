@@ -247,19 +247,22 @@
             color: #1e293b;
             word-break: break-word;
         }
-       /* Default grey for all action icons */
-
-.actions svg {
-    stroke: #9ca3af;
+/* Action icons – Font Awesome */
+.actions i {
+    color: #9ca3af;
     transition: all 0.2s ease;
+    cursor: pointer;
+    font-size: 16px;
 }
-.actions svg.action-view:hover,
-.actions svg.action-edit:hover {
-    stroke: #1e293b;
+
+.actions i.action-view:hover,
+.actions i.action-edit:hover {
+    color: #1e293b;
     transform: scale(1.05);
 }
-.actions svg.action-delete:hover {
-    stroke: #dc2626;
+
+.actions i.action-delete:hover {
+    color: #dc2626;
     transform: scale(1.05);
 }
        
