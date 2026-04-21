@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/customers.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -211,10 +212,7 @@
     </div>
 </div>
 
-<!-- TOAST NOTIFICATION -->
-<div id="toastOverlay" class="toast-overlay">
-    <div class="toast-message" id="toastMessage">Success !</div>
-</div>
+
 
 <script>
 
@@ -231,8 +229,6 @@
     const modal = document.getElementById('customerModal');
     const modalTitle = document.getElementById('modalTitle');
     const saveBtn = document.getElementById('saveCustomerBtn');
-    const toastOverlay = document.getElementById('toastOverlay');
-    const toastMsg = document.getElementById('toastMessage');
     const reportBtn = document.getElementById('reportBtn');
     const deleteModal = document.getElementById('deleteConfirmModal');
     const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
@@ -259,13 +255,17 @@
     let pendingDeleteName = '';
 
     //  Helper functions
-    function showToast(message, isError = false) {
-        toastMsg.textContent = message;
-        toastMsg.style.backgroundColor = isError ? '#b91c1c' : '#0c5025';
-        toastOverlay.style.display = 'flex';
-        setTimeout(() => { toastOverlay.style.display = 'none'; }, 3000);
-    }
-
+   function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    if (isError) toast.classList.add('error');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
     function resetModalToAdd() {
         modalTitle.textContent = 'Add New Customer';
         saveBtn.textContent = 'Save Customer';
@@ -326,11 +326,11 @@
                     <td class="text-gray">${safePhone}</td>
                     <td class="text-gray">${safeAddress}</td>
                     <td><b>${safeEmail}</b></td>
-                    <td class="actions">
-                        <svg class="action-view" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <svg class="action-edit" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        <svg class="action-delete" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                    </td>
+                 <td class="actions">
+                    <i class="fa-regular fa-eye action-view" data-id="${c.id}"></i>
+                    <i class="fa-regular fa-pen-to-square action-edit" data-id="${c.id}"></i>
+                    <i class="fa-regular fa-trash-can action-delete" data-id="${c.id}"></i>
+                </td>
                 </tr>
             `;
         });
