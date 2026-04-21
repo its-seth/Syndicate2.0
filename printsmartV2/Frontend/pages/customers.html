@@ -775,27 +775,27 @@ customers.forEach(c => {
     }
  
     //  Event listeners 
-    tbody.addEventListener('click', (e) => {
-        let target = e.target;
-        // Find the closest <i> element if clicked inside it
-        if (target.tagName !== 'I') {
-            target = target.closest('i');
-        }
-        if (!target) return;
-        
-        const row = target.closest('tr');
-        if (!row) return;
-        const customerId = row.dataset.customerId;
-        
-        if (target.classList.contains('action-view')) {
-            viewCustomerProfile(customerId);
-        } else if (target.classList.contains('action-edit')) {
-            openEditModal(row);
-        } else if (target.classList.contains('action-delete')) {
-            const name = row.dataset.name;
-            if (customerId && name) showDeleteConfirm(customerId, name);
-        }
-    });
+   tbody.addEventListener('click', (e) => {
+    // Get the actual element (not a text node)
+    let target = e.target;
+    if (target.nodeType !== 1) target = target.parentElement;
+    
+    const icon = target.closest('i');
+    if (!icon) return;
+    
+    const row = icon.closest('tr');
+    if (!row) return;
+    const customerId = row.dataset.customerId;
+    
+    if (icon.classList.contains('action-view')) {
+        viewCustomerProfile(customerId);
+    } else if (icon.classList.contains('action-edit')) {
+        openEditModal(row);
+    } else if (icon.classList.contains('action-delete')) {
+        const name = row.dataset.name;
+        if (customerId && name) showDeleteConfirm(customerId, name);
+    }
+});
 
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
