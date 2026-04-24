@@ -7,8 +7,17 @@ const modal = document.getElementById('addEmployeeModal');
 const openBtn = document.getElementById('openAddEmployeeModal');
 const closeBtn = document.getElementById('closeAddEmployeeModal');
 const saveBtn = document.querySelector('.save-btn');
-const toast = document.getElementById('successToast');
-const toastMsg = document.querySelector('.toast-message');
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    if (isError) toast.classList.add('error');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 const tableBody = document.querySelector('tbody');
 
 const empName = document.getElementById('empName');
@@ -83,22 +92,52 @@ if (searchInputEl) {
     searchInputEl.addEventListener('input', (e) => triggerSearchFilter(e.target.value));
 }
 
-// Delete employee
-async function deleteEmployee(id) {
-    if (!confirm('Are you sure you want to delete this employee?')) return;
-    try {
-        const res = await fetch(API_EMP, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
-        });
-        const result = await res.json();
-        if (result.success) {
-            if (toastMsg) toastMsg.textContent = 'Deleted Successfully !!!';
-            if (toast) toast.style.display = 'flex';
-            fetchEmployees();
-        } else { alert(result.message); }
-    } catch (err) { console.error('Error deleting employee:', err); }
+// Delete Employee Modal Setup
+let pendingDeleteId = null;
+let pendingDeleteName = '';
+
+const deleteModal = document.getElementById('deleteConfirmModal');
+const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const deleteMessageSpan = document.getElementById('deleteMessage');
+
+if (closeDeleteModalBtn) {
+    closeDeleteModalBtn.addEventListener('click', () => { if (deleteModal) deleteModal.style.display = 'none'; });
+}
+if (deleteModal) {
+    window.addEventListener('click', e => { if (e.target === deleteModal) deleteModal.style.display = 'none'; });
+}
+
+// Delete employee (Triggered when trash icon clicked)
+function deleteEmployee(id) {
+    const emp = allEmployeesData.find(e => e.id == id);
+    const name = emp ? emp.name : 'this employee';
+    pendingDeleteId = id;
+    pendingDeleteName = name;
+    if (deleteMessageSpan) deleteMessageSpan.textContent = `Are you sure you want to delete ${name}? `;
+    if (deleteModal) deleteModal.style.display = 'flex';
+}
+
+if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        try {
+            const res = await fetch(API_EMP, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingDeleteId })
+            });
+            const result = await res.json();
+            if (result.success) {
+                showToast(`✅ "${pendingDeleteName}" deleted successfully`);
+                fetchEmployees();
+            } else { alert(result.message); }
+        } catch (err) { console.error('Error deleting employee:', err); }
+        finally {
+            if (deleteModal) deleteModal.style.display = 'none';
+            pendingDeleteId = null;
+        }
+    });
 }
 
 // Modal controls
@@ -127,15 +166,14 @@ if (saveBtn) {
                 [empName, empEmail, empPhone, empAddress, empDetails, empRole, empSalary]
                     .forEach(el => { if (el) el.value = ''; });
                 modal.style.display = 'none';
-                if (toastMsg) toastMsg.textContent = 'Added Successfully !!!';
-                if (toast) toast.style.display = 'flex';
+                showToast('✅ Employee added successfully');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error adding employee:', err); }
     });
 }
 
-if (toast) toast.addEventListener('click', () => { toast.style.display = 'none'; });
+// Old static toast click listener removed
 
 // Event delegation for actions
 tableBody.addEventListener('click', function (e) {
@@ -234,8 +272,7 @@ if (saveEditBtn) {
             const result = await res.json();
             if (result.success) {
                 if (editModal) editModal.style.display = 'none';
-                if (toastMsg) toastMsg.textContent = 'Updated Successfully !!!';
-                if (toast) toast.style.display = 'flex';
+                showToast('✅ Employee updated successfully');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error updating employee:', err); }
