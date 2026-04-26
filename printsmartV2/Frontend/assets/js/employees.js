@@ -340,8 +340,10 @@ if (reportBtn) {
 
             const totalEmployees = employees.length;
             let roleDistribution = {};
+            let roleSalaryTotal = {};
             let totalSalary = 0;
             let hasSalaryData = false;
+            let cityDistribution = {};
 
             employees.forEach(emp => {
                 const role = emp.role || 'Unassigned';
@@ -351,7 +353,23 @@ if (reportBtn) {
                     const sal = parseFloat(String(emp.salary).replace(/[^0-9.-]+/g, ""));
                     if (!isNaN(sal)) {
                         totalSalary += sal;
+                        roleSalaryTotal[role] = (roleSalaryTotal[role] || 0) + sal;
                         hasSalaryData = true;
+                    }
+                }
+
+                // Extract city/area for Geographic Distribution (simplistic logic)
+                if (emp.address && emp.address.trim() !== '') {
+                    const parts = emp.address.split(',');
+                    let city = parts[parts.length - 1].trim();
+                    // Fallback to simple words if no commas used
+                    if (!city || city.length > 25) {
+                        const words = emp.address.trim().split(' ');
+                        city = words[words.length - 1]; 
+                    }
+                    if (city) {
+                        const normalizedCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+                        cityDistribution[normalizedCity] = (cityDistribution[normalizedCity] || 0) + 1;
                     }
                 }
             });
@@ -364,16 +382,38 @@ if (reportBtn) {
 
             if (hasSalaryData) {
                 yPos += 7;
-                doc.text(`Total Payroll: $${totalSalary.toFixed(2)}`, 14, yPos);
+                doc.text(`Total Payroll: $${totalSalary.toLocaleString()}`, 14, yPos);
             }
 
             yPos += 10;
-            doc.text("Role Breakdown:", 14, yPos);
+            doc.setFont(undefined, 'bold');
+            doc.text("Role Breakdown & Average Salary:", 14, yPos);
+            doc.setFont(undefined, 'normal');
             yPos += 7;
 
             for (const [role, count] of Object.entries(roleDistribution)) {
-                doc.text(`- ${role}: ${count}`, 20, yPos);
+                let text = `- ${role}: ${count} employee(s)`;
+                if (roleSalaryTotal[role]) {
+                     let avg = roleSalaryTotal[role] / count;
+                     text += ` (Avg: $${avg.toLocaleString()})`;
+                }
+                doc.text(text, 20, yPos);
                 yPos += 7;
+            }
+
+            if (Object.keys(cityDistribution).length > 0) {
+                 yPos += 5;
+                 doc.setFont(undefined, 'bold');
+                 doc.text("Top Geographic Distributions (Address base):", 14, yPos);
+                 doc.setFont(undefined, 'normal');
+                 yPos += 7;
+                 // Sort cities by count descending
+                 const sortedCities = Object.entries(cityDistribution).sort((a,b) => b[1]-a[1]);
+                 // Print top 5 regions to avoid PDF overflow
+                 for(let i=0; i<Math.min(sortedCities.length, 5); i++) {
+                     doc.text(`- ${sortedCities[i][0]}: ${sortedCities[i][1]} employee(s)`, 20, yPos);
+                     yPos += 7;
+                 }
             }
 
             doc.save('Employee_Report.pdf');
