@@ -254,12 +254,11 @@
     align-items: center;
 }
 
-/* Action icons – Font Awesome */
 .actions i {
     color: #9ca3af;
     transition: all 0.2s ease;
     cursor: pointer;
-    font-size: 16px;
+    
 }
 
 .actions i:hover {
