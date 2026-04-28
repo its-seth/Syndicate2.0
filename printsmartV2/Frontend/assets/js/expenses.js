@@ -286,12 +286,15 @@ if (generateReportBtn) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
+        // Add title
         doc.setFontSize(18);
-        doc.text("PrintSmart - Expense Report", 14, 20);
+        doc.text('Expense Report', 14, 22);
         
-        doc.setFontSize(10);
+        // Add generation date
+        doc.setFontSize(11);
         doc.setTextColor(100);
-        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+        const dateStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+        doc.text(`Generated on: ${dateStr}`, 14, 30);
         
         const searchTerm = searchExpenseInput ? searchExpenseInput.value.toLowerCase() : '';
         const filteredExpenses = expenses.filter(expense => 
@@ -314,64 +317,69 @@ if (generateReportBtn) {
             statusTotals[e.status] += amt;
         });
 
-        doc.setFontSize(14);
-        doc.setTextColor(0);
-        doc.text("Expense Analysis Summary", 14, 40);
-
-        doc.setFontSize(11);
-        doc.text(`Total Expense Amount: ${formatCurrency(totalExpensesAmount)}`, 14, 48);
-
-        const categoryData = Object.keys(categoryTotals).map(cat => [cat, formatCurrency(categoryTotals[cat])]);
-        doc.autoTable({
-            head: [['Category Breakdown', 'Total Amount']],
-            body: categoryData,
-            startY: 55,
-            theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [46, 204, 113] }
-        });
-
-        let finalY = doc.lastAutoTable.finalY || 55;
-
-        const statusData = Object.keys(statusTotals).map(st => [st, formatCurrency(statusTotals[st])]);
-        doc.autoTable({
-            head: [['Status Breakdown', 'Total Amount']],
-            body: statusData,
-            startY: finalY + 10,
-            theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [243, 156, 18] }
-        });
-
-        finalY = doc.lastAutoTable.finalY || (finalY + 10);
-
-        doc.setFontSize(14);
-        doc.text("Expense Details", 14, finalY + 15);
-
+        // --- Details Section ---
         const tableBody = filteredExpenses.map(e => [
             formatExpenseId(e.id), 
             e.category, 
             formatCurrency(e.amount),
             formatDate(e.date).replace(',', ''), 
-            e.status
+            e.status.toUpperCase()
         ]);
         
         doc.autoTable({
             head: [['Expense ID', 'Category', 'Amount', 'Date', 'Status']],
             body: tableBody,
-            startY: finalY + 20,
+            startY: 40,
             theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [30, 64, 175] }
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [79, 70, 229] }
         });
 
+        let finalY = doc.lastAutoTable.finalY || 40;
+
+        // --- Analysis Summary Section ---
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.setFont(undefined, 'bold');
+        doc.text("Analysis Summary", 14, finalY + 15);
+        doc.setFont(undefined, 'normal');
+
+        doc.setFontSize(11);
+        doc.setTextColor(50);
+        doc.text(`Total Expense Amount: ${formatCurrency(totalExpensesAmount)}`, 14, finalY + 25);
+
+        let yPos = finalY + 35;
+        doc.setFont(undefined, 'bold');
+        doc.text("Category Breakdown:", 14, yPos);
+        doc.setFont(undefined, 'normal');
+        yPos += 7;
+
+        for (const [cat, amt] of Object.entries(categoryTotals)) {
+            doc.text(`- ${cat}: ${formatCurrency(amt)}`, 20, yPos);
+            yPos += 7;
+        }
+
+        yPos += 3;
+        doc.setFont(undefined, 'bold');
+        doc.text("Status Breakdown:", 14, yPos);
+        doc.setFont(undefined, 'normal');
+        yPos += 7;
+
+        for (const [st, amt] of Object.entries(statusTotals)) {
+            doc.text(`- ${st}: ${formatCurrency(amt)}`, 20, yPos);
+            yPos += 7;
+        }
+
+        // --- Reminders Section ---
         if (Array.isArray(reminders) && reminders.length > 0) {
-            let nextY = doc.lastAutoTable.finalY + 15;
-            if (nextY > 270) { doc.addPage(); nextY = 20; }
+            let nextY = yPos + 10;
+            if (nextY > 250) { doc.addPage(); nextY = 20; }
 
             doc.setFontSize(14);
             doc.setTextColor(0);
-            doc.text("Upcoming & Pending Reminders", 14, nextY);
+            doc.setFont(undefined, 'bold');
+            doc.text("Payment Reminders", 14, nextY);
+            doc.setFont(undefined, 'normal');
 
             const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
             const remindersBody = sortedReminders.map(r => [
@@ -382,12 +390,12 @@ if (generateReportBtn) {
             ]);
 
             doc.autoTable({
-                head: [['Reminder / Bill', 'Amount', 'Due Date', 'Status']],
+                head: [['Reminder Title', 'Amount', 'Due Date', 'Status']],
                 body: remindersBody,
-                startY: nextY + 5,
+                startY: nextY + 7,
                 theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 4 },
-                headStyles: { fillColor: [231, 76, 60] }
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [79, 70, 229] }
             });
         }
         
