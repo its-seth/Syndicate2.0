@@ -295,11 +295,11 @@ if (reportBtn) {
             });
 
             // --- Analysis Section ---
-            const finalY = doc.lastAutoTable.finalY || 40;
+            let finalY = doc.lastAutoTable.finalY || 40;
 
             doc.setFontSize(14);
             doc.setTextColor(0);
-            doc.text("Analysis Summary", 14, finalY + 15);
+            doc.text("Employee Analysis Summary", 14, finalY + 15);
 
             const totalEmployees = employees.length;
             let roleDistribution = {};
@@ -330,13 +330,39 @@ if (reportBtn) {
                 doc.text(`Total Payroll: $${totalSalary.toFixed(2)}`, 14, yPos);
             }
 
-            yPos += 10;
-            doc.text("Role Breakdown:", 14, yPos);
-            yPos += 7;
+            const roleData = Object.keys(roleDistribution).map(role => [role, roleDistribution[role]]);
+            doc.autoTable({
+                head: [['Role Breakdown', 'Employee Count']],
+                body: roleData,
+                startY: yPos + 10,
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 4 },
+                headStyles: { fillColor: [46, 204, 113] }
+            });
 
-            for (const [role, count] of Object.entries(roleDistribution)) {
-                doc.text(`- ${role}: ${count}`, 20, yPos);
-                yPos += 7;
+            finalY = doc.lastAutoTable.finalY || (yPos + 10);
+
+            if (hasSalaryData) {
+                let salaryDistribution = {};
+                employees.forEach(emp => {
+                    const role = emp.role || 'Unassigned';
+                    if (emp.salary) {
+                        const sal = parseFloat(String(emp.salary).replace(/[^0-9.-]+/g, ""));
+                        if (!isNaN(sal)) {
+                            salaryDistribution[role] = (salaryDistribution[role] || 0) + sal;
+                        }
+                    }
+                });
+
+                const salaryData = Object.keys(salaryDistribution).map(role => [role, `$${salaryDistribution[role].toFixed(2)}`]);
+                doc.autoTable({
+                    head: [['Role', 'Total Salary']],
+                    body: salaryData,
+                    startY: finalY + 10,
+                    theme: 'grid',
+                    styles: { fontSize: 9, cellPadding: 4 },
+                    headStyles: { fillColor: [243, 156, 18] }
+                });
             }
 
             doc.save('Employee_Report.pdf');
