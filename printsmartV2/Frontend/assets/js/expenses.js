@@ -34,11 +34,28 @@ const addReminderBtn         = document.getElementById('addReminderBtn');
 
 let editingId = null, deletingType = null, deletingId = null;
 
-let expenses = [
-    { id: 1025, date: '2026-01-02', category: 'Water Bill',       amount: '1250.00', status: 'Pending' },
-    { id: 1026, date: '2026-01-20', category: 'Electricity Bill', amount: '800.00',  status: 'Overdue' },
-    { id: 1027, date: '2026-01-26', category: 'WIFI Bill',         amount: '120.00',  status: 'Paid'    },
-];
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    if (isError) toast.classList.add('error');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function escapeJsString(str) {
+    if (!str) return '';
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+function formatExpenseId(id) {
+    return `#EXP-${String(id).padStart(3, '0')}`;
+}
+
+let expenses = [];
 
 let reminders = [
     { id: 2001, date: '2026-10-18', title: 'water bill',   amount: '1200.00', status: 'Overdue',  icon: 'pencil',    reminderOn: true  },
@@ -86,15 +103,15 @@ const renderTable = () => {
         const tr = document.createElement('tr');
         const statusClass = `status-${expense.status.toLowerCase()}`;
         tr.innerHTML = `
-            <td><span class="expense-id">#EXP-${expense.id}</span></td>
-            <td><div class="category-cell"><div class="category-icon-box"></div><span>${expense.category}</span></div></td>
+            <td class="id-color">${formatExpenseId(expense.id)}</td>
+            <td><div class="category-cell"><span>${expense.category}</span></div></td>
             <td><span class="amount-text">${formatCurrency(expense.amount)}</span></td>
             <td><span class="date-text">${formatDate(expense.date).replace(',','')}</span></td>
-            <td><div class="status-cell-wrapper"><span class="status-pill ${statusClass}"><span class="dot"></span>${expense.status}</span>${expense.status==='Pending'?'<i data-lucide="bell" class="status-bell-alert"></i>':''}</div></td>
-            <td><i data-lucide="file-text" class="receipt-icon"></i></td>
-            <td><div class="action-btns">
-                <button class="action-btn edit" onclick="window.openEditModal(${expense.id})" title="Edit"><i data-lucide="pencil"></i></button>
-                <button class="action-btn delete" onclick="window.openDeleteModal('expense',${expense.id})" title="Delete"><i data-lucide="trash-2"></i></button>
+            <td><div class="status-cell-wrapper"><span class="status-pill ${statusClass}">${expense.status.toUpperCase()}</span></div></td>
+            <td class="actions"><div class="action-btns">
+                <i class="fa-regular fa-eye action-view" title="View"></i>
+                <i class="fa-regular fa-pen-to-square action-edit" onclick="window.openEditModal(${expense.id})" title="Edit"></i>
+                <i class="fa-regular fa-trash-can action-delete" onclick="window.openDeleteModal('expense', ${expense.id}, '${escapeJsString(expense.category)}')" title="Delete"></i>
             </div></td>`;
         expenseTableBody.appendChild(tr);
     });
@@ -102,23 +119,47 @@ const renderTable = () => {
 };
 
 window.toggleReminderStatus = id => {
-    reminders = reminders.map(r => { if(r.id===id){const u={...r,reminderOn:!r.reminderOn};apiPost(API_REMINDERS,u);return u;} return r; });
+    expenses = expenses.map(e => { 
+        if(e.id===id){
+            const u={...e, reminderOn: e.reminderOn === false ? true : false};
+            apiPost(API_EXPENSES, u);
+            return u;
+        } 
+        return e; 
+    });
     renderReminders();
+    showToast('✅ Reminder updated successfully');
 };
 
 if (markAllPaidBtn) markAllPaidBtn.addEventListener('click', () => {
-    reminders = reminders.map(r => { const u={...r,status:'Upcoming'};apiPost(API_REMINDERS,u);return u; });
+    expenses = expenses.map(e => { 
+        if(e.status !== 'Paid'){
+            const u={...e, status: 'Paid'};
+            apiPost(API_EXPENSES, u);
+            return u;
+        }
+        return e;
+    });
+    renderTable();
     renderReminders();
+    showToast('✅ All reminders marked as paid');
 });
 
 const renderReminders = () => {
+    if (!remindersListContainer) return;
     remindersListContainer.innerHTML = '';
-    if (!Array.isArray(reminders) || !reminders.length) { remindersListContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">No pending bills.</p>'; return; }
+    
+    const pendingExpenses = expenses.filter(e => e.status !== 'Paid');
+
+    if (!Array.isArray(pendingExpenses) || !pendingExpenses.length) { 
+        remindersListContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">No pending bills.</p>'; 
+        return; 
+    }
 
     const today = new Date();
     today.setHours(0,0,0,0);
 
-    const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const sortedReminders = [...pendingExpenses].sort((a,b) => new Date(a.date) - new Date(b.date));
 
     sortedReminders.forEach(r => {
         const rDate = new Date(r.date);
@@ -127,24 +168,26 @@ const renderReminders = () => {
         }
 
         const isOverdue = r.status === 'Overdue';
+        const isReminderOn = r.reminderOn !== false; // Default to true
+
         remindersListContainer.insertAdjacentHTML('beforeend', `
             <div class="reminder-card ${isOverdue?'card-red':'card-blue'}">
-                <div class="card-left"><div class="card-icon"><i data-lucide="${r.icon}"></i></div></div>
+                <div class="card-left"><div class="card-icon"><i data-lucide="bell"></i></div></div>
                 <div class="card-middle">
-                    <div class="card-title-row"><h4>${r.title}</h4><span class="status-pill-small ${isOverdue?'pill-red':'pill-blue'}">${r.status.toUpperCase()}</span></div>
+                    <div class="card-title-row"><h4>${escapeJsString(r.category)}</h4><span class="status-pill-small ${isOverdue?'pill-red':'pill-blue'}">${r.status.toUpperCase()}</span></div>
                     <div class="card-due">Due: ${formatDate(r.date)}</div>
                     <div class="card-amount">${formatCurrency(r.amount)}</div>
                 </div>
                 <div class="card-right">
                     <label class="toggle-switch">
-                        <input type="checkbox" onchange="window.toggleReminderStatus(${r.id})" ${r.reminderOn?'checked':''}>
+                        <input type="checkbox" onchange="window.toggleReminderStatus(${r.id})" ${isReminderOn?'checked':''}>
                         <span class="slider round"></span>
                     </label>
-                    <span class="toggle-label">${r.reminderOn?'REMINDER ON':'REMINDER OFF'}</span>
+                    <span class="toggle-label">${isReminderOn?'REMINDER ON':'REMINDER OFF'}</span>
                 </div>
             </div>`);
     });
-    lucide.createIcons();
+    if (window.lucide) window.lucide.createIcons();
 };
 
 const openModal = m => m.classList.add('active');
@@ -173,28 +216,47 @@ window.openEditModal = id => {
     }
 };
 
-window.openDeleteModal = (type, id) => { deletingType = type; deletingId = id; openModal(document.getElementById('deleteModal')); };
+window.openDeleteModal = (type, id, title = '') => { 
+    deletingType = type; 
+    deletingId = id; 
+    const msg = document.getElementById('deleteMessage');
+    if (msg) msg.textContent = title ? `Delete "${title}"? This action cannot be undone.` : 'Are you sure you want to delete this record? This action cannot be undone.';
+    openModal(document.getElementById('deleteModal')); 
+};
 
 expenseForm.addEventListener('submit', e => {
     e.preventDefault();
     const amountVal = parseFloat(document.getElementById('expenseAmount').value);
+    const newId = expenses.length > 0 ? Math.max(...expenses.map(e => parseInt(e.id) || 0)) + 1 : 1;
     const newExpense = {
-        id: editingId || Math.floor(1000 + Math.random() * 9000),
+        id: editingId || newId,
         category: document.getElementById('expenseCategory').value,
         amount: isNaN(amountVal) ? '0.00' : amountVal.toFixed(2),
         date: document.getElementById('expenseDate').value,
         status: document.getElementById('expenseStatus').value,
     };
-    if (editingId) expenses = expenses.map(e => e.id === editingId ? newExpense : e);
-    else expenses.unshift(newExpense);
-    closeAllModals(); renderTable();
+    if (editingId) {
+        expenses = expenses.map(e => e.id === editingId ? newExpense : e);
+        showToast('✅ Expense updated successfully');
+    } else {
+        expenses.unshift(newExpense);
+        showToast('✅ Expense added successfully');
+    }
+    closeAllModals(); 
+    renderTable();
+    renderReminders();
     apiPost(API_EXPENSES, newExpense);
 });
 
 document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
     if (deletingId) {
-        if (deletingType === 'expense') { expenses = expenses.filter(e => e.id !== deletingId); apiDelete(API_EXPENSES, deletingId); closeAllModals(); renderTable(); }
-        else { reminders = reminders.filter(e => e.id !== deletingId); apiDelete(API_REMINDERS, deletingId); closeAllModals(); renderReminders(); }
+        if (deletingType === 'expense') { 
+            expenses = expenses.filter(e => e.id !== deletingId); apiDelete(API_EXPENSES, deletingId); closeAllModals(); renderTable(); 
+            showToast('✅ Expense deleted successfully');
+        } else { 
+            reminders = reminders.filter(e => e.id !== deletingId); apiDelete(API_REMINDERS, deletingId); closeAllModals(); renderReminders(); 
+            showToast('✅ Reminder deleted successfully');
+        }
     }
 });
 
@@ -287,7 +349,7 @@ if (generateReportBtn) {
         doc.text("Expense Details", 14, finalY + 15);
 
         const tableBody = filteredExpenses.map(e => [
-            `#EXP-${e.id}`, 
+            formatExpenseId(e.id), 
             e.category, 
             formatCurrency(e.amount),
             formatDate(e.date).replace(',', ''), 
