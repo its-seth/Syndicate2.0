@@ -109,7 +109,7 @@ const renderTable = () => {
             <td><span class="date-text">${formatDate(expense.date).replace(',','')}</span></td>
             <td><div class="status-cell-wrapper"><span class="status-pill ${statusClass}">${expense.status.toUpperCase()}</span></div></td>
             <td class="actions"><div class="action-btns">
-                <i class="fa-regular fa-eye action-view" title="View"></i>
+                <i class="fa-regular fa-eye action-view" onclick="window.openViewModal(${expense.id})" title="View" style="cursor:pointer;"></i>
                 <i class="fa-regular fa-pen-to-square action-edit" onclick="window.openEditModal(${expense.id})" title="Edit"></i>
                 <i class="fa-regular fa-trash-can action-delete" onclick="window.openDeleteModal('expense', ${expense.id}, '${escapeJsString(expense.category)}')" title="Delete"></i>
             </div></td>`;
@@ -196,13 +196,29 @@ const closeAllModals = () => {
     const rm = document.getElementById('reminderModal');
     if (rm) rm.classList.remove('active');
     document.getElementById('deleteModal').classList.remove('active');
+    const vm = document.getElementById('viewModal');
+    if (vm) vm.classList.remove('active');
     expenseForm.reset();
     const rf = document.getElementById('reminderForm');
     if (rf) rf.reset();
     editingId = deletingType = deletingId = null;
 };
 
-document.querySelectorAll('.close-modal, .close-delete-modal').forEach(btn => btn.addEventListener('click', closeAllModals));
+document.querySelectorAll('.close-modal, .close-delete-modal, .close-view-modal').forEach(btn => btn.addEventListener('click', closeAllModals));
+
+window.openViewModal = id => {
+    const expense = expenses.find(e => e.id === id);
+    if (expense) {
+        document.getElementById('viewExpenseId').textContent = formatExpenseId(expense.id);
+        document.getElementById('viewExpenseCategory').textContent = expense.category;
+        document.getElementById('viewExpenseAmount').textContent = formatCurrency(expense.amount);
+        document.getElementById('viewExpenseDate').textContent = formatDate(expense.date).replace(',', '');
+        const statusEl = document.getElementById('viewExpenseStatus');
+        statusEl.textContent = expense.status.toUpperCase();
+        statusEl.className = `status-pill status-${expense.status.toLowerCase()}`;
+        openModal(document.getElementById('viewModal'));
+    }
+};
 
 window.openEditModal = id => {
     const expense = expenses.find(e => e.id === id);

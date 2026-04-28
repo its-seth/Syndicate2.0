@@ -144,6 +144,25 @@
         </div>
     </div>
 
+    <!-- View Expense Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Expense Details</h2>
+            </div>
+            <div class="modal-body" style="padding: 20px; line-height: 1.6;">
+                <p style="margin-bottom: 8px;"><strong>Expense ID:</strong> <span id="viewExpenseId" class="id-color"></span></p>
+                <p style="margin-bottom: 8px;"><strong>Category:</strong> <span id="viewExpenseCategory"></span></p>
+                <p style="margin-bottom: 8px;"><strong>Amount:</strong> <span id="viewExpenseAmount" class="amount-text"></span></p>
+                <p style="margin-bottom: 8px;"><strong>Date:</strong> <span id="viewExpenseDate" class="date-text"></span></p>
+                <p style="margin-bottom: 8px;"><strong>Status:</strong> <span id="viewExpenseStatus" class="status-pill-small"></span></p>
+            </div>
+            <div class="modal-footer" style="padding: 0 25px 25px 25px; border-top: none; background: none;">
+                <button type="button" class="cancel-btn close-view-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
