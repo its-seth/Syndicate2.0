@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
 </head>
+
 <body>
 <div class="page-container">
     <!-- SIDEBAR -->
@@ -351,7 +353,7 @@
             const res = await fetch(`${API_URL}/${pendingDeleteId}`, { method: 'DELETE' });
             const data = await res.json();
             if (data.success) {
-                showToast(`✅ "${pendingDeleteName}" deleted successfully`);
+                showToast(` "${pendingDeleteName}" deleted successfully`);
                 loadCustomers();
             } else {
                 showToast('Delete failed: ' + data.message, true);
@@ -393,7 +395,7 @@
             });
             const data = await res.json();
             if (data.success) {
-                showToast('✅ Customer added successfully');
+                showToast('Customer added successfully');
                 modal.style.display = 'none';
                 resetModalToAdd();
                 loadCustomers();
@@ -438,7 +440,7 @@
             });
             const data = await res.json();
             if (data.success) {
-                showToast(`✅ Customer updated successfully`);
+                showToast(`Customer updated successfully`);
                 modal.style.display = 'none';
                 resetModalToAdd();
                 loadCustomers();
@@ -652,7 +654,7 @@
                 if (legendDiv) legendDiv.innerHTML = '<p>No district data available.</p>';
             }
             
-            //  Prepare calendars using date strings (no timezone)
+ //  Prepare calendars using date strings (no timezone)
 const startDateStr = fromDate;
 const endDateStr = toDate;
 const monthsMap = new Map();
@@ -692,6 +694,7 @@ customers.forEach(c => {
                 </td>`;
                 if ((startWeekday + day) % 7 === 0 && day !== daysInMonth) calendarTable += `<tr></tr>`;
                 }
+
         const remaining = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
         for (let i = 0; i < remaining; i++) calendarTable += '<td style="padding:8px;"> </td>';
         calendarTable += `</tr></tbody></table>`;
@@ -766,7 +769,7 @@ customers.forEach(c => {
 
             pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
             pdf.save(`customers_report_${fromDate}_to_${toDate}.pdf`);
-                        showToast('✅ Report downloaded');
+                        showToast(' Report downloaded');
             
         } catch (err) {
             console.error(err);

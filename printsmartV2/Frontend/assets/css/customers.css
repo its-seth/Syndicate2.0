@@ -247,6 +247,13 @@
             color: #1e293b;
             word-break: break-word;
         }
+/* Action icons container */
+.actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
 /* Action icons – Font Awesome */
 .actions i {
     color: #9ca3af;
@@ -255,15 +262,18 @@
     font-size: 16px;
 }
 
+.actions i:hover {
+    transform: scale(1.1);
+}
+
+
 .actions i.action-view:hover,
 .actions i.action-edit:hover {
     color: #1e293b !important;
-    transform: scale(1.05);
 }
 
 .actions i.action-delete:hover {
     color: #dc2626 !important;
-    transform: scale(1.05);
 }
        
 .id-color {
