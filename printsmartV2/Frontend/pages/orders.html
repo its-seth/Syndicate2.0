@@ -225,7 +225,7 @@
         </div>
     </div>
 
-    <!-- View Order Modal -->
+    <!---------------------------------------------------------View Order Modal------------------------------------------------------------------------------->
     <div id="viewOrderModal" class="modal">
         <div class="modal-content" style="width: 500px; background-color: #f9fafb;">
             <div class="modal-header"
@@ -324,7 +324,7 @@
         </div>
     </div>
 
-    <!-- Month Selection Modal for Report -->
+    <!---------------------------------------------------------Month Selection Modal for Report ------------------------------------------------------------->
     <div id="reportMonthModal" class="modal">
         <div class="modal-content" style="width: 400px;">
             <div class="modal-header">
@@ -364,7 +364,7 @@
     </div>
 
 
-    <!---------------------------------delete confirm model------------------------------------------->
+    <!------------------------------------------------------------------delete confirm model----------------------------------------------------------------->
     <div id="deleteConfirmModal" class="modal">
         <div class="modal-content" style="width: 500px;">
             <div class="modal-header" style="background-color: #0c4ea3;">
@@ -381,7 +381,7 @@
             </div>
         </div>
     </div>
-
+<!---------------------------------------------JSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -532,11 +532,11 @@
             });
 
             // ------------------------------------------Delete order----------------------------------------------
-            // Variables for delete confirmation
+            
             let pendingDeleteId = null;
             let pendingDeleteOrderNumber = null;
 
-            // Show delete confirmation modal
+            
             function showDeleteConfirm(id, orderNumber) {
                 pendingDeleteId = id;
                 pendingDeleteOrderNumber = orderNumber;
@@ -548,7 +548,7 @@
                 });
             }
 
-            // Perform delete operation
+            
             function performDelete() {
                 if (!pendingDeleteId) return;
 
@@ -576,14 +576,14 @@
                 });
             }
 
-            // Close delete modal
+            
             function closeDeleteModal() {
                 $('#deleteConfirmModal').hide();
                 pendingDeleteId = null;
                 pendingDeleteOrderNumber = null;
             }
 
-            // Delete order - Show custom modal
+            
             $(document).on('click', '.delete-order', function () {
                 const orderId = $(this).data('id');
                 const orderRow = $(this).closest('tr');
@@ -591,11 +591,11 @@
                 showDeleteConfirm(orderId, orderNumber);
             });
 
-            // Event listeners for delete modal
+            
             $('#closeDeleteModalBtn').click(closeDeleteModal);
             $('#confirmDeleteBtn').click(performDelete);
 
-            // Close modal when clicking outside
+            
             $(window).click(function (e) {
                 if ($(e.target).is('#deleteConfirmModal')) {
                     closeDeleteModal();
@@ -619,9 +619,9 @@
                 });
             });
 
-            //------------------------------edit order------------------------------------------------
+            //-----------------------------------------------------------edit order------------------------------------------------
 
-            // Load customers for edit dropdown
+            
             function loadCustomersForEdit() {
                 $.ajax({
                     url: '../../Backend/api/orders.php',
@@ -642,7 +642,7 @@
             }
 
 
-            // Get order details for editing
+            
             function getOrderForEdit(orderId) {
                 $.ajax({
                     url: '../../Backend/api/orders.php',
@@ -652,7 +652,7 @@
                     success: function (response) {
                         if (response.success) {
                             const order = response.data;
-                            // Fill the edit form with order data
+                            
                             $('#edit_order_id').val(order.id);
                             $('#edit_customer_id').val(order.customer_id);
                             $('#edit_order_placed_date').val(order.order_date);
@@ -661,7 +661,7 @@
                             $('#edit_total_amount').val(order.total_amount);
                             $('#edit_order_details').val(order.order_details || '');
 
-                            // Show the modal
+                            
                             $('#editOrderModal').css({
                                 'display': 'flex',
                                 'align-items': 'center',
@@ -677,14 +677,14 @@
                 });
             }
 
-            // Edit order button click
+            
             $(document).on('click', '.edit-order', function () {
                 const orderId = $(this).data('id');
-                loadCustomersForEdit(); // Load customers first
-                getOrderForEdit(orderId); // Then load order details
+                loadCustomersForEdit(); 
+                getOrderForEdit(orderId); 
             });
 
-            // Update order
+            
             $('#updateOrderBtn').click(function () {
                 const orderData = {
                     id: $('#edit_order_id').val(),
@@ -696,7 +696,7 @@
                     order_details: $('#edit_order_details').val().trim()
                 };
 
-                // Validation
+                
                 if (!orderData.customer_id || !orderData.order_date || !orderData.deadline || !orderData.status || !orderData.total_amount) {
                     showToast('Please fill all required fields', 'error');
                     return;
@@ -711,7 +711,7 @@
                         if (response.success) {
                             showToast('Order updated successfully!');
                             $('#editOrderModal').hide();
-                            loadOrders(); // Refresh the orders table
+                            loadOrders(); 
                         } else {
                             showToast('Error: ' + response.message, 'error');
                         }
@@ -722,7 +722,7 @@
                 });
             });
 
-            // Close edit order modal
+            
             $('#closeEditOrderModal').click(function () {
                 $('#editOrderModal').hide();
             });
@@ -735,12 +735,12 @@
 
             //------------------------------view order details------------------------------------------
 
-            // View order details
+           
             $(document).on('click', '.view-order', function () {
                 const orderId = $(this).data('id');
                 getOrderDetails(orderId);
             });
-            // Function to get single order details
+            
             function getOrderDetails(orderId) {
                 $.ajax({
                     url: '../../Backend/api/orders.php',
@@ -760,30 +760,30 @@
                 });
             }
 
-            // Function to display order details in modal
+            
             function displayOrderDetails(order) {
-                // Set Order Number (enlarged at top)
+                
                 $('#viewOrderNumber').text(order.order_number);
 
-                // Set Status with appropriate class
+                
                 const statusClass = order.status.toLowerCase();
                 $('#viewOrderStatus').removeClass('pending processing completed').addClass(statusClass);
                 $('#viewOrderStatus').text(order.status);
 
-                // Set Order Information
+                
                 $('#viewOrderDate').text(formatDate(order.order_date));
                 $('#viewDeadline').text(formatDate(order.deadline));
                 $('#viewTotalAmount').text('LKR ' + parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
-                // Set Customer Information
+                
                 $('#viewCustomerName').text(order.customer_name);
                 $('#viewCustomerId').text(order.customer_code || 'N/A');
 
-                // Set Order Description
+            
                 const orderDetails = order.order_details && order.order_details.trim() !== '' ? order.order_details : 'No additional details provided.';
                 $('#viewOrderDetails').text(orderDetails);
 
-                // Show the modal
+                
                 $('#viewOrderModal').css({
                     'display': 'flex',
                     'align-items': 'center',
@@ -791,7 +791,7 @@
                 });
             }
 
-            // Close view order modal
+            
             $('#closeViewOrderModal').click(function () {
                 $('#viewOrderModal').hide();
             });
@@ -803,7 +803,7 @@
             });
 
             //-------------------------------------------------Report Generation---------------------------------------------------------
-            // Populate years in the report modal
+            
             function populateYears() {
                 const currentYear = new Date().getFullYear();
                 const yearSelect = $('#reportYear');
@@ -814,7 +814,7 @@
                 }
             }
 
-            // Open report modal
+            
             $('#reportBtn').click(function () {
                 populateYears();
                 $('#reportMonthModal').css({
@@ -824,12 +824,12 @@
                 });
             });
 
-            // Close report modal
+            
             $('#closeReportModal').click(function () {
                 $('#reportMonthModal').hide();
             });
 
-            // Generate report
+            
             $('#generateReportBtn').click(function () {
                 const month = $('#reportMonth').val();
                 const year = $('#reportYear').val();
@@ -839,7 +839,7 @@
                     return;
                 }
 
-                // Fetch report data
+                
                 $.ajax({
                     url: '../../Backend/api/orders.php',
                     type: 'GET',
@@ -863,14 +863,14 @@
                 });
             });
 
-            // Generate PDF report
+            
             
             function generatePDF(reportData, month, year) {
                 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
                 const monthName = monthNames[parseInt(month) - 1];
 
-                // Create report HTML
+                // report
                 const reportHTML = `
         <div class="report-container">
             <div class="report-header">
@@ -917,12 +917,12 @@
         </div>
     `;
 
-                // Create a temporary div to hold the report
+                // temp div for report
                 const element = document.createElement('div');
                 element.innerHTML = reportHTML;
                 document.body.appendChild(element);
 
-                // Generate PDF
+                // Generate pdf
                 html2pdf().from(element).set({
                     margin: [0.5, 0.5, 0.5, 0.5],
                     filename: `PrintSmart_Report_${monthName}_${year}.pdf`,
@@ -933,7 +933,7 @@
                 });
             }
 
-            // Helper function to render status breakdown
+            // render status breakdown
             function renderStatusBreakdown(breakdown, total) {
                 let html = '';
                 const statuses = ['completed', 'processing', 'pending'];
@@ -958,7 +958,7 @@
                 return html;
             }
 
-            // Helper function to render top customers
+            // render top customers
             function renderTopCustomers(customers) {
                 if (!customers || customers.length === 0) {
                     return '<p>No customer data available</p>';
@@ -990,7 +990,7 @@
 
 
 
-            //---------------------------toast--------------------------------------------------
+            //---------------------------toast----------------------------------------------------------------------------------------------------
 
             function showToast(message, type = 'success') {
                 const toast = $(`<div class="toast-notification ${type}">${message}</div>`);
