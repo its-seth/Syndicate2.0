@@ -53,6 +53,20 @@ async function fetchEmployees() {
         const res = await fetch(API_EMP);
         allEmployeesData = await res.json();
 
+        // Dynamically renumber employees so the oldest is 1 and newest is N
+        if (Array.isArray(allEmployeesData)) {
+            // API returns DESC (newest first). Reverse to oldest first.
+            allEmployeesData.reverse();
+
+            allEmployeesData.forEach((emp, index) => {
+                const seq = index + 1;
+                emp.emp_id_str = '#EM-' + String(seq).padStart(3, '0');
+            });
+
+            // Reverse back to newest first for descending display
+            allEmployeesData.reverse();
+        }
+
         const searchInput = document.getElementById('searchInput');
         triggerSearchFilter(searchInput ? searchInput.value : '');
     } catch (err) { console.error('Error fetching employees:', err); }
@@ -293,6 +307,17 @@ if (reportBtn) {
             const res = await fetch(API_EMP);
             const employees = await res.json();
 
+            // Apply dynamic sequential numbering to match the UI
+            if (Array.isArray(employees)) {
+                // API returns DESC (newest first). Reverse to oldest first.
+                employees.reverse();
+                employees.forEach((emp, index) => {
+                    const seq = index + 1;
+                    emp.emp_id_str = '#EM-' + String(seq).padStart(3, '0');
+                });
+                // Reverse back to newest first
+                employees.reverse();
+            }
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
