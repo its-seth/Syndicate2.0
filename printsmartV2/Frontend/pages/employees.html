@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PrintSmart - Employee Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/global.css?v=1.1">
     <link rel="stylesheet" href="../assets/css/employees.css?v=1.2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
@@ -86,15 +88,14 @@
                     <h1>Employee Management</h1>
                     <p>Directory of all staff members, their current roles and compensation packages.</p>
                 </div>
-                <div style="display:flex; gap:16px; align-items:center;">
-                    <label class="search-box" for="searchInput">
+                <div class="top-bar-actions">
+                    <div class="search-box">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2">
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
-                        <input type="text" id="searchInput" placeholder="Search employee..."
-                            style="border:none; outline:none; background:transparent; margin-left:8px; width:100%;">
-                    </label>
+                        <input type="text" id="searchInput" placeholder="Search employee...">
+                    </div>
                     <button class="btn-primary" id="openAddEmployeeModal">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" style="vertical-align:middle; margin-right:4px;">
