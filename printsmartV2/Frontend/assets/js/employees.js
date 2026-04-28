@@ -66,7 +66,6 @@ function renderEmployees(employees) {
     }
     employees.forEach((emp, index) => {
         const displayIdStr = emp.emp_id_str || ('#EM-' + String(emp.id).padStart(3, '0'));
-        const initials = emp.name ? emp.name.substring(0, 2).toUpperCase() : 'NA';
         const roleStr = (emp.role || '').toLowerCase();
         const roleClass = roleStr.includes('designer') ? 'designer' : roleStr.includes('manager') ? 'manager' :
             roleStr.includes('lead') ? 'lead' : roleStr.includes('operator') ? 'operator' :
@@ -74,7 +73,7 @@ function renderEmployees(employees) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="id-color">${displayIdStr}</td>
-            <td><div class="name-cell"><span class="avatar blue-avatar">${initials}</span><b>${emp.name}</b></div></td>
+            <td><b>${emp.name}</b></td>
             <td><span class="role-badge ${roleClass}">${emp.role || ''}</span></td>
             <td class="text-gray">${emp.phone || ''}</td>
             <td><b>${emp.email || ''}</b></td>
@@ -129,13 +128,13 @@ if (confirmDeleteBtn) {
             });
             const result = await res.json();
             if (result.success) {
-                showToast(`✅ "${pendingDeleteName}" deleted successfully`);
+                showToast(`"${pendingDeleteName}" deleted successfully`);
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error deleting employee:', err); }
         finally {
             if (deleteModal) deleteModal.style.display = 'none';
-            pendingDeleteId = null;
+            pendingDeleteId = null; S
         }
     });
 }
@@ -166,7 +165,7 @@ if (saveBtn) {
                 [empName, empEmail, empPhone, empAddress, empDetails, empRole, empSalary]
                     .forEach(el => { if (el) el.value = ''; });
                 modal.style.display = 'none';
-                showToast('✅ Employee added successfully');
+                showToast('Employee added successfully');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error adding employee:', err); }
@@ -365,7 +364,7 @@ if (reportBtn) {
                     // Fallback to simple words if no commas used
                     if (!city || city.length > 25) {
                         const words = emp.address.trim().split(' ');
-                        city = words[words.length - 1]; 
+                        city = words[words.length - 1];
                     }
                     if (city) {
                         const normalizedCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
@@ -394,26 +393,26 @@ if (reportBtn) {
             for (const [role, count] of Object.entries(roleDistribution)) {
                 let text = `- ${role}: ${count} employee(s)`;
                 if (roleSalaryTotal[role]) {
-                     let avg = roleSalaryTotal[role] / count;
-                     text += ` (Avg: $${avg.toLocaleString()})`;
+                    let avg = roleSalaryTotal[role] / count;
+                    text += ` (Avg: $${avg.toLocaleString()})`;
                 }
                 doc.text(text, 20, yPos);
                 yPos += 7;
             }
 
             if (Object.keys(cityDistribution).length > 0) {
-                 yPos += 5;
-                 doc.setFont(undefined, 'bold');
-                 doc.text("Top Geographic Distributions (Address base):", 14, yPos);
-                 doc.setFont(undefined, 'normal');
-                 yPos += 7;
-                 // Sort cities by count descending
-                 const sortedCities = Object.entries(cityDistribution).sort((a,b) => b[1]-a[1]);
-                 // Print top 5 regions to avoid PDF overflow
-                 for(let i=0; i<Math.min(sortedCities.length, 5); i++) {
-                     doc.text(`- ${sortedCities[i][0]}: ${sortedCities[i][1]} employee(s)`, 20, yPos);
-                     yPos += 7;
-                 }
+                yPos += 5;
+                doc.setFont(undefined, 'bold');
+                doc.text("Top Geographic Distributions (Address base):", 14, yPos);
+                doc.setFont(undefined, 'normal');
+                yPos += 7;
+                // Sort cities by count descending
+                const sortedCities = Object.entries(cityDistribution).sort((a, b) => b[1] - a[1]);
+                // Print top 5 regions to avoid PDF overflow
+                for (let i = 0; i < Math.min(sortedCities.length, 5); i++) {
+                    doc.text(`- ${sortedCities[i][0]}: ${sortedCities[i][1]} employee(s)`, 20, yPos);
+                    yPos += 7;
+                }
             }
 
             doc.save('Employee_Report.pdf');
