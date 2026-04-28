@@ -1,6 +1,6 @@
 // assets/js/suppliers.js — rewritten to match order page style
-const SUPP_API = '/Syndicate/Syndicate2.0/printsmartV2/Backend/api/suppliers.php';
-const REPORT_URL = '/Syndicate/Syndicate2.0/printsmartV2/Backend/reports/suppliers.php';
+const SUPP_API = '../../Backend/api/suppliers.php';
+const REPORT_URL = '../../Backend/reports/suppliers.php';
 
 $(document).ready(function () {
     // Load suppliers on page load
