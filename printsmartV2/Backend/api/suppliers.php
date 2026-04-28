@@ -8,7 +8,7 @@ $empId  = (int) ($_SESSION['EmpID'] ?? 1);
 
 // Helper: format supplier ID
 function formatSupplierId($id) {
-    return '#SUP-' . str_pad($id, 4, '0', STR_PAD_LEFT);
+    return '#SUP-' . str_pad($id, 3, '0', STR_PAD_LEFT);
 }
 
 if ($action === 'list') {

@@ -223,7 +223,7 @@ foreach ($suppliers as &$s) {
             <tbody>
                 <?php foreach ($suppliers as $s): ?>
                 <tr>
-                    <td><?php echo '#SUP-' . str_pad($s['id'], 4, '0', STR_PAD_LEFT); ?></td>
+                    <td><?php echo '#SUP-' . str_pad($s['id'], 3, '0', STR_PAD_LEFT); ?></td>
                     <td><?php echo htmlspecialchars($s['SName']); ?></td>
                     <td><?php echo htmlspecialchars($s['supply_type']); ?></td>
                     <td><?php echo htmlspecialchars($s['SContact_No']); ?></td>
