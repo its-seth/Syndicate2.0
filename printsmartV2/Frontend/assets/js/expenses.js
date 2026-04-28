@@ -220,7 +220,7 @@ window.openDeleteModal = (type, id, title = '') => {
     deletingType = type; 
     deletingId = id; 
     const msg = document.getElementById('deleteMessage');
-    if (msg) msg.textContent = title ? `Delete "${title}"? This action cannot be undone.` : 'Are you sure you want to delete this record? This action cannot be undone.';
+    if (msg) msg.textContent = title ? `Are you sure you want to delete "${title}"?` : 'Are you sure you want to delete this expense?';
     openModal(document.getElementById('deleteModal')); 
 };
 
