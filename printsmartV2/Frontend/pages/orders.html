@@ -363,6 +363,25 @@
         </div>
     </div>
 
+
+    <!---------------------------------delete confirm model------------------------------------------->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content" style="width: 500px;">
+            <div class="modal-header" style="background-color: #0c4ea3;">
+                <h2 style="color: white;">Confirm Deletion</h2>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage" style="font-size: 14px; color: #374151; text-align: center;">
+                    Are you sure you want to delete this order?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="closeDeleteModalBtn">Cancel</button>
+                <button class="save-btn" id="confirmDeleteBtn" style="background-color: #b91c1c;">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -513,28 +532,76 @@
             });
 
             // ------------------------------------------Delete order----------------------------------------------
+            // Variables for delete confirmation
+            let pendingDeleteId = null;
+            let pendingDeleteOrderNumber = null;
+
+            // Show delete confirmation modal
+            function showDeleteConfirm(id, orderNumber) {
+                pendingDeleteId = id;
+                pendingDeleteOrderNumber = orderNumber;
+                $('#deleteMessage').text(`Delete order "${orderNumber}"? This action cannot be undone.`);
+                $('#deleteConfirmModal').css({
+                    'display': 'flex',
+                    'align-items': 'center',
+                    'justify-content': 'center'
+                });
+            }
+
+            // Perform delete operation
+            function performDelete() {
+                if (!pendingDeleteId) return;
+
+                $.ajax({
+                    url: '../../Backend/api/orders.php',
+                    type: 'POST',
+                    data: { action: 'delete_order', id: pendingDeleteId },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            showToast(`Order "${pendingDeleteOrderNumber}" deleted successfully`);
+                            $('#deleteConfirmModal').hide();
+                            loadOrders();
+                        } else {
+                            showToast('Delete failed: ' + response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        showToast('Server error during deletion', 'error');
+                    },
+                    complete: function () {
+                        pendingDeleteId = null;
+                        pendingDeleteOrderNumber = null;
+                    }
+                });
+            }
+
+            // Close delete modal
+            function closeDeleteModal() {
+                $('#deleteConfirmModal').hide();
+                pendingDeleteId = null;
+                pendingDeleteOrderNumber = null;
+            }
+
+            // Delete order - Show custom modal
             $(document).on('click', '.delete-order', function () {
                 const orderId = $(this).data('id');
-                if (confirm('Are you sure you want to delete this order?')) {
-                    $.ajax({
-                        url: '../../Backend/api/orders.php',
-                        type: 'POST',
-                        data: { action: 'delete_order', id: orderId },
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.success) {
-                                showToast('Order deleted successfully!');
-                                loadOrders();
-                            } else {
-                                showToast('Error: ' + response.message, 'error');
-                            }
-                        },
-                        error: function () {
-                            showToast('Error deleting order', 'error');
-                        }
-                    });
+                const orderRow = $(this).closest('tr');
+                const orderNumber = orderRow.find('td:first').text();
+                showDeleteConfirm(orderId, orderNumber);
+            });
+
+            // Event listeners for delete modal
+            $('#closeDeleteModalBtn').click(closeDeleteModal);
+            $('#confirmDeleteBtn').click(performDelete);
+
+            // Close modal when clicking outside
+            $(window).click(function (e) {
+                if ($(e.target).is('#deleteConfirmModal')) {
+                    closeDeleteModal();
                 }
             });
+
 
 
             //-------------------------------------search-----------------------------------------------
@@ -797,7 +864,7 @@
             });
 
             // Generate PDF report
-            // Generate PDF report (without detailed orders list)
+            
             function generatePDF(reportData, month, year) {
                 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
@@ -920,7 +987,7 @@
                 return html;
             }
 
-            
+
 
 
             //---------------------------toast--------------------------------------------------
