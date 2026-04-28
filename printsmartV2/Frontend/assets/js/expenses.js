@@ -50,7 +50,7 @@ function escapeJsString(str) {
     if (!str) return '';
     return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
 }
-
+//expense id
 function formatExpenseId(id) {
     return `#EXP-${String(id).padStart(3, '0')}`;
 }
@@ -58,9 +58,7 @@ function formatExpenseId(id) {
 let expenses = [];
 
 let reminders = [
-    { id: 2001, date: '2026-10-18', title: 'water bill',   amount: '1200.00', status: 'Overdue',  icon: 'pencil',    reminderOn: true  },
-    { id: 2002, date: '2026-10-24', title: 'Electricity',  amount: '45000.00',status: 'Upcoming', icon: 'zap',       reminderOn: true  },
-    { id: 2003, date: '2026-11-02', title: 'WIFI',         amount: '8500.00', status: 'Upcoming', icon: 'file-text', reminderOn: false },
+   
 ];
 
 async function syncWithDB() {
