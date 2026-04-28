@@ -66,7 +66,6 @@ function renderEmployees(employees) {
     }
     employees.forEach((emp, index) => {
         const displayIdStr = emp.emp_id_str || ('#EM-' + String(emp.id).padStart(3, '0'));
-        const initials = emp.name ? emp.name.substring(0, 2).toUpperCase() : 'NA';
         const roleStr = (emp.role || '').toLowerCase();
         const roleClass = roleStr.includes('designer') ? 'designer' : roleStr.includes('manager') ? 'manager' :
             roleStr.includes('lead') ? 'lead' : roleStr.includes('operator') ? 'operator' :
@@ -74,7 +73,7 @@ function renderEmployees(employees) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="id-color">${displayIdStr}</td>
-            <td><div class="name-cell"><span class="avatar blue-avatar">${initials}</span><b>${emp.name}</b></div></td>
+            <td><b>${emp.name}</b></td>
             <td><span class="role-badge ${roleClass}">${emp.role || ''}</span></td>
             <td class="text-gray">${emp.phone || ''}</td>
             <td><b>${emp.email || ''}</b></td>
