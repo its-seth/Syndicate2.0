@@ -69,18 +69,11 @@ if ($method === 'POST') {
         exit;
     }
 
-<<<<<<< Updated upstream
-    // Generate emp_id_str
-    $stmt = $pdo->query("SELECT COUNT(id) FROM employees");
-    $count = $stmt->fetchColumn();
-    $emp_id_str = '#EM-' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
-=======
     //Generate employee ID like #EM-001
     $stmt = $pdo->query("SELECT MAX(id) FROM employees");
     $maxId = $stmt->fetchColumn();
     $maxId = $maxId ? (int)$maxId : 0;
     $emp_id_str = '#EM-' . str_pad($maxId + 1, 3, '0', STR_PAD_LEFT);
->>>>>>> Stashed changes
 
     try {
         $sql = "INSERT INTO employees (emp_id_str, name, email, phone, address, role, salary, additional_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

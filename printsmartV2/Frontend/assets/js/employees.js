@@ -7,11 +7,6 @@ const modal = document.getElementById('addEmployeeModal');
 const openBtn = document.getElementById('openAddEmployeeModal');
 const closeBtn = document.getElementById('closeAddEmployeeModal');
 const saveBtn = document.querySelector('.save-btn');
-<<<<<<< Updated upstream
-const toast = document.getElementById('successToast');
-const toastMsg = document.querySelector('.toast-message');
-=======
-
 
 // ───── TOAST NOTIFICATION FUNCTION ─────
 function showToast(message, isError = false) {
@@ -27,7 +22,6 @@ function showToast(message, isError = false) {
 }
 
 // Table body (where employees will be displayed)
->>>>>>> Stashed changes
 const tableBody = document.querySelector('tbody');
 
 const empName = document.getElementById('empName');
@@ -90,12 +84,8 @@ function renderEmployees(employees) {
 
         // Generate ID display
         const displayIdStr = emp.emp_id_str || ('#EM-' + String(emp.id).padStart(3, '0'));
-<<<<<<< Updated upstream
         const initials = emp.name ? emp.name.substring(0, 2).toUpperCase() : 'NA';
-=======
-
         // ─────Role styling─────
->>>>>>> Stashed changes
         const roleStr = (emp.role || '').toLowerCase();
         const roleClass = roleStr.includes('designer') ? 'designer' : roleStr.includes('manager') ? 'manager' :
             roleStr.includes('lead') ? 'lead' : roleStr.includes('operator') ? 'operator' :
@@ -123,24 +113,6 @@ if (searchInputEl) {
     searchInputEl.addEventListener('input', (e) => triggerSearchFilter(e.target.value));
 }
 
-<<<<<<< Updated upstream
-// Delete employee
-async function deleteEmployee(id) {
-    if (!confirm('Are you sure you want to delete this employee?')) return;
-    try {
-        const res = await fetch(API_EMP, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
-        });
-        const result = await res.json();
-        if (result.success) {
-            if (toastMsg) toastMsg.textContent = 'Deleted Successfully !!!';
-            if (toast) toast.style.display = 'flex';
-            fetchEmployees();
-        } else { alert(result.message); }
-    } catch (err) { console.error('Error deleting employee:', err); }
-=======
 // Delete Employee
 let pendingDeleteId = null;
 let pendingDeleteName = '';
@@ -185,10 +157,9 @@ if (confirmDeleteBtn) {
         } catch (err) { console.error('Error deleting employee:', err); }
         finally {
             if (deleteModal) deleteModal.style.display = 'none';
-            pendingDeleteId = null; S
+            pendingDeleteId = null;
         }
     });
->>>>>>> Stashed changes
 }
 
 // Modal controls (ADD , CLOSE)
@@ -217,20 +188,14 @@ if (saveBtn) {
                 [empName, empEmail, empPhone, empAddress, empDetails, empRole, empSalary]
                     .forEach(el => { if (el) el.value = ''; });
                 modal.style.display = 'none';
-                if (toastMsg) toastMsg.textContent = 'Added Successfully !!!';
-                if (toast) toast.style.display = 'flex';
+                showToast('Added Successfully !!!');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error adding employee:', err); }
     });
 }
 
-<<<<<<< Updated upstream
-if (toast) toast.addEventListener('click', () => { toast.style.display = 'none'; });
-
-=======
 // ───── ACTION BUTTONS (VIEW / EDIT / DELETE) ─────
->>>>>>> Stashed changes
 // Event delegation for actions
 tableBody.addEventListener('click', function (e) {
     const delBtn = e.target.closest('.delete-btn');
@@ -328,8 +293,7 @@ if (saveEditBtn) {
             const result = await res.json();
             if (result.success) {
                 if (editModal) editModal.style.display = 'none';
-                if (toastMsg) toastMsg.textContent = 'Updated Successfully !!!';
-                if (toast) toast.style.display = 'flex';
+                showToast('Updated Successfully !!!');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error updating employee:', err); }
