@@ -7,6 +7,8 @@ const modal = document.getElementById('addEmployeeModal');
 const openBtn = document.getElementById('openAddEmployeeModal');
 const closeBtn = document.getElementById('closeAddEmployeeModal');
 const saveBtn = document.querySelector('.save-btn');
+
+// ───── TOAST NOTIFICATION FUNCTION ─────
 function showToast(message, isError = false) {
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
@@ -18,6 +20,8 @@ function showToast(message, isError = false) {
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
+
+// Table body (where employees will be displayed)
 const tableBody = document.querySelector('tbody');
 
 const empName = document.getElementById('empName');
@@ -28,15 +32,23 @@ const empDetails = document.getElementById('empDetails');
 const empRole = document.getElementById('empRole');
 const empSalary = document.getElementById('empSalary');
 
+
+// Store all employee data
 let allEmployeesData = [];
 
-// Helper function to handle search and filtering
+
+// ───── SEARCH FUNCTION AND FILTERING─────
 function triggerSearchFilter(searchTerm) {
     const trm = (searchTerm || '').toLowerCase().trim();
+
+    // If empty → show all
     if (!trm) {
         renderEmployees(allEmployeesData);
         return;
     }
+
+
+    // Filter employees
     const filtered = allEmployeesData.filter(emp => {
         return (emp.name && emp.name.toLowerCase().includes(trm)) ||
             (emp.emp_id_str && emp.emp_id_str.toLowerCase().includes(trm)) ||
@@ -71,15 +83,23 @@ async function fetchEmployees() {
         triggerSearchFilter(searchInput ? searchInput.value : '');
     } catch (err) { console.error('Error fetching employees:', err); }
 }
-
+// ───── DISPLAY EMPLOYEES IN TABLE ─────
 function renderEmployees(employees) {
     tableBody.innerHTML = '';
+
+    // If no employees
     if (!employees.length) {
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No employees found.</td></tr>';
         return;
     }
+
+    // Loop each employee
     employees.forEach((emp, index) => {
+
+        // Generate ID display
         const displayIdStr = emp.emp_id_str || ('#EM-' + String(emp.id).padStart(3, '0'));
+        const initials = emp.name ? emp.name.substring(0, 2).toUpperCase() : 'NA';
+        // ─────Role styling─────
         const roleStr = (emp.role || '').toLowerCase();
         const roleClass = roleStr.includes('designer') ? 'designer' : roleStr.includes('manager') ? 'manager' :
             roleStr.includes('lead') ? 'lead' : roleStr.includes('operator') ? 'operator' :
@@ -100,14 +120,17 @@ function renderEmployees(employees) {
     });
 }
 
+
+// ───── SEARCH INPUT EVENT ─────
 const searchInputEl = document.getElementById('searchInput');
 if (searchInputEl) {
     searchInputEl.addEventListener('input', (e) => triggerSearchFilter(e.target.value));
 }
 
-// Delete Employee Modal Setup
+// Delete Employee
 let pendingDeleteId = null;
 let pendingDeleteName = '';
+
 
 const deleteModal = document.getElementById('deleteConfirmModal');
 const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
@@ -148,12 +171,12 @@ if (confirmDeleteBtn) {
         } catch (err) { console.error('Error deleting employee:', err); }
         finally {
             if (deleteModal) deleteModal.style.display = 'none';
-            pendingDeleteId = null; S
+            pendingDeleteId = null;
         }
     });
 }
 
-// Modal controls
+// Modal controls (ADD , CLOSE)
 if (openBtn) openBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
 if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
 window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
@@ -179,15 +202,14 @@ if (saveBtn) {
                 [empName, empEmail, empPhone, empAddress, empDetails, empRole, empSalary]
                     .forEach(el => { if (el) el.value = ''; });
                 modal.style.display = 'none';
-                showToast('Employee added successfully');
+                showToast('Added Successfully !!!');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error adding employee:', err); }
     });
 }
 
-// Old static toast click listener removed
-
+// ───── ACTION BUTTONS (VIEW / EDIT / DELETE) ─────
 // Event delegation for actions
 tableBody.addEventListener('click', function (e) {
     const delBtn = e.target.closest('.delete-btn');
@@ -285,7 +307,7 @@ if (saveEditBtn) {
             const result = await res.json();
             if (result.success) {
                 if (editModal) editModal.style.display = 'none';
-                showToast('✅ Employee updated successfully');
+                showToast('Updated Successfully !!!');
                 fetchEmployees();
             } else { alert(result.message); }
         } catch (err) { console.error('Error updating employee:', err); }
@@ -356,11 +378,11 @@ if (reportBtn) {
             });
 
             // --- Analysis Section ---
-            const finalY = doc.lastAutoTable.finalY || 40;
+            let finalY = doc.lastAutoTable.finalY || 40;
 
             doc.setFontSize(14);
             doc.setTextColor(0);
-            doc.text("Analysis Summary", 14, finalY + 15);
+            doc.text("Employee Analysis Summary", 14, finalY + 15);
 
             const totalEmployees = employees.length;
             let roleDistribution = {};
@@ -409,20 +431,39 @@ if (reportBtn) {
                 doc.text(`Total Payroll: $${totalSalary.toLocaleString()}`, 14, yPos);
             }
 
-            yPos += 10;
-            doc.setFont(undefined, 'bold');
-            doc.text("Role Breakdown & Average Salary:", 14, yPos);
-            doc.setFont(undefined, 'normal');
-            yPos += 7;
+            const roleData = Object.keys(roleDistribution).map(role => [role, roleDistribution[role]]);
+            doc.autoTable({
+                head: [['Role Breakdown', 'Employee Count']],
+                body: roleData,
+                startY: yPos + 10,
+                theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 4 },
+                headStyles: { fillColor: [46, 204, 113] }
+            });
 
-            for (const [role, count] of Object.entries(roleDistribution)) {
-                let text = `- ${role}: ${count} employee(s)`;
-                if (roleSalaryTotal[role]) {
-                    let avg = roleSalaryTotal[role] / count;
-                    text += ` (Avg: $${avg.toLocaleString()})`;
-                }
-                doc.text(text, 20, yPos);
-                yPos += 7;
+            finalY = doc.lastAutoTable.finalY || (yPos + 10);
+
+            if (hasSalaryData) {
+                let salaryDistribution = {};
+                employees.forEach(emp => {
+                    const role = emp.role || 'Unassigned';
+                    if (emp.salary) {
+                        const sal = parseFloat(String(emp.salary).replace(/[^0-9.-]+/g, ""));
+                        if (!isNaN(sal)) {
+                            salaryDistribution[role] = (salaryDistribution[role] || 0) + sal;
+                        }
+                    }
+                });
+
+                const salaryData = Object.keys(salaryDistribution).map(role => [role, `$${salaryDistribution[role].toFixed(2)}`]);
+                doc.autoTable({
+                    head: [['Role', 'Total Salary']],
+                    body: salaryData,
+                    startY: finalY + 10,
+                    theme: 'grid',
+                    styles: { fontSize: 9, cellPadding: 4 },
+                    headStyles: { fillColor: [243, 156, 18] }
+                });
             }
 
             if (Object.keys(cityDistribution).length > 0) {

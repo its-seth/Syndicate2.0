@@ -48,18 +48,20 @@ if ($method === 'POST') {
     $additional_details = trim($data['additional_details'] ?? $data['details'] ?? '');
 
     // Validation
+    //Gmail validation
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[a-zA-Z0-9._%+\-]+@gmail\.com$/', $email)) {
         echo json_encode(['success' => false, 'message' => 'Only valid Gmail addresses are allowed']);
         exit;
     }
 
+    //Phone number validations
     $clean_phone = preg_replace('/[^0-9]/', '', $phone);
     if (empty($clean_phone) || strlen($clean_phone) !== 10) {
         echo json_encode(['success' => false, 'message' => 'Valid phone number is required (exactly 10 digits)']);
         exit;
     }
 
-    // Duplicate check
+    // Check duplicate phone numbers
     $stmt = $pdo->prepare("SELECT id FROM employees WHERE phone = ?");
     $stmt->execute([$phone]);
     if ($stmt->fetch()) {
@@ -67,7 +69,7 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Generate emp_id_str safely avoiding conflicts from deleted rows
+    //Generate employee ID like #EM-001
     $stmt = $pdo->query("SELECT MAX(id) FROM employees");
     $maxId = $stmt->fetchColumn();
     $maxId = $maxId ? (int)$maxId : 0;
@@ -118,7 +120,7 @@ if ($method === 'PUT') {
         exit;
     }
 
-    // Duplicate phone check for other user
+    // Duplicate phone number
     $stmt = $pdo->prepare("SELECT id FROM employees WHERE phone = ? AND id != ?");
     $stmt->execute([$phone, $id]);
     if ($stmt->fetch()) {
