@@ -7,8 +7,27 @@ const modal = document.getElementById('addEmployeeModal');
 const openBtn = document.getElementById('openAddEmployeeModal');
 const closeBtn = document.getElementById('closeAddEmployeeModal');
 const saveBtn = document.querySelector('.save-btn');
+<<<<<<< Updated upstream
 const toast = document.getElementById('successToast');
 const toastMsg = document.querySelector('.toast-message');
+=======
+
+
+// ───── TOAST NOTIFICATION FUNCTION ─────
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    if (isError) toast.classList.add('error');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Table body (where employees will be displayed)
+>>>>>>> Stashed changes
 const tableBody = document.querySelector('tbody');
 
 const empName = document.getElementById('empName');
@@ -19,15 +38,23 @@ const empDetails = document.getElementById('empDetails');
 const empRole = document.getElementById('empRole');
 const empSalary = document.getElementById('empSalary');
 
+
+// Store all employee data
 let allEmployeesData = [];
 
-// Helper function to handle search and filtering
+
+// ───── SEARCH FUNCTION AND FILTERING─────
 function triggerSearchFilter(searchTerm) {
     const trm = (searchTerm || '').toLowerCase().trim();
+
+    // If empty → show all
     if (!trm) {
         renderEmployees(allEmployeesData);
         return;
     }
+
+
+    // Filter employees
     const filtered = allEmployeesData.filter(emp => {
         return (emp.name && emp.name.toLowerCase().includes(trm)) ||
             (emp.emp_id_str && emp.emp_id_str.toLowerCase().includes(trm)) ||
@@ -48,16 +75,27 @@ async function fetchEmployees() {
         triggerSearchFilter(searchInput ? searchInput.value : '');
     } catch (err) { console.error('Error fetching employees:', err); }
 }
-
++// ───── DISPLAY EMPLOYEES IN TABLE ─────
 function renderEmployees(employees) {
     tableBody.innerHTML = '';
+
+    // If no employees
     if (!employees.length) {
         tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No employees found.</td></tr>';
         return;
     }
+
+    // Loop each employee
     employees.forEach((emp, index) => {
+
+        // Generate ID display
         const displayIdStr = emp.emp_id_str || ('#EM-' + String(emp.id).padStart(3, '0'));
+<<<<<<< Updated upstream
         const initials = emp.name ? emp.name.substring(0, 2).toUpperCase() : 'NA';
+=======
+
+        // ─────Role styling─────
+>>>>>>> Stashed changes
         const roleStr = (emp.role || '').toLowerCase();
         const roleClass = roleStr.includes('designer') ? 'designer' : roleStr.includes('manager') ? 'manager' :
             roleStr.includes('lead') ? 'lead' : roleStr.includes('operator') ? 'operator' :
@@ -78,11 +116,14 @@ function renderEmployees(employees) {
     });
 }
 
+
+// ───── SEARCH INPUT EVENT ─────
 const searchInputEl = document.getElementById('searchInput');
 if (searchInputEl) {
     searchInputEl.addEventListener('input', (e) => triggerSearchFilter(e.target.value));
 }
 
+<<<<<<< Updated upstream
 // Delete employee
 async function deleteEmployee(id) {
     if (!confirm('Are you sure you want to delete this employee?')) return;
@@ -99,9 +140,58 @@ async function deleteEmployee(id) {
             fetchEmployees();
         } else { alert(result.message); }
     } catch (err) { console.error('Error deleting employee:', err); }
+=======
+// Delete Employee
+let pendingDeleteId = null;
+let pendingDeleteName = '';
+
+
+const deleteModal = document.getElementById('deleteConfirmModal');
+const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn');
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+const deleteMessageSpan = document.getElementById('deleteMessage');
+
+if (closeDeleteModalBtn) {
+    closeDeleteModalBtn.addEventListener('click', () => { if (deleteModal) deleteModal.style.display = 'none'; });
+}
+if (deleteModal) {
+    window.addEventListener('click', e => { if (e.target === deleteModal) deleteModal.style.display = 'none'; });
 }
 
-// Modal controls
+// Delete employee (Triggered when trash icon clicked)
+function deleteEmployee(id) {
+    const emp = allEmployeesData.find(e => e.id == id);
+    const name = emp ? emp.name : 'this employee';
+    pendingDeleteId = id;
+    pendingDeleteName = name;
+    if (deleteMessageSpan) deleteMessageSpan.textContent = `Are you sure you want to delete ${name}? `;
+    if (deleteModal) deleteModal.style.display = 'flex';
+}
+
+if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        try {
+            const res = await fetch(API_EMP, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: pendingDeleteId })
+            });
+            const result = await res.json();
+            if (result.success) {
+                showToast(`"${pendingDeleteName}" deleted successfully`);
+                fetchEmployees();
+            } else { alert(result.message); }
+        } catch (err) { console.error('Error deleting employee:', err); }
+        finally {
+            if (deleteModal) deleteModal.style.display = 'none';
+            pendingDeleteId = null; S
+        }
+    });
+>>>>>>> Stashed changes
+}
+
+// Modal controls (ADD , CLOSE)
 if (openBtn) openBtn.addEventListener('click', () => { modal.style.display = 'flex'; });
 if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
 window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
@@ -135,8 +225,12 @@ if (saveBtn) {
     });
 }
 
+<<<<<<< Updated upstream
 if (toast) toast.addEventListener('click', () => { toast.style.display = 'none'; });
 
+=======
+// ───── ACTION BUTTONS (VIEW / EDIT / DELETE) ─────
+>>>>>>> Stashed changes
 // Event delegation for actions
 tableBody.addEventListener('click', function (e) {
     const delBtn = e.target.closest('.delete-btn');
