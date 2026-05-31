@@ -16,11 +16,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/../config/db_connect.php';
 
+function resequenceEmployees($pdo) {
+    try {
+        // Fetch all employees in ascending chronological order of creation
+        $stmt = $pdo->query("SELECT id FROM employees ORDER BY id ASC");
+        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $count = 1;
+        $updateStmt = $pdo->prepare("UPDATE employees SET emp_id_str = ? WHERE id = ?");
+        foreach ($employees as $emp) {
+            $new_emp_id_str = '#EM-' . str_pad($count, 3, '0', STR_PAD_LEFT);
+            $updateStmt->execute([$new_emp_id_str, $emp['id']]);
+            $count++;
+        }
+    } catch (PDOException $e) {
+        // Fail silently or log error
+    }
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET — list all employees ───────────────────────────────────────
 if ($method === 'GET') {
     try {
+        resequenceEmployees($pdo);
         $stmt = $pdo->query("SELECT * FROM employees ORDER BY id DESC");
         $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($employees);
@@ -67,15 +86,16 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Generate emp_id_str
-    $stmt = $pdo->query("SELECT COUNT(id) FROM employees");
-    $count = $stmt->fetchColumn();
-    $emp_id_str = '#EM-' . str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+    // Generate a temporary unique emp_id_str to avoid UNIQUE constraint conflicts
+    $emp_id_str = '#T-' . time() . '-' . rand(10, 99);
 
     try {
         $sql = "INSERT INTO employees (emp_id_str, name, email, phone, address, role, salary, additional_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$emp_id_str, $name, $email, $phone, $address, $role, $salary, $additional_details]);
+
+        // Resequence all employees to set the correct sequential chronological IDs
+        resequenceEmployees($pdo);
 
         echo json_encode([
             'success' => true,
@@ -155,6 +175,7 @@ if ($method === 'DELETE') {
         $stmt->execute([$id]);
 
         if ($stmt->rowCount() > 0) {
+            resequenceEmployees($pdo);
             echo json_encode(['success' => true, 'message' => 'Employee deleted successfully']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Employee not found']);
