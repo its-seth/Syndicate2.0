@@ -210,52 +210,74 @@
 
 <script>
     // Format currency
-    const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(val);
+    const formatCurrency = (val) => new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(val || 0);
     
     // Fetch dashboard stats and lists
     fetch('../Backend/api/dashboard.php')
         .then(res => res.json())
         .then(data => {
-            if (!data.success) return;
+            if (!data || !data.success) return;
             
             // Stats
-            document.getElementById('stat-orders').textContent = data.orders.count.toLocaleString();
-            document.getElementById('stat-customers').textContent = data.customers.toLocaleString();
-            document.getElementById('stat-suppliers').textContent = data.suppliers.toLocaleString();
-            document.getElementById('stat-employees').textContent = data.employees.toLocaleString();
-            document.getElementById('stat-expenses').textContent = 'LKR ' + formatCurrency(data.expenses.total);
-            document.getElementById('stat-revenue').textContent = 'LKR ' + formatCurrency(data.orders.revenue);
+            const ordersCount = data.orders?.count ?? 0;
+            const customersCount = data.customers ?? 0;
+            const suppliersCount = data.suppliers ?? 0;
+            const employeesCount = data.employees ?? 0;
+            const totalExpenses = data.expenses?.total ?? 0;
+            const totalRevenue = data.orders?.revenue ?? 0;
+
+            if (document.getElementById('stat-orders')) document.getElementById('stat-orders').textContent = ordersCount.toLocaleString();
+            if (document.getElementById('stat-customers')) document.getElementById('stat-customers').textContent = customersCount.toLocaleString();
+            if (document.getElementById('stat-suppliers')) document.getElementById('stat-suppliers').textContent = suppliersCount.toLocaleString();
+            if (document.getElementById('stat-employees')) document.getElementById('stat-employees').textContent = employeesCount.toLocaleString();
+            if (document.getElementById('stat-expenses')) document.getElementById('stat-expenses').textContent = 'LKR ' + formatCurrency(totalExpenses);
+            if (document.getElementById('stat-revenue')) document.getElementById('stat-revenue').textContent = 'LKR ' + formatCurrency(totalRevenue);
 
             // Recent Orders
             const ordersTbody = document.getElementById('recent-orders-body');
-            if (data.recent_orders && data.recent_orders.length) {
-                ordersTbody.innerHTML = data.recent_orders.map(o => `
-                    <tr>
-                        <td style="font-weight:600; color:var(--text-primary)">${o.order_number}</td>
-                        <td style="color:var(--text-secondary)">${o.customer_name || 'Walk-in'}</td>
-                        <td style="color:var(--text-secondary)">${o.order_details || 'Print jobs'}</td>
-                        <td style="font-weight:600">$${parseFloat(o.total_amount).toFixed(2)}</td>
-                        <td><span class="badge ${o.status.toLowerCase()}">${o.status.toUpperCase()}</span></td>
-                    </tr>
-                `).join('');
-            } else {
-                ordersTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent orders found.</td></tr>';
+            if (ordersTbody) {
+                if (data.recent_orders && data.recent_orders.length) {
+                    ordersTbody.innerHTML = data.recent_orders.map(o => {
+                        const statusClass = (o.status || 'Pending').toLowerCase();
+                        const statusText = (o.status || 'Pending').toUpperCase();
+                        const amt = o.total_amount ? parseFloat(o.total_amount) : 0;
+                        return `
+                            <tr>
+                                <td style="font-weight:600; color:var(--text-primary)">${o.order_number || '—'}</td>
+                                <td style="color:var(--text-secondary)">${o.customer_name || 'Walk-in'}</td>
+                                <td style="color:var(--text-secondary)">${o.order_details || 'Print jobs'}</td>
+                                <td style="font-weight:600">$${amt.toFixed(2)}</td>
+                                <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    ordersTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent orders found.</td></tr>';
+                }
             }
 
             // Recent Expenses
             const expTbody = document.getElementById('recent-expenses-body');
-            if (data.recent_expenses && data.recent_expenses.length) {
-                expTbody.innerHTML = data.recent_expenses.map(e => `
-                    <tr>
-                        <td style="font-weight:600; color:var(--primary-blue)">${e.expense_id}</td>
-                        <td style="color:var(--text-secondary)">${e.category}</td>
-                        <td style="font-weight:600">$${parseFloat(e.amount).toFixed(2)}</td>
-                        <td style="color:var(--text-secondary)">${new Date(e.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}</td>
-                        <td><span class="badge ${e.status.toLowerCase()}">${e.status}</span></td>
-                    </tr>
-                `).join('');
-            } else {
-                expTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent transactions found.</td></tr>';
+            if (expTbody) {
+                if (data.recent_expenses && data.recent_expenses.length) {
+                    expTbody.innerHTML = data.recent_expenses.map(e => {
+                        const statusClass = (e.status || 'Pending').toLowerCase();
+                        const statusText = e.status || 'Pending';
+                        const amt = e.amount ? parseFloat(e.amount) : 0;
+                        const dateStr = e.date ? new Date(e.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '—';
+                        return `
+                            <tr>
+                                <td style="font-weight:600; color:var(--primary-blue)">${e.expense_id || '—'}</td>
+                                <td style="color:var(--text-secondary)">${e.category || '—'}</td>
+                                <td style="font-weight:600">$${amt.toFixed(2)}</td>
+                                <td style="color:var(--text-secondary)">${dateStr}</td>
+                                <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    expTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No recent transactions found.</td></tr>';
+                }
             }
         })
         .catch(err => {

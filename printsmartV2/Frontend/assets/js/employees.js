@@ -69,7 +69,7 @@ async function fetchEmployees() {
         triggerSearchFilter(searchInput ? searchInput.value : '');
     } catch (err) { console.error('Error fetching employees:', err); }
 }
-+// ───── DISPLAY EMPLOYEES IN TABLE ─────
+// ───── DISPLAY EMPLOYEES IN TABLE ─────
 function renderEmployees(employees) {
     tableBody.innerHTML = '';
 
