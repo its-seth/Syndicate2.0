@@ -34,11 +34,28 @@ const addReminderBtn         = document.getElementById('addReminderBtn');
 
 let editingId = null, deletingType = null, deletingId = null;
 
-let expenses = [
-    { id: 1025, date: '2026-01-02', category: 'Water Bill',       amount: '1250.00', status: 'Pending' },
-    { id: 1026, date: '2026-01-20', category: 'Electricity Bill', amount: '800.00',  status: 'Overdue' },
-    { id: 1027, date: '2026-01-26', category: 'WIFI Bill',         amount: '120.00',  status: 'Paid'    },
-];
+function showToast(message, isError = false) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    if (isError) toast.classList.add('error');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function escapeJsString(str) {
+    if (!str) return '';
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+function formatExpenseId(id) {
+    return `#EXP-${String(id).padStart(3, '0')}`;
+}
+
+let expenses = [];
 
 let reminders = [
     { id: 2001, date: '2026-10-18', title: 'water bill',   amount: '1200.00', status: 'Overdue',  icon: 'pencil',    reminderOn: true  },
@@ -86,15 +103,15 @@ const renderTable = () => {
         const tr = document.createElement('tr');
         const statusClass = `status-${expense.status.toLowerCase()}`;
         tr.innerHTML = `
-            <td><span class="expense-id">#EXP-${expense.id}</span></td>
-            <td><div class="category-cell"><div class="category-icon-box"></div><span>${expense.category}</span></div></td>
+            <td class="id-color">${formatExpenseId(expense.id)}</td>
+            <td><div class="category-cell"><span>${expense.category}</span></div></td>
             <td><span class="amount-text">${formatCurrency(expense.amount)}</span></td>
             <td><span class="date-text">${formatDate(expense.date).replace(',','')}</span></td>
-            <td><div class="status-cell-wrapper"><span class="status-pill ${statusClass}"><span class="dot"></span>${expense.status}</span>${expense.status==='Pending'?'<i data-lucide="bell" class="status-bell-alert"></i>':''}</div></td>
-            <td><i data-lucide="file-text" class="receipt-icon"></i></td>
-            <td><div class="action-btns">
-                <button class="action-btn edit" onclick="window.openEditModal(${expense.id})" title="Edit"><i data-lucide="pencil"></i></button>
-                <button class="action-btn delete" onclick="window.openDeleteModal('expense',${expense.id})" title="Delete"><i data-lucide="trash-2"></i></button>
+            <td><div class="status-cell-wrapper"><span class="status-pill ${statusClass}">${expense.status.toUpperCase()}</span></div></td>
+            <td class="actions"><div class="action-btns">
+                <i class="fa-regular fa-eye action-view" onclick="window.openViewModal(${expense.id})" title="View" style="cursor:pointer;"></i>
+                <i class="fa-regular fa-pen-to-square action-edit" onclick="window.openEditModal(${expense.id})" title="Edit"></i>
+                <i class="fa-regular fa-trash-can action-delete" onclick="window.openDeleteModal('expense', ${expense.id}, '${escapeJsString(expense.category)}')" title="Delete"></i>
             </div></td>`;
         expenseTableBody.appendChild(tr);
     });
@@ -102,23 +119,47 @@ const renderTable = () => {
 };
 
 window.toggleReminderStatus = id => {
-    reminders = reminders.map(r => { if(r.id===id){const u={...r,reminderOn:!r.reminderOn};apiPost(API_REMINDERS,u);return u;} return r; });
+    expenses = expenses.map(e => { 
+        if(e.id===id){
+            const u={...e, reminderOn: e.reminderOn === false ? true : false};
+            apiPost(API_EXPENSES, u);
+            return u;
+        } 
+        return e; 
+    });
     renderReminders();
+    showToast('✅ Reminder updated successfully');
 };
 
 if (markAllPaidBtn) markAllPaidBtn.addEventListener('click', () => {
-    reminders = reminders.map(r => { const u={...r,status:'Upcoming'};apiPost(API_REMINDERS,u);return u; });
+    expenses = expenses.map(e => { 
+        if(e.status !== 'Paid'){
+            const u={...e, status: 'Paid'};
+            apiPost(API_EXPENSES, u);
+            return u;
+        }
+        return e;
+    });
+    renderTable();
     renderReminders();
+    showToast('✅ All reminders marked as paid');
 });
 
 const renderReminders = () => {
+    if (!remindersListContainer) return;
     remindersListContainer.innerHTML = '';
-    if (!Array.isArray(reminders) || !reminders.length) { remindersListContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">No pending bills.</p>'; return; }
+    
+    const pendingExpenses = expenses.filter(e => e.status !== 'Paid');
+
+    if (!Array.isArray(pendingExpenses) || !pendingExpenses.length) { 
+        remindersListContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">No pending bills.</p>'; 
+        return; 
+    }
 
     const today = new Date();
     today.setHours(0,0,0,0);
 
-    const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const sortedReminders = [...pendingExpenses].sort((a,b) => new Date(a.date) - new Date(b.date));
 
     sortedReminders.forEach(r => {
         const rDate = new Date(r.date);
@@ -127,24 +168,26 @@ const renderReminders = () => {
         }
 
         const isOverdue = r.status === 'Overdue';
+        const isReminderOn = r.reminderOn !== false; // Default to true
+
         remindersListContainer.insertAdjacentHTML('beforeend', `
             <div class="reminder-card ${isOverdue?'card-red':'card-blue'}">
-                <div class="card-left"><div class="card-icon"><i data-lucide="${r.icon}"></i></div></div>
+                <div class="card-left"><div class="card-icon"><i data-lucide="bell"></i></div></div>
                 <div class="card-middle">
-                    <div class="card-title-row"><h4>${r.title}</h4><span class="status-pill-small ${isOverdue?'pill-red':'pill-blue'}">${r.status.toUpperCase()}</span></div>
+                    <div class="card-title-row"><h4>${escapeJsString(r.category)}</h4><span class="status-pill-small ${isOverdue?'pill-red':'pill-blue'}">${r.status.toUpperCase()}</span></div>
                     <div class="card-due">Due: ${formatDate(r.date)}</div>
                     <div class="card-amount">${formatCurrency(r.amount)}</div>
                 </div>
                 <div class="card-right">
                     <label class="toggle-switch">
-                        <input type="checkbox" onchange="window.toggleReminderStatus(${r.id})" ${r.reminderOn?'checked':''}>
+                        <input type="checkbox" onchange="window.toggleReminderStatus(${r.id})" ${isReminderOn?'checked':''}>
                         <span class="slider round"></span>
                     </label>
-                    <span class="toggle-label">${r.reminderOn?'REMINDER ON':'REMINDER OFF'}</span>
+                    <span class="toggle-label">${isReminderOn?'REMINDER ON':'REMINDER OFF'}</span>
                 </div>
             </div>`);
     });
-    lucide.createIcons();
+    if (window.lucide) window.lucide.createIcons();
 };
 
 const openModal = m => m.classList.add('active');
@@ -153,13 +196,29 @@ const closeAllModals = () => {
     const rm = document.getElementById('reminderModal');
     if (rm) rm.classList.remove('active');
     document.getElementById('deleteModal').classList.remove('active');
+    const vm = document.getElementById('viewModal');
+    if (vm) vm.classList.remove('active');
     expenseForm.reset();
     const rf = document.getElementById('reminderForm');
     if (rf) rf.reset();
     editingId = deletingType = deletingId = null;
 };
 
-document.querySelectorAll('.close-modal, .close-delete-modal').forEach(btn => btn.addEventListener('click', closeAllModals));
+document.querySelectorAll('.close-modal, .close-delete-modal, .close-view-modal').forEach(btn => btn.addEventListener('click', closeAllModals));
+
+window.openViewModal = id => {
+    const expense = expenses.find(e => e.id === id);
+    if (expense) {
+        document.getElementById('viewExpenseId').textContent = formatExpenseId(expense.id);
+        document.getElementById('viewExpenseCategory').textContent = expense.category;
+        document.getElementById('viewExpenseAmount').textContent = formatCurrency(expense.amount);
+        document.getElementById('viewExpenseDate').textContent = formatDate(expense.date).replace(',', '');
+        const statusEl = document.getElementById('viewExpenseStatus');
+        statusEl.textContent = expense.status.toUpperCase();
+        statusEl.className = `status-pill status-${expense.status.toLowerCase()}`;
+        openModal(document.getElementById('viewModal'));
+    }
+};
 
 window.openEditModal = id => {
     const expense = expenses.find(e => e.id === id);
@@ -173,28 +232,47 @@ window.openEditModal = id => {
     }
 };
 
-window.openDeleteModal = (type, id) => { deletingType = type; deletingId = id; openModal(document.getElementById('deleteModal')); };
+window.openDeleteModal = (type, id, title = '') => { 
+    deletingType = type; 
+    deletingId = id; 
+    const msg = document.getElementById('deleteMessage');
+    if (msg) msg.textContent = title ? `Are you sure you want to delete "${title}"?` : 'Are you sure you want to delete this expense?';
+    openModal(document.getElementById('deleteModal')); 
+};
 
 expenseForm.addEventListener('submit', e => {
     e.preventDefault();
     const amountVal = parseFloat(document.getElementById('expenseAmount').value);
+    const newId = expenses.length > 0 ? Math.max(...expenses.map(e => parseInt(e.id) || 0)) + 1 : 1;
     const newExpense = {
-        id: editingId || Math.floor(1000 + Math.random() * 9000),
+        id: editingId || newId,
         category: document.getElementById('expenseCategory').value,
         amount: isNaN(amountVal) ? '0.00' : amountVal.toFixed(2),
         date: document.getElementById('expenseDate').value,
         status: document.getElementById('expenseStatus').value,
     };
-    if (editingId) expenses = expenses.map(e => e.id === editingId ? newExpense : e);
-    else expenses.unshift(newExpense);
-    closeAllModals(); renderTable();
+    if (editingId) {
+        expenses = expenses.map(e => e.id === editingId ? newExpense : e);
+        showToast('✅ Expense updated successfully');
+    } else {
+        expenses.unshift(newExpense);
+        showToast('✅ Expense added successfully');
+    }
+    closeAllModals(); 
+    renderTable();
+    renderReminders();
     apiPost(API_EXPENSES, newExpense);
 });
 
 document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
     if (deletingId) {
-        if (deletingType === 'expense') { expenses = expenses.filter(e => e.id !== deletingId); apiDelete(API_EXPENSES, deletingId); closeAllModals(); renderTable(); }
-        else { reminders = reminders.filter(e => e.id !== deletingId); apiDelete(API_REMINDERS, deletingId); closeAllModals(); renderReminders(); }
+        if (deletingType === 'expense') { 
+            expenses = expenses.filter(e => e.id !== deletingId); apiDelete(API_EXPENSES, deletingId); closeAllModals(); renderTable(); 
+            showToast('✅ Expense deleted successfully');
+        } else { 
+            reminders = reminders.filter(e => e.id !== deletingId); apiDelete(API_REMINDERS, deletingId); closeAllModals(); renderReminders(); 
+            showToast('✅ Reminder deleted successfully');
+        }
     }
 });
 
@@ -224,12 +302,15 @@ if (generateReportBtn) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
+        // Add title
         doc.setFontSize(18);
-        doc.text("PrintSmart - Expense Report", 14, 20);
+        doc.text('Expense Report', 14, 22);
         
-        doc.setFontSize(10);
+        // Add generation date
+        doc.setFontSize(11);
         doc.setTextColor(100);
-        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 28);
+        const dateStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+        doc.text(`Generated on: ${dateStr}`, 14, 30);
         
         const searchTerm = searchExpenseInput ? searchExpenseInput.value.toLowerCase() : '';
         const filteredExpenses = expenses.filter(expense => 
@@ -252,64 +333,69 @@ if (generateReportBtn) {
             statusTotals[e.status] += amt;
         });
 
-        doc.setFontSize(14);
-        doc.setTextColor(0);
-        doc.text("Expense Analysis Summary", 14, 40);
-
-        doc.setFontSize(11);
-        doc.text(`Total Expense Amount: ${formatCurrency(totalExpensesAmount)}`, 14, 48);
-
-        const categoryData = Object.keys(categoryTotals).map(cat => [cat, formatCurrency(categoryTotals[cat])]);
-        doc.autoTable({
-            head: [['Category Breakdown', 'Total Amount']],
-            body: categoryData,
-            startY: 55,
-            theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [46, 204, 113] }
-        });
-
-        let finalY = doc.lastAutoTable.finalY || 55;
-
-        const statusData = Object.keys(statusTotals).map(st => [st, formatCurrency(statusTotals[st])]);
-        doc.autoTable({
-            head: [['Status Breakdown', 'Total Amount']],
-            body: statusData,
-            startY: finalY + 10,
-            theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [243, 156, 18] }
-        });
-
-        finalY = doc.lastAutoTable.finalY || (finalY + 10);
-
-        doc.setFontSize(14);
-        doc.text("Expense Details", 14, finalY + 15);
-
+        // --- Details Section ---
         const tableBody = filteredExpenses.map(e => [
-            `#EXP-${e.id}`, 
+            formatExpenseId(e.id), 
             e.category, 
             formatCurrency(e.amount),
             formatDate(e.date).replace(',', ''), 
-            e.status
+            e.status.toUpperCase()
         ]);
         
         doc.autoTable({
             head: [['Expense ID', 'Category', 'Amount', 'Date', 'Status']],
             body: tableBody,
-            startY: finalY + 20,
+            startY: 40,
             theme: 'grid',
-            styles: { fontSize: 9, cellPadding: 4 },
-            headStyles: { fillColor: [30, 64, 175] }
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [79, 70, 229] }
         });
 
+        let finalY = doc.lastAutoTable.finalY || 40;
+
+        // --- Analysis Summary Section ---
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.setFont(undefined, 'bold');
+        doc.text("Analysis Summary", 14, finalY + 15);
+        doc.setFont(undefined, 'normal');
+
+        doc.setFontSize(11);
+        doc.setTextColor(50);
+        doc.text(`Total Expense Amount: ${formatCurrency(totalExpensesAmount)}`, 14, finalY + 25);
+
+        let yPos = finalY + 35;
+        doc.setFont(undefined, 'bold');
+        doc.text("Category Breakdown:", 14, yPos);
+        doc.setFont(undefined, 'normal');
+        yPos += 7;
+
+        for (const [cat, amt] of Object.entries(categoryTotals)) {
+            doc.text(`- ${cat}: ${formatCurrency(amt)}`, 20, yPos);
+            yPos += 7;
+        }
+
+        yPos += 3;
+        doc.setFont(undefined, 'bold');
+        doc.text("Status Breakdown:", 14, yPos);
+        doc.setFont(undefined, 'normal');
+        yPos += 7;
+
+        for (const [st, amt] of Object.entries(statusTotals)) {
+            doc.text(`- ${st}: ${formatCurrency(amt)}`, 20, yPos);
+            yPos += 7;
+        }
+
+        // --- Reminders Section ---
         if (Array.isArray(reminders) && reminders.length > 0) {
-            let nextY = doc.lastAutoTable.finalY + 15;
-            if (nextY > 270) { doc.addPage(); nextY = 20; }
+            let nextY = yPos + 10;
+            if (nextY > 250) { doc.addPage(); nextY = 20; }
 
             doc.setFontSize(14);
             doc.setTextColor(0);
-            doc.text("Upcoming & Pending Reminders", 14, nextY);
+            doc.setFont(undefined, 'bold');
+            doc.text("Payment Reminders", 14, nextY);
+            doc.setFont(undefined, 'normal');
 
             const sortedReminders = [...reminders].sort((a,b) => new Date(a.date) - new Date(b.date));
             const remindersBody = sortedReminders.map(r => [
@@ -320,12 +406,12 @@ if (generateReportBtn) {
             ]);
 
             doc.autoTable({
-                head: [['Reminder / Bill', 'Amount', 'Due Date', 'Status']],
+                head: [['Reminder Title', 'Amount', 'Due Date', 'Status']],
                 body: remindersBody,
-                startY: nextY + 5,
+                startY: nextY + 7,
                 theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 4 },
-                headStyles: { fillColor: [231, 76, 60] }
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [79, 70, 229] }
             });
         }
         

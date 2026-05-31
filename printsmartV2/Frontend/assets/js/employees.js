@@ -65,6 +65,20 @@ async function fetchEmployees() {
         const res = await fetch(API_EMP);
         allEmployeesData = await res.json();
 
+        // Dynamically renumber employees so the oldest is 1 and newest is N
+        if (Array.isArray(allEmployeesData)) {
+            // API returns DESC (newest first). Reverse to oldest first.
+            allEmployeesData.reverse();
+
+            allEmployeesData.forEach((emp, index) => {
+                const seq = index + 1;
+                emp.emp_id_str = '#EM-' + String(seq).padStart(3, '0');
+            });
+
+            // Reverse back to newest first for descending display
+            allEmployeesData.reverse();
+        }
+
         const searchInput = document.getElementById('searchInput');
         triggerSearchFilter(searchInput ? searchInput.value : '');
     } catch (err) { console.error('Error fetching employees:', err); }
@@ -93,14 +107,14 @@ function renderEmployees(employees) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="id-color">${displayIdStr}</td>
-            <td><div class="name-cell"><span class="avatar blue-avatar">${initials}</span><b>${emp.name}</b></div></td>
+            <td><b>${emp.name}</b></td>
             <td><span class="role-badge ${roleClass}">${emp.role || ''}</span></td>
             <td class="text-gray">${emp.phone || ''}</td>
             <td><b>${emp.email || ''}</b></td>
             <td class="actions">
-                <svg class="view-btn" data-id="${emp.id}" style="cursor:pointer; margin-right: 8px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <svg class="edit-btn" data-id="${emp.id}" style="cursor:pointer; margin-right: 8px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                <svg class="delete-btn" data-id="${emp.id}" style="cursor:pointer;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <i class="fa-regular fa-eye view-btn" data-id="${emp.id}"></i>
+                <i class="fa-regular fa-pen-to-square edit-btn" data-id="${emp.id}"></i>
+                <i class="fa-regular fa-trash-can delete-btn" data-id="${emp.id}"></i>
             </td>`;
         tableBody.appendChild(tr);
     });
@@ -315,6 +329,17 @@ if (reportBtn) {
             const res = await fetch(API_EMP);
             const employees = await res.json();
 
+            // Apply dynamic sequential numbering to match the UI
+            if (Array.isArray(employees)) {
+                // API returns DESC (newest first). Reverse to oldest first.
+                employees.reverse();
+                employees.forEach((emp, index) => {
+                    const seq = index + 1;
+                    emp.emp_id_str = '#EM-' + String(seq).padStart(3, '0');
+                });
+                // Reverse back to newest first
+                employees.reverse();
+            }
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
@@ -361,8 +386,10 @@ if (reportBtn) {
 
             const totalEmployees = employees.length;
             let roleDistribution = {};
+            let roleSalaryTotal = {};
             let totalSalary = 0;
             let hasSalaryData = false;
+            let cityDistribution = {};
 
             employees.forEach(emp => {
                 const role = emp.role || 'Unassigned';
@@ -372,7 +399,23 @@ if (reportBtn) {
                     const sal = parseFloat(String(emp.salary).replace(/[^0-9.-]+/g, ""));
                     if (!isNaN(sal)) {
                         totalSalary += sal;
+                        roleSalaryTotal[role] = (roleSalaryTotal[role] || 0) + sal;
                         hasSalaryData = true;
+                    }
+                }
+
+                // Extract city/area for Geographic Distribution (simplistic logic)
+                if (emp.address && emp.address.trim() !== '') {
+                    const parts = emp.address.split(',');
+                    let city = parts[parts.length - 1].trim();
+                    // Fallback to simple words if no commas used
+                    if (!city || city.length > 25) {
+                        const words = emp.address.trim().split(' ');
+                        city = words[words.length - 1];
+                    }
+                    if (city) {
+                        const normalizedCity = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase();
+                        cityDistribution[normalizedCity] = (cityDistribution[normalizedCity] || 0) + 1;
                     }
                 }
             });
@@ -385,7 +428,7 @@ if (reportBtn) {
 
             if (hasSalaryData) {
                 yPos += 7;
-                doc.text(`Total Payroll: $${totalSalary.toFixed(2)}`, 14, yPos);
+                doc.text(`Total Payroll: $${totalSalary.toLocaleString()}`, 14, yPos);
             }
 
             const roleData = Object.keys(roleDistribution).map(role => [role, roleDistribution[role]]);
@@ -421,6 +464,21 @@ if (reportBtn) {
                     styles: { fontSize: 9, cellPadding: 4 },
                     headStyles: { fillColor: [243, 156, 18] }
                 });
+            }
+
+            if (Object.keys(cityDistribution).length > 0) {
+                yPos += 5;
+                doc.setFont(undefined, 'bold');
+                doc.text("Top Geographic Distributions (Address base):", 14, yPos);
+                doc.setFont(undefined, 'normal');
+                yPos += 7;
+                // Sort cities by count descending
+                const sortedCities = Object.entries(cityDistribution).sort((a, b) => b[1] - a[1]);
+                // Print top 5 regions to avoid PDF overflow
+                for (let i = 0; i < Math.min(sortedCities.length, 5); i++) {
+                    doc.text(`- ${sortedCities[i][0]}: ${sortedCities[i][1]} employee(s)`, 20, yPos);
+                    yPos += 7;
+                }
             }
 
             doc.save('Employee_Report.pdf');

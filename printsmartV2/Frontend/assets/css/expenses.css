@@ -1,8 +1,7 @@
 /* expenses.css - specific styles for this module */
-.expense-id {
-    color: var(--primary-blue);
-    font-weight: 600;
-    cursor: pointer;
+.id-color {
+    color: #1d4ed8 !important;
+    font-weight: 500;
 }
 .category-cell {
     display: flex;
@@ -34,27 +33,24 @@
 .status-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.status-pill .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+.status-pending {
+    background: #fef3c7;
+    color: #d97706;
 }
-.status-pending { background-color: var(--status-pending-bg); color: var(--status-pending-text); }
-.status-pending .dot { background-color: var(--status-pending-text); }
-.status-overdue { background-color: var(--status-overdue-bg); color: var(--status-overdue-text); }
-.status-overdue .dot { background-color: var(--status-overdue-text); }
-.status-paid { background-color: var(--status-paid-bg); color: var(--status-paid-text); }
-.status-paid .dot { background-color: var(--status-paid-text); }
-.status-bell-alert {
-    width: 14px;
-    height: 14px;
-    color: var(--status-pending-text);
+.status-overdue {
+    background: #fee2e2;
+    color: #dc2626;
+}
+.status-paid {
+    background: #d1fae5;
+    color: #059669;
 }
 .receipt-icon {
     color: var(--text-light);
@@ -257,4 +253,48 @@ input:checked + .slider:before { transform: translateX(20px); }
     align-items: center;
     gap: 8px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== TOAST NOTIFICATIONS ========== */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 3000;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast-notification.error {
+    background-color: #ef4444;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* ========== ACTION ICONS ========== */
+.actions i {
+    color: #9ca3af;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.actions i.action-view:hover,
+.actions i.action-edit:hover {
+    color: #1e293b !important;
+    transform: scale(1.05);
+}
+
+.actions i.action-delete:hover {
+    color: #dc2626 !important;
+    transform: scale(1.05);
 }

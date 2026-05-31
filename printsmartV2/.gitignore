@@ -1,0 +1,18 @@
+# Ignore sensitive configuration files (update these names to match your actual files)
+config.php
+db.php
+database_connect.php
+
+# Ignore database exports or dumps
+*.sql
+*.sqlite
+
+# Ignore OS-generated hidden files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE / Editor configuration folders
+.vscode/
+.idea/
+*.suo
+*.sln

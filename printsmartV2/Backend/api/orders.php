@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 require_once '../config/db_connect.php';
 
-//action req
+
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 switch ($action) {
@@ -68,7 +68,6 @@ function getOrders($conn)
 //------------------------------------------------------------add order--------------------------------------------------------------
 function addOrder($conn)
 {
-
     if (!isset($_POST['order'])) {
         echo json_encode(['success' => false, 'message' => 'No order data received']);
         return;
@@ -84,15 +83,16 @@ function addOrder($conn)
     $order_details = $order['order_details'];
 
     $customer_id = (int)$customer_id;
-
     $total_amount = (float)$total_amount;
 
-    $count_result = $conn->query("SELECT COUNT(*) as total FROM orders");
-    $count_row = $count_result->fetch_assoc();
-    $order_count = $count_row['total'];
+    
+    $max_result = $conn->query("SELECT MAX(CAST(SUBSTRING(order_number, 6) AS UNSIGNED)) as max_number FROM orders");
+    $max_row = $max_result->fetch_assoc();
+    $max_number = $max_row['max_number'] ?? 0;  
+    
+    $next_number = $max_number + 1;
 
-    $next_number = $order_count + 1;
-
+    
     if ($next_number < 10) {
         $order_number = "#ORD-00" . $next_number;
     } elseif ($next_number < 100) {
@@ -104,14 +104,11 @@ function addOrder($conn)
     $sql = "INSERT INTO orders (customer_id, order_number, order_date, deadline, status, total_amount, order_details) 
             VALUES ($customer_id, '$order_number', '$order_date', '$deadline', '$status', $total_amount, '$order_details')";
 
-
     if ($conn->query($sql) === TRUE) {
-
-        $new_id = $conn->insert_id;
-
         echo json_encode([
             'success' => true,
             'message' => 'Order added successfully',
+            'order_number' => $order_number
         ]);
     } else {
         echo json_encode([
@@ -120,7 +117,6 @@ function addOrder($conn)
         ]);
     }
 }
-
 
 
 //--------------------------------------------------------------------delete order--------------------------------------------------------------------------
@@ -228,11 +224,11 @@ function getMonthlyReport($conn)
         return;
     }
 
-    // Get start and end dates for the month
+    
     $start_date = "$year-$month-01";
     $end_date = date("Y-m-t", strtotime($start_date));
 
-    // Get all orders for the month
+    
     $sql = "SELECT o.*, c.name as customer_name, c.customer_id 
             FROM orders o 
             LEFT JOIN customers c ON o.customer_id = c.id 
@@ -250,13 +246,13 @@ function getMonthlyReport($conn)
             $orders[] = $row;
             $total_revenue += $row['total_amount'];
 
-            // Count statuses
+            
             $status = strtolower($row['status']);
             if (isset($status_count[$status])) {
                 $status_count[$status]++;
             }
 
-            // Track customer totals for top customers
+            // Track customers
             $customer_id = $row['customer_id'];
             if (!isset($customer_totals[$customer_id])) {
                 $customer_totals[$customer_id] = [
@@ -271,13 +267,13 @@ function getMonthlyReport($conn)
         }
     }
 
-    // Calculate metrics
+    // Calculationssss
     $total_orders = count($orders);
     $avg_order_value = $total_orders > 0 ? $total_revenue / $total_orders : 0;
     $completed_orders = $status_count['completed'];
     $completion_rate = $total_orders > 0 ? round(($completed_orders / $total_orders) * 100, 1) : 0;
 
-    // Get top 5 customers
+    // top 5
     usort($customer_totals, function ($a, $b) {
         return $b['total_spent'] <=> $a['total_spent'];
     });
